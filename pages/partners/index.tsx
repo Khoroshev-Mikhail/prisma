@@ -4,9 +4,10 @@ import prisma from '../../lib/prisma';
 import Layout from "../../components/Layout";
 import { TextInput } from "flowbite-react";
 import useSWR, { SWRConfig } from 'swr'
-
+import { useSession, signIn, signOut } from "next-auth/react"
 export const getServerSideProps: GetServerSideProps = async () => {
   const partners = await prisma.partner.findMany()
+
   return {
     props: {
       fallbackData: JSON.parse(JSON.stringify(partners))
@@ -14,6 +15,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 export default function Partner({fallbackData}){
+  const { data: session } = useSession()
   const {data, error, isLoading} = useSWR(`/api/partners/get`, {fallbackData})
   return (
     <Layout>
@@ -36,6 +38,18 @@ export default function Partner({fallbackData}){
         </div>    
       )
     })}
+    <div>
+      {session 
+      ?<>
+        Signed in as {session.user.email} <br />
+        <button onClick={() => signOut()}>Sign out</button>
+      </> 
+      :<>
+        Not signed in <br />
+        <button onClick={() => signIn()}>Sign in</button>
+      </> 
+      }
+    </div>
     </Layout>
   )
 }
