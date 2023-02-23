@@ -1,5 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -10,21 +9,73 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        String     @default(cuid()) @id
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User?   @relation(fields: [authorId], references: [id])
-  authorId  String?
-}
-
 model User {
-  id            String       @default(cuid()) @id
-  name          String?
-  email         String?   @unique
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
-  posts         Post[]
+  id            Int @unique @default(autoincrement()) @id
+  name          String
+  password      String    
+  email         String @unique
+  tgId          String? @unique
+  partners      Partner[]
+  contracts     Contract[]
+  ks3           Ks3[]
+  ks2           Ks2[]
+  role          Role @default(USER)
   @@map(name: "users")
+}
+enum Role {
+  USER
+  ADMIN
+  BOOKKEEPER
+  SDO
+}
+model Partner {
+  id            Int @unique @default(autoincrement()) @id
+  inn           String @unique
+  name          String @unique
+  form          String
+  createdAt     DateTime @default(now()) @map(name: "created_at")
+  author        User @relation(fields: [authorId], references: [id])
+  authorId      Int
+  contacts      String?
+  contracts     Contract[]
+}
+model Contract {
+  id            Int @unique @default(autoincrement()) @id
+  name          String @unique
+  description   String?
+  date          DateTime
+  expireDate    DateTime?
+  createdAt     DateTime @default(now()) @map(name: "created_at")
+  partner       Partner @relation(fields: [partnerId], references: [id])
+  partnerId     Int
+  author        User @relation(fields: [authorId], references: [id])
+  authorId      Int
+  ks3           Ks3[]
+}
+model Ks3 {
+  id            Int @unique @default(autoincrement()) @id
+  name          String @unique
+  date          DateTime
+  createdAt     DateTime @default(now()) @map(name: "created_at")
+  contract      Contract @relation(fields: [contractId], references: [id])
+  contractId    Int
+  author        User @relation(fields: [authorId], references: [id])
+  authorId      Int
+  ks2           Ks2[]
+  rejected      Boolean?
+  accepted      Boolean?
+  comment       String?
+}
+model Ks2{
+  id            Int @unique @default(autoincrement()) @id
+  name          String @unique
+  date          DateTime
+  createdAt     DateTime @default(now()) @map(name: "created_at")
+  ks3           Ks3 @relation(fields: [ks3Id], references: [id])
+  ks3Id         Int
+  author        User @relation(fields: [authorId], references: [id])
+  authorId      Int
+  rejected      Boolean?
+  accepted      Boolean?
+  comment       String?
 }
