@@ -4,9 +4,10 @@ import useSWR from 'swr'
 import { Button, Table, TextInput } from "flowbite-react";
 import useSWRMutation from 'swr/mutation'
 import { useEffect, useState } from "react";
-import { updateApi } from "../../../lib/myFns";
+import { deleteApi, updateApi } from "../../../lib/myFns";
 import Layout from "../../../components/layout/Layout";
 import prisma from "../../../lib/prisma";
+import { useSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const {id} = context.query
@@ -26,9 +27,13 @@ export default function PartnersEdit({fallbackData}){
     const router = useRouter()
     const {id} = router.query
 
+    //UserData
+    const {data: {user: {email} }} = useSession()
+
     //Асинхронная дата и мутации
     const {data, error, isLoading} = useSWR(`/api/partners/findUnique?id=${id}`, {fallbackData})
-    const { trigger } = useSWRMutation('/api/partners/put', updateApi)
+    const { trigger } = useSWRMutation('/api/partners/', updateApi)
+    const { trigger: deleteParnter } = useSWRMutation('/api/partners/', deleteApi)
 
     //Локальный стейт
     const [inn, setInn] = useState<string>(data.inn)
@@ -81,7 +86,12 @@ export default function PartnersEdit({fallbackData}){
                             <TextInput value={contacts || undefined} onChange={(e)=>{setContacts(e.target.value)}}/>
                         </Table.Cell>
                         <Table.Cell>
-                            <Button onClick={()=>trigger({id: data.id, inn, form, name, contacts})}>Сохранить</Button>
+                            <Button onClick={()=>trigger({id: data.id, inn, form, name, contacts, email})}>Сохранить</Button>
+                        </Table.Cell>
+                    </Table.Row>
+                    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            <Button color='failure' onClick={()=>deleteParnter({id: data.id})}>Удалить навсегда</Button>
                         </Table.Cell>
                     </Table.Row>
                 </Table.Body>

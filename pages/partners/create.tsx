@@ -10,7 +10,7 @@ export default function PartnersCreate(){
     const {data: {user: {email} }} = useSession()
 
     //Асинхронная дата и мутации
-    const { trigger } = useSWRMutation('/api/partners/set', createApi)
+    const { trigger } = useSWRMutation('/api/partners/', createApi)
 
     //Локальный стейт
     const [inn, setInn] = useState<string>('')

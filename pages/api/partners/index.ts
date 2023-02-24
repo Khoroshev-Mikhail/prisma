@@ -25,8 +25,16 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 res.status(401).json('Не авторизирован.');
                 return;
             }
-            const {inn, form, name, authorId} = JSON.parse(req.body)
-            if(!inn || !form || !name || !authorId) throw new Error('Указаны не все данные.')
+            const {inn, form, name, email} = JSON.parse(req.body)
+            if(!inn || !form || !name || !email) throw new Error('Указаны не все данные.')
+
+            const {id: authorId} = await prisma.user.findUnique({
+                where: {
+                    email: String(email)
+                }
+            })        
+            if(!authorId) throw new Error('Не указан автор.')
+
             const data = await prisma.partner.create({
                 data: {
                     inn: String(inn),
@@ -44,8 +52,16 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 res.status(401).json('Не авторизирован.');
                 return;
             }
-            const {id, inn, form, name, authorId} = JSON.parse(req.body)
-            if(!id) throw new Error('Не указан Id.')
+            const {id, inn, form, name, email} = JSON.parse(req.body)
+            if(!id || !email) throw new Error('Указаны не все данные.')
+
+            const {id: authorId} = await prisma.user.findUnique({
+                where: {
+                    email: String(email)
+                }
+            })        
+            if(!authorId) throw new Error('Не указан автор.')
+
             const data = await prisma.partner.update({
                 where: {
                     id: Number(id)
@@ -54,7 +70,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     inn: inn ? String(inn) : undefined,
                     form: form ? String(form) : undefined,
                     name: name ? String(name) : undefined,
-                    authorId: authorId ? Number(authorId) : undefined
+                    authorId: Number(authorId)
                 }
             })
             res.status(200).json(data);
