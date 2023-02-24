@@ -10,12 +10,21 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             res.status(401).json('Не авторизирован.');
             return;
         }
-        const {id} = JSON.parse(req.body)
+        const {id, name, date, updatedAt, contractId, authorId, rejected, accepted, comment} = JSON.parse(req.body)
         if(!id) throw new Error('Не указан Id.')
-
-        const data = await prisma.partner.delete({
+        const data = await prisma.ks3.update({
             where: {
                 id: Number(id)
+            },
+            data: {
+                name: name ? String(name) : undefined,
+                date: date ? String(date) : undefined,
+                updatedAt: new Date(),
+                contractId: contractId ? Number(contractId) : undefined,
+                authorId: authorId ? Number(authorId) : undefined,
+                rejected:  rejected ? !!rejected : undefined,
+                accepted: accepted ? !!accepted : undefined,
+                comment: comment ? String(comment) : undefined,
             }
         })
         res.status(200).json(data);

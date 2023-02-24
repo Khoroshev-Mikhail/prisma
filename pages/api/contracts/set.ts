@@ -10,22 +10,16 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             res.status(401).json('Не авторизирован.');
             return;
         }
-        const {inn, form, name, email} = JSON.parse(req.body)
-        if(!inn || !form || !name || !email) throw new Error('Указаны не все данные.')
-
-        const {id: authorId} = await prisma.user.findUnique({
-            where: {
-                email: String(email)
-            }
-        })        
-        if(!authorId) throw new Error('Не указан автор.')
-
-        const data = await prisma.partner.create({
+        const {name, authorId, description, date, expireDate, partnerId} = JSON.parse(req.body)
+        if(!name || !authorId || !description || !date || !expireDate || !partnerId) throw new Error('Указаны не все данные.')
+        const data = await prisma.contract.create({
             data: {
-                inn: String(inn),
                 name: String(name),
-                form: String(form),
                 authorId: Number(authorId),
+                description: description ? String(description) : undefined,
+                date: new Date(date),
+                expireDate: expireDate ? new Date(expireDate) : undefined,
+                partnerId: Number(partnerId),
             }
         })
         res.status(200).json(data);

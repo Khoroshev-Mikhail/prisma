@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
         const {id} = JSON.parse(req.body)
         if(!id) throw new Error('Не указан Id.')
 
-        const data = await prisma.partner.delete({
+        const data = await prisma.contract.delete({
             where: {
                 id: Number(id)
             }

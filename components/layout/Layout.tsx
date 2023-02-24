@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import Footer from "./Footer";
 import Nav from "./Nav";
 
 type Props = {
@@ -8,7 +9,8 @@ type Props = {
 const Layout: React.FC<Props> = ({children}) => (
   <div>
     <Nav />
-    <div className="layout border-b-1">{children}</div>
+    <div className="my-3">{children}</div>
+    <Footer />
   </div>
 );
 

@@ -1,7 +1,9 @@
 import React from "react"
 import { GetServerSideProps } from "next"
 import prisma from '../../lib/prisma';
-import Layout from "../../components/Layout";
+import Layout from "../../components/layout/Layout";
+import { Table } from "flowbite-react";
+import useSWR from 'swr'
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const contracts = await prisma.contract.findMany({
@@ -10,7 +12,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
         select: {
           id: true,
           form: true,
-          name: true
+          name: true,
+          _count: true,
         }
       }
     }
@@ -20,29 +23,57 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-export default function Contracts({contracts}){
+export default function Contracts({fallbackData}){
+  const {data, error, isLoading} = useSWR(`/api/contracts/get`, {fallbackData})
   return (
-   <Layout>
-    <div className="p-2 gap-2 grid grid-cols-10">
-      <div className="p-2 col-span-2 cursor-pointer">Контрагент</div>
-      <div className="p-2 col-span-2 cursor-pointer">Название договора</div>
-      <div className="p-2 col-span-2 cursor-pointer">Дата</div>
-      {/* <div className="p-2 col-span-2  ">Expire Date</div> */}
-      <div className="p-2 col-span-2 cursor-pointer">Скачать</div>
-      <div className="p-2 col-span-2 cursor-pointer">Ks3</div>
-    </div>
-    {contracts.map((el, i) => {
-      return(
-        <div className="p-2 gap-2 grid grid-cols-10" key={i}>
-          <div className="p-2 col-span-2">{el.partner.form} {el.partner.name}</div>
-          <div className="p-2 col-span-2">{el.name}</div>
-          <div className="p-2 col-span-2">{el.date}</div>
-          {/* <div className="p-2 col-span-2  ">{el.expire_date}</div> */}
-          <div className="p-2 col-span-2">pdf</div>
-          <div className="p-2 col-span-2">ks3</div>
-        </div>
-      )
-    })}
+    <Layout>
+      <Table hoverable={true}>
+
+        <Table.Head>
+          <Table.HeadCell>
+            № Договора
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Дата
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Контрагент
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Доп.инфо
+          </Table.HeadCell>
+          <Table.HeadCell>
+            <span className="sr-only">
+              Edit
+            </span>
+          </Table.HeadCell>
+        </Table.Head>
+        
+        <Table.Body className="divide-y">
+          {data && data.map((el, i) => {
+            return (
+              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={i}>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {el.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {new Date(el.date).toLocaleDateString()}
+                </Table.Cell>
+                <Table.Cell>
+                  {el.partner.form} {el.partner.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {el.desciption}
+                </Table.Cell>
+                <Table.Cell>
+                  <a href="/tables" className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</a>
+                </Table.Cell>
+              </Table.Row>
+            )
+          })} 
+        </Table.Body>
+
+      </Table>
     </Layout>
   )
 }

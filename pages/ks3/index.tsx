@@ -1,10 +1,12 @@
 import React from "react"
 import { GetServerSideProps } from "next"
 import prisma from '../../lib/prisma';
-import Layout from "../../components/Layout";
+import Layout from "../../components/layout/Layout";
+import { Button, Table } from "flowbite-react";
+import useSWR from 'swr'
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const ks3 = await prisma.ks3.findMany({
+  const data = await prisma.ks3.findMany({
     include: {
       contract: {
         select: {
@@ -17,34 +19,81 @@ export const getServerSideProps: GetServerSideProps = async () => {
     }
   })
   return {
-    props: {ks3: JSON.parse(JSON.stringify(ks3))},
+    props: {
+      fallbackData: JSON.parse(JSON.stringify(data))
+    },
   }
 }
 
-export default function Ks3({ks3}){
+export default function Ks3({fallbackData}){
+  const {data, error, isLoading} = useSWR(`/api/ks3/get`, {fallbackData})
   return (
     <Layout>
-      <div className="p-2 gap-2 grid grid-cols-10">
-        {/* <div className="p-2 col-span-2 cursor-pointer">Partner</div> */}
-        <div className="p-2 col-span-2 cursor-pointer">Договор</div>
-        <div className="p-2 col-span-2 cursor-pointer">Номер кс-3</div>
-        <div className="p-2 col-span-2 cursor-pointer">Дата кс-2</div>
-        <div className="p-2 col-span-2 cursor-pointer">Отклонить / Принять</div>
-        <div className="p-2 col-span-2 cursor-pointer">Комментарий</div>
-      </div>
-      {ks3.map((el, i) => {
-        console.log(el)
-        return(
-          <div className="p-2 gap-2 grid grid-cols-10" key={i}>
-            {/* <div className="p-2 col-span-2 cursor-pointer">{el.partner}</div> */}
-            <div className="p-2 col-span-2 cursor-pointer">{el.contract.name} от {el.contract.date}</div>
-            <div className="p-2 col-span-2 cursor-pointer">{el.name}</div>
-            <div className="p-2 col-span-2 cursor-pointer">{el.date}</div>
-            <div className="p-2 col-span-2 cursor-pointer">{el.accepted} or {el.rejected}</div>
-            <div className="p-2 col-span-2 cursor-pointer">{el.comment}</div>
-          </div>
-        )
-      })}
+      <Table hoverable={true}>
+
+        <Table.Head>
+          <Table.HeadCell>
+            Номер КС-3
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Дата
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Вышестоящий док-т
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Скан
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Принять / Отклонить
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Комментарий
+          </Table.HeadCell>
+          <Table.HeadCell>
+            <span className="sr-only">
+              Edit
+            </span>
+          </Table.HeadCell>
+        </Table.Head>
+      
+        <Table.Body className="divide-y">
+          {data && data.map((el, i) => {
+            return (
+              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={i}>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {el.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {new Date(el.date).toLocaleDateString()}
+                </Table.Cell>
+                <Table.Cell>
+                  Договор {el.contract.name}
+                </Table.Cell>
+                <Table.Cell>
+                  Ссылка на скачивание
+                </Table.Cell>
+                <Table.Cell>
+                  <Button.Group>
+                    <Button color={el.accepted ? 'success' : 'gray'}>
+                      Принять
+                    </Button>
+                    <Button  color={el.rejected ? 'failure' : 'gray'}>
+                      Отклонить
+                    </Button>
+                  </Button.Group>
+                </Table.Cell>
+                <Table.Cell>
+                  {el.comment}
+                </Table.Cell>
+                <Table.Cell>
+                  <a href="/tables" className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</a>
+                </Table.Cell>
+              </Table.Row>
+            )
+          })} 
+        </Table.Body>
+      </Table>
     </Layout>
   )
 }

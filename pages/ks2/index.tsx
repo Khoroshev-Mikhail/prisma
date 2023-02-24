@@ -1,52 +1,98 @@
 import React from "react"
 import { GetServerSideProps } from "next"
 import prisma from '../../lib/prisma';
-import Layout from "../../components/Layout";
-import { TextInput } from "flowbite-react";
-import Ks2line from "../../components/Ks2-line";
+import Layout from "../../components/layout/Layout";
+import { Button, Table, TextInput } from "flowbite-react";
+import useSWR from 'swr'
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const ks2 = await prisma.ks2.findMany({
+  const data = await prisma.ks2.findMany({
     include: {
       ks3: {
         select: {
           id: true,
           name: true,
-          date: true
+          date: true,
+          _count: true
         },
       }
     }
   })
   return {
     props: {
-      ks2: JSON.parse(JSON.stringify(ks2))}
+      fallbackData: JSON.parse(JSON.stringify(data))}
   }
 }
 
-export default function Ks2({ks2}){
+export default function Ks2({fallbackData}){
+  const {data, error, isLoading} = useSWR(`/api/ks2/get`, {fallbackData})
   return (
     <Layout>
-      <div className="px-4 gap-2 grid grid-cols-10">
-        {/* <div className="p-2 col-span-2 cursor-pointer">Partner</div> */}
-        <div className="col-span-2 cursor-pointer">Вышестоящий акт</div>
-        <div className="col-span-2 cursor-pointer">Номер кс-2</div>
-        <div className="col-span-2 cursor-pointer">Дата кс-2</div>
-        <div className="col-span-2 cursor-pointer">Отклонить / Принять</div>
-        <div className="col-span-2 cursor-pointer">Комментарий</div>
-      </div>
-      <div className="px-4 gap-2 grid grid-cols-10">
-        {/* <div className="p-2 col-span-2 cursor-pointer">Partner</div> */}
-        <div className="col-span-2 cursor-pointer"><TextInput sizing="sm" /></div>
-        <div className="col-span-2 cursor-pointer"><TextInput sizing="sm"/></div>
-        <div className="col-span-2 cursor-pointer"></div>
-        <div className="col-span-2 cursor-pointer"></div>
-        <div className="col-span-2 cursor-pointer"><TextInput sizing="sm"/></div>
-      </div>
-      {ks2.map((el, i) => {
-        return(
-          <Ks2line {...el}/>
-        )
-      })}
+      <Table hoverable={true}>
+
+        <Table.Head>
+          <Table.HeadCell>
+            Номер КС-2
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Дата
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Вышестоящий док-т
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Скан
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Принять / Отклонить
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Комментарий
+          </Table.HeadCell>
+          <Table.HeadCell>
+            <span className="sr-only">
+              Edit
+            </span>
+          </Table.HeadCell>
+        </Table.Head>
+      
+        <Table.Body className="divide-y">
+          {data && data.map((el, i) => {
+            return (
+              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={i}>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {el.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {new Date(el.date).toLocaleDateString()}
+                </Table.Cell>
+                <Table.Cell>
+                  КС-3 {el.ks3.name}
+                </Table.Cell>
+                <Table.Cell>
+                  Ссылка на скачивание
+                </Table.Cell>
+                <Table.Cell>
+                  <Button.Group>
+                    <Button color={el.accepted ? 'success' : 'gray'}>
+                      Принять
+                    </Button>
+                    <Button  color={el.rejected ? 'failure' : 'gray'}>
+                      Отклонить
+                    </Button>
+                  </Button.Group>
+                </Table.Cell>
+                <Table.Cell>
+                  {el.comment}
+                </Table.Cell>
+                <Table.Cell>
+                  <a href="/tables" className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</a>
+                </Table.Cell>
+              </Table.Row>
+            )
+          })} 
+        </Table.Body>
+      </Table>
     </Layout>
   )
 }

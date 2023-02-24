@@ -4,13 +4,11 @@ import prisma from '../../../lib/prisma';
 
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
-        const {id, inn, name, authorId} = req.query
-        const data = await prisma.partner.findMany({
+        const {id} = req.query
+        if(!id) throw new Error('Не указан id.')
+        const data = await prisma.partner.findUnique({
             where: {
-                id: id ? Number(id) : undefined,
-                inn: inn ? String(inn) : undefined,
-                name: name ? String(name) : undefined,
-                authorId: authorId ? Number(authorId) : undefined
+                id: Number(id),
             }
         })
         res.status(200).json(data);

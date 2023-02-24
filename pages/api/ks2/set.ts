@@ -10,22 +10,17 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             res.status(401).json('Не авторизирован.');
             return;
         }
-        const {inn, form, name, email} = JSON.parse(req.body)
-        if(!inn || !form || !name || !email) throw new Error('Указаны не все данные.')
-
-        const {id: authorId} = await prisma.user.findUnique({
-            where: {
-                email: String(email)
-            }
-        })        
-        if(!authorId) throw new Error('Не указан автор.')
-
-        const data = await prisma.partner.create({
+        const {name, date, ks3Id, authorId, rejected, accepted, comment} = JSON.parse(req.body)
+        if(!name || !date || !ks3Id || !authorId) throw new Error('Указаны не все данные.')
+        const data = await prisma.ks2.create({
             data: {
-                inn: String(inn),
                 name: String(name),
-                form: String(form),
+                date: String(date),
+                ks3Id: Number(ks3Id),
                 authorId: Number(authorId),
+                rejected: rejected ? !!rejected : undefined,
+                accepted: accepted ? !!accepted : undefined,
+                comment: comment ? String(comment) : undefined
             }
         })
         res.status(200).json(data);
