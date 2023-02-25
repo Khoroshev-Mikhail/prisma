@@ -52,6 +52,8 @@ model Contract {
   partnerId     Int
   author        User @relation(fields: [authorId], references: [id])
   authorId      Int
+  rejected      Boolean?
+  accepted      Boolean?
   ks3           Ks3[]
 }
 model Ks3 {

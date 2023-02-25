@@ -7,13 +7,28 @@ import { authOptions } from '../auth/[...nextauth]';
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
         if(req.method === "GET"){
-            const {id, inn, name, authorId} = req.query
-            const data = await prisma.partner.findMany({
+            const {id, name, date, createdAt, contractId, authorId, rejected, accepted, comment} = req.query
+            const data = await prisma.ks3.findMany({
                 where: {
                     id: id ? Number(id) : undefined,
-                    inn: inn ? String(inn) : undefined,
                     name: name ? String(name) : undefined,
-                    authorId: authorId ? Number(authorId) : undefined
+                    date: date ? String(date) : undefined,
+                    createdAt: createdAt ? String(createdAt) : undefined,
+                    contractId: contractId ? Number(contractId) : undefined,
+                    authorId: authorId ? Number(authorId) : undefined,
+                    rejected:  rejected ? !!rejected : undefined,
+                    accepted: accepted ? !!accepted : undefined,
+                    comment: comment ? String(comment) : undefined,
+                },
+                include: {
+                  contract: {
+                    select: {
+                      id: true,
+                      name: true,
+                      date: true,
+                      _count: true
+                    },
+                  }
                 }
             })
             res.status(200).json(data);
@@ -25,8 +40,8 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 res.status(401).json('Не авторизирован.');
                 return;
             }
-            const {inn, form, name, email} = JSON.parse(req.body)
-            if(!inn || !form || !name || !email) throw new Error('Указаны не все данные.')
+            const {name, date, contractId, email, rejected, accepted, comment} = JSON.parse(req.body)
+            if(!name || !date || !contractId || !email) throw new Error('Указаны не все данные.')
 
             const {id: authorId} = await prisma.user.findUnique({
                 where: {
@@ -35,16 +50,19 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             })        
             if(!authorId) throw new Error('Не указан автор.')
 
-            const data = await prisma.partner.create({
+            const data = await prisma.ks3.create({
                 data: {
-                    inn: String(inn),
                     name: String(name),
-                    form: String(form),
+                    date: String(date),
+                    contractId: Number(contractId),
                     authorId: Number(authorId),
+                    rejected: !!rejected || undefined,
+                    accepted: !!accepted || undefined,
+                    comment: String(comment) || undefined
                 }
             })
             res.status(200).json(data);
-            return;
+            return
         }
         if(req.method === "PUT"){
             const session = await getServerSession(req, res, authOptions)
@@ -52,8 +70,8 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 res.status(401).json('Не авторизирован.');
                 return;
             }
-            const {id, inn, form, name, email} = JSON.parse(req.body)
-            if(!id || !email) throw new Error('Указаны не все данные.')
+            const {id, name, date, updatedAt, contractId, email, rejected, accepted, comment} = JSON.parse(req.body)
+            if(!id || !email) throw new Error('Не указан Id или автор обновления.')
 
             const {id: authorId} = await prisma.user.findUnique({
                 where: {
@@ -62,15 +80,19 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             })        
             if(!authorId) throw new Error('Не указан автор.')
 
-            const data = await prisma.partner.update({
+            const data = await prisma.ks3.update({
                 where: {
                     id: Number(id)
                 },
                 data: {
-                    inn: inn ? String(inn) : undefined,
-                    form: form ? String(form) : undefined,
                     name: name ? String(name) : undefined,
-                    authorId: Number(authorId)
+                    date: date ? String(date) : undefined,
+                    updatedAt: new Date(),
+                    contractId: contractId ? Number(contractId) : undefined,
+                    authorId: authorId ? Number(authorId) : undefined,
+                    rejected:  rejected ? !!rejected : undefined,
+                    accepted: accepted ? !!accepted : undefined,
+                    comment: comment ? String(comment) : undefined,
                 }
             })
             res.status(200).json(data);
@@ -85,7 +107,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             const {id} = JSON.parse(req.body)
             if(!id) throw new Error('Не указан Id.')
     
-            const data = await prisma.partner.delete({
+            const data = await prisma.ks3.delete({
                 where: {
                     id: Number(id)
                 }
@@ -94,6 +116,6 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             return;
         }
     }catch(e){
-        res.status(500).json(e.message);
+        res.status(500).json(e.messagey);
     }
 }

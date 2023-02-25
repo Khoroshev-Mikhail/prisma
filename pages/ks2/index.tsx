@@ -4,6 +4,7 @@ import prisma from '../../lib/prisma';
 import Layout from "../../components/layout/Layout";
 import { Button, Table, TextInput } from "flowbite-react";
 import useSWR from 'swr'
+import Link from "next/link";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const data = await prisma.ks2.findMany({
@@ -86,7 +87,7 @@ export default function Ks2({fallbackData}){
                   {el.comment}
                 </Table.Cell>
                 <Table.Cell>
-                  <a href="/tables" className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</a>
+                  <Link href={`/ks2/edit/${el.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</Link>
                 </Table.Cell>
               </Table.Row>
             )

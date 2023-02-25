@@ -7,10 +7,10 @@ import { useSession } from "next-auth/react";
 
 export default function PartnersCreate(){
     //UserData
-    const {data: {user: {email} }} = useSession()
+    const {data: session} = useSession()
 
     //Асинхронная дата и мутации
-    const { trigger } = useSWRMutation('/api/partners/', createApi)
+    const {trigger} = useSWRMutation('/api/partners/', createApi)
 
     //Локальный стейт
     const [inn, setInn] = useState<string>('')
@@ -53,7 +53,7 @@ export default function PartnersCreate(){
                             <TextInput value={contacts} onChange={(e)=>{setContacts(e.target.value)}}/>
                         </Table.Cell>
                         <Table.Cell>
-                            <Button onClick={()=>trigger({inn, form, name, contacts, email})}>Создать</Button>
+                            <Button onClick={()=>trigger({inn, form, name, contacts, email: session?.user?.email})}>Создать</Button>
                         </Table.Cell>
                     </Table.Row>
                 </Table.Body>

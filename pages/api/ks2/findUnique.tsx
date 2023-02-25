@@ -6,9 +6,19 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
     try{
         const {id} = req.query
         if(!id) throw new Error('Не указан id.')
-        const data = await prisma.ks3.findUnique({
+        const data = await prisma.ks2.findUnique({
             where: {
                 id: Number(id),
+            },
+            include: {
+                ks3: {
+                    select: {
+                      id: true,
+                      date: true,
+                      name: true,
+                      _count: true
+                    },
+                  }
             }
         })
         res.status(200).json(data);

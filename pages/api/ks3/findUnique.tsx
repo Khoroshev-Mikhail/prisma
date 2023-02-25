@@ -9,6 +9,16 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
         const data = await prisma.ks3.findUnique({
             where: {
                 id: Number(id),
+            },
+            include: {
+                contract: {
+                    select: {
+                      id: true,
+                      date: true,
+                      name: true,
+                      _count: true
+                    },
+                  }
             }
         })
         res.status(200).json(data);

@@ -8,13 +8,23 @@ import { deleteApi, updateApi } from "../../../lib/myFns";
 import Layout from "../../../components/layout/Layout";
 import prisma from "../../../lib/prisma";
 import { useSession } from "next-auth/react";
-import { Partner } from "@prisma/client";
+import { Ks2 } from "@prisma/client";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const {id} = context.query
-    const data = await prisma.partner.findUnique({
+    const data = await prisma.ks2.findUnique({
         where: {
             id: Number(id)
+        },
+        include: {
+            ks3: {
+                select: {
+                  id: true,
+                  date: true,
+                  name: true,
+                  _count: true
+                },
+              }
         }
     })
     return {
@@ -23,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             },
         }
 }
-export default function PartnersEdit({fallbackData}:{fallbackData: Partner}){
+export default function PartnersEdit({fallbackData}:{fallbackData: Ks2}){
     //Роутинги
     const router = useRouter()
     const {id} = router.query
@@ -32,22 +42,20 @@ export default function PartnersEdit({fallbackData}:{fallbackData: Partner}){
     const {data: session} = useSession()
 
     //Асинхронная дата и мутации
-    const {data, error, isLoading} = useSWR<Partner>(`/api/partners/findUnique?id=${id}`, {fallbackData})
-    const { trigger } = useSWRMutation('/api/partners/', updateApi)
-    const { trigger: deleteData } = useSWRMutation('/api/partners/', deleteApi)
+    const {data, error, isLoading} = useSWR<Ks2>(`/api/ks2/findUnique?id=${id}`, {fallbackData})
+    const { trigger } = useSWRMutation('/api/ks2/', updateApi)
+    const { trigger: deleteData } = useSWRMutation('/api/ks2/', deleteApi)
 
     //Локальный стейт
-    const [inn, setInn] = useState<string>(data.inn)
-    const [form, setForm] = useState<string>(data.form)
     const [name, setName] = useState<string>(data.name)
-    const [contacts, setContacts] = useState<string>(data.contacts)
+    const [date, setDate] = useState<Date>(data.date)
+    const [ks3Id, setContractId] = useState<number>(data.ks3Id)
 
     //Рефакторинг???
     useEffect(()=>{
-        setInn(data.inn)
-        setForm(data.form)
         setName(data.name)
-        setContacts(data.contacts)
+        setDate(data.date)
+        setContractId(data.ks3Id)
     }, [data])
 
     return (
@@ -55,36 +63,37 @@ export default function PartnersEdit({fallbackData}:{fallbackData: Partner}){
             <Table hoverable={true}>
                 <Table.Head>
                     <Table.HeadCell>
-                        ИНН
+                        Номер КС-2
                     </Table.HeadCell>
                     <Table.HeadCell>
-                        Форма соб-ти
+                        Дата
                     </Table.HeadCell>
                     <Table.HeadCell>
-                        Название
+                        Вышестоящий док-т
                     </Table.HeadCell>
                     <Table.HeadCell>
-                        Контакты
+                        Скан
                     </Table.HeadCell>
                     <Table.HeadCell>
+                        
                     </Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="divide-y">
                     <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                            <TextInput value={inn} onChange={(e)=>{setInn(e.target.value)}}/>
-                        </Table.Cell>
-                        <Table.Cell>
-                            <TextInput value={form} onChange={(e)=>{setForm(e.target.value)}}/>
-                        </Table.Cell>
                         <Table.Cell>
                             <TextInput value={name} onChange={(e)=>{setName(e.target.value)}}/>
                         </Table.Cell>
                         <Table.Cell>
-                            <TextInput value={contacts || undefined} onChange={(e)=>{setContacts(e.target.value)}}/>
+
                         </Table.Cell>
                         <Table.Cell>
-                            <Button onClick={()=>trigger({id: data.id, inn, form, name, contacts, email: session?.user?.email})}>Сохранить</Button>
+                           Select
+                        </Table.Cell>
+                        <Table.Cell>
+                            Скан
+                        </Table.Cell>
+                        <Table.Cell>
+                            <Button onClick={()=>trigger({id: data.id, name, date, email: session?.user?.email, ks3Id})}>Сохранить</Button>
                         </Table.Cell>
                     </Table.Row>
                     <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -93,6 +102,7 @@ export default function PartnersEdit({fallbackData}:{fallbackData: Partner}){
                         </Table.Cell>
                     </Table.Row>
                 </Table.Body>
+
             </Table>
         </Layout>
     )

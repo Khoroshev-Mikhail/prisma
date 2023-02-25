@@ -4,7 +4,18 @@ import prisma from '../../lib/prisma';
 import Layout from "../../components/layout/Layout";
 import { Button, Table } from "flowbite-react";
 import useSWR from 'swr'
+import Link from "next/link";
+import { Ks3, Prisma } from "@prisma/client";
 
+
+export type ks3Ext = Ks3 & {
+  contract: {
+    name: string;
+    id: number;
+    date: Date;
+    _count: Prisma.ContractCountOutputType;
+};
+}
 export const getServerSideProps: GetServerSideProps = async () => {
   const data = await prisma.ks3.findMany({
     include: {
@@ -25,8 +36,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-export default function Ks3({fallbackData}){
-  const {data, error, isLoading} = useSWR(`/api/ks3/get`, {fallbackData})
+export default function Ks3({fallbackData}:{fallbackData: ks3Ext[]}){
+  const {data, error, isLoading} = useSWR<ks3Ext[]>(`/api/ks3/get`, {fallbackData})
   return (
     <Layout>
       <Table hoverable={true}>
@@ -87,7 +98,7 @@ export default function Ks3({fallbackData}){
                   {el.comment}
                 </Table.Cell>
                 <Table.Cell>
-                  <a href="/tables" className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</a>
+                  <Link href={`/ks3/edit/${el.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</Link>
                 </Table.Cell>
               </Table.Row>
             )

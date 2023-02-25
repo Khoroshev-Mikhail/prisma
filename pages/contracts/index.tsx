@@ -2,11 +2,21 @@ import React from "react"
 import { GetServerSideProps } from "next"
 import prisma from '../../lib/prisma';
 import Layout from "../../components/layout/Layout";
-import { Table } from "flowbite-react";
+import { Button, Table } from "flowbite-react";
 import useSWR from 'swr'
+import Link from "next/link";
+import { Contract, Prisma } from "@prisma/client";
 
+export type ContractExt = Contract & {
+  partner: {
+      id: number;
+      name: string;
+      form: string;
+      _count: Prisma.PartnerCountOutputType;
+  };
+}
 export const getServerSideProps: GetServerSideProps = async () => {
-  const contracts = await prisma.contract.findMany({
+  const data = await prisma.contract.findMany({
     include: {
       partner: {
         select: {
@@ -19,12 +29,14 @@ export const getServerSideProps: GetServerSideProps = async () => {
     }
   })
   return {
-    props: {contracts: JSON.parse(JSON.stringify(contracts))},
+    props: {
+      fallbackData: JSON.parse(JSON.stringify(data))
+    },
   }
 }
 
-export default function Contracts({fallbackData}){
-  const {data, error, isLoading} = useSWR(`/api/contracts/get`, {fallbackData})
+export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
+  const {data, error, isLoading} = useSWR<ContractExt[]>(`/api/contracts/get`, {fallbackData})
   return (
     <Layout>
       <Table hoverable={true}>
@@ -43,9 +55,7 @@ export default function Contracts({fallbackData}){
             Доп.инфо
           </Table.HeadCell>
           <Table.HeadCell>
-            <span className="sr-only">
-              Edit
-            </span>
+              <Link href='/contracts/create'><Button>+</Button></Link>
           </Table.HeadCell>
         </Table.Head>
         
@@ -63,10 +73,10 @@ export default function Contracts({fallbackData}){
                   {el.partner.form} {el.partner.name}
                 </Table.Cell>
                 <Table.Cell>
-                  {el.desciption}
+                  {el.description}
                 </Table.Cell>
                 <Table.Cell>
-                  <a href="/tables" className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</a>
+                  <Link href={`/contracts/edit/${el.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</Link>
                 </Table.Cell>
               </Table.Row>
             )
