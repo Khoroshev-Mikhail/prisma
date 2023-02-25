@@ -33,8 +33,8 @@ export default function PartnersEdit({fallbackData}:{fallbackData: Partner}){
 
     //Асинхронная дата и мутации
     const {data, error, isLoading} = useSWR<Partner>(`/api/partners/findUnique?id=${id}`, {fallbackData})
-    const { trigger } = useSWRMutation('/api/partners/', updateApi)
-    const { trigger: deleteData } = useSWRMutation('/api/partners/', deleteApi)
+    const {trigger} = useSWRMutation('/api/partners/', updateApi)
+    const {trigger: deleteData} = useSWRMutation('/api/partners/', deleteApi)
 
     //Локальный стейт
     const [inn, setInn] = useState<string>(data.inn)
