@@ -5,7 +5,7 @@ import { createApi } from "./../../lib/myFns";
 import Layout from "./../../components/layout/Layout";
 import { useSession } from "next-auth/react";
 
-export default function PartnersCreate(){
+export default function Create(){
     //UserData
     const {data: session} = useSession()
 
@@ -61,3 +61,4 @@ export default function PartnersCreate(){
         </Layout>
     )
 }
+Create.auth = true

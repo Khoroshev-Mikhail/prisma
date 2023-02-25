@@ -33,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             },
         }
 }
-export default function PartnersEdit({fallbackData}:{fallbackData: Ks2Ext}){
+export default function Edit({fallbackData}:{fallbackData: Ks2Ext}){
     //Роутинги
     const router = useRouter()
     const {id} = router.query
@@ -107,3 +107,4 @@ export default function PartnersEdit({fallbackData}:{fallbackData: Ks2Ext}){
         </Layout>
     )
 }
+Edit.auth = true

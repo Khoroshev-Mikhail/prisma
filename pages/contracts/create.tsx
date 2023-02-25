@@ -9,7 +9,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Partner } from "@prisma/client";
 
-export default function PartnersCreate(){
+export default function Create(){
     //UserData
     const {data: session} = useSession()
 
@@ -94,3 +94,4 @@ export default function PartnersCreate(){
         </Layout>
     )
 }
+Create.auth = true
