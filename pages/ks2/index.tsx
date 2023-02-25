@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-export default function Ks2({fallbackData}){
+export default function Ks2Page({fallbackData}){
   const {data, error, isLoading} = useSWR(`/api/ks2/get`, {fallbackData})
   return (
     <Layout>

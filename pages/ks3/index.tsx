@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-export default function Ks3({fallbackData}:{fallbackData: ks3Ext[]}){
+export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
   const {data, error, isLoading} = useSWR<ks3Ext[]>(`/api/ks3/get`, {fallbackData})
   return (
     <Layout>
