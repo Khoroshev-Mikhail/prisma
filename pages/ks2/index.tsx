@@ -5,6 +5,16 @@ import Layout from "../../components/layout/Layout";
 import { Button, Table, TextInput } from "flowbite-react";
 import useSWR from 'swr'
 import Link from "next/link";
+import { Ks2, Prisma } from "@prisma/client";
+
+export type Ks2Ext = Ks2 & {
+  ks3: {
+    name: string;
+    id: number;
+    date: Date;
+    _count: Prisma.Ks3CountOutputType;
+};
+}
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const data = await prisma.ks2.findMany({
@@ -25,8 +35,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-export default function Ks2Page({fallbackData}){
-  const {data, error, isLoading} = useSWR(`/api/ks2/get`, {fallbackData})
+export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
+  const {data, error, isLoading} = useSWR<Ks2Ext[]>(`/api/ks2/get`, {fallbackData})
   return (
     <Layout>
       <Table hoverable={true}>

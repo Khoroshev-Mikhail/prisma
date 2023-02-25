@@ -1,20 +1,22 @@
 import React from "react"
 import { GetServerSideProps } from "next"
 import prisma from './../lib/prisma';
-import Layout from "../components/layout/Layout";
-import { Table, TextInput } from "flowbite-react";
+import Layout from "./../components/layout/Layout";
+import { Button, Table} from "flowbite-react";
 import useSWR from 'swr'
+import Link from "next/link";
+import { Partner } from "@prisma/client";
+
 export const getServerSideProps: GetServerSideProps = async () => {
   const partners = await prisma.partner.findMany()
-
   return {
     props: {
       fallbackData: JSON.parse(JSON.stringify(partners))
     },
   }
 }
-export default function Partner({fallbackData}){
-  const {data, error, isLoading} = useSWR(`/api/partners/get`, {fallbackData})
+export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
+  const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/`, {fallbackData})
   return (
     <Layout>
       <Table hoverable={true}>
@@ -30,9 +32,7 @@ export default function Partner({fallbackData}){
             Контакты
           </Table.HeadCell>
           <Table.HeadCell>
-            <span className="sr-only">
-              Edit
-            </span>
+            <Link href='/partners/create'><Button>+</Button></Link>
           </Table.HeadCell>
         </Table.Head>
         
@@ -50,7 +50,7 @@ export default function Partner({fallbackData}){
                   {el.contacts}
                 </Table.Cell>
                 <Table.Cell>
-                  <a href="/tables" className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</a>
+                  <Link href={`/partners/edit/${el.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</Link>
                 </Table.Cell>
               </Table.Row>
             )

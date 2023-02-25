@@ -5,6 +5,7 @@ import Layout from "../../components/layout/Layout";
 import { Button, Table} from "flowbite-react";
 import useSWR from 'swr'
 import Link from "next/link";
+import { Partner } from "@prisma/client";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const partners = await prisma.partner.findMany()
@@ -14,8 +15,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
   }
 }
-export default function Partner({fallbackData}){
-  const {data, error, isLoading} = useSWR(`/api/partners/`, {fallbackData})
+export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
+  const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/`, {fallbackData})
   return (
     <Layout>
       <Table hoverable={true}>

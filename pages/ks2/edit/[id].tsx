@@ -8,7 +8,7 @@ import { deleteApi, updateApi } from "../../../lib/myFns";
 import Layout from "../../../components/layout/Layout";
 import prisma from "../../../lib/prisma";
 import { useSession } from "next-auth/react";
-import { Ks2 } from "@prisma/client";
+import { Ks2Ext } from "..";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const {id} = context.query
@@ -33,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             },
         }
 }
-export default function PartnersEdit({fallbackData}:{fallbackData: Ks2}){
+export default function PartnersEdit({fallbackData}:{fallbackData: Ks2Ext}){
     //Роутинги
     const router = useRouter()
     const {id} = router.query
@@ -42,7 +42,7 @@ export default function PartnersEdit({fallbackData}:{fallbackData: Ks2}){
     const {data: session} = useSession()
 
     //Асинхронная дата и мутации
-    const {data, error, isLoading} = useSWR<Ks2>(`/api/ks2/findUnique?id=${id}`, {fallbackData})
+    const {data, error, isLoading} = useSWR<Ks2Ext>(`/api/ks2/findUnique?id=${id}`, {fallbackData})
     const { trigger } = useSWRMutation('/api/ks2/', updateApi)
     const { trigger: deleteData } = useSWRMutation('/api/ks2/', deleteApi)
 
