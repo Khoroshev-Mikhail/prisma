@@ -37,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 }
 
 export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
-  const {data, error, isLoading} = useSWR<ks3Ext[]>(`/api/ks3/get`, {fallbackData})
+  const {data, error, isLoading} = useSWR<ks3Ext[]>(`/api/ks3/`, {fallbackData})
   return (
     <Layout>
       <Table hoverable={true}>

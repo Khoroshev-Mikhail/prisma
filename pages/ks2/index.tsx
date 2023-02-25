@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 }
 
 export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
-  const {data, error, isLoading} = useSWR<Ks2Ext[]>(`/api/ks2/get`, {fallbackData})
+  const {data, error, isLoading} = useSWR<Ks2Ext[]>(`/api/ks2/`, {fallbackData})
   return (
     <Layout>
       <Table hoverable={true}>

@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 }
 
 export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
-  const {data, error, isLoading} = useSWR<ContractExt[]>(`/api/contracts/get`, {fallbackData})
+  const {data, error, isLoading} = useSWR<ContractExt[]>(`/api/contracts/`, {fallbackData})
   return (
     <Layout>
       <Table hoverable={true}>

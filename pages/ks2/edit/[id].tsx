@@ -42,9 +42,9 @@ export default function Edit({fallbackData}:{fallbackData: Ks2Ext}){
     const {data: session} = useSession()
 
     //Асинхронная дата и мутации
-    const {data, error, isLoading} = useSWR<Ks2Ext>(`/api/ks2/findUnique?id=${id}`, {fallbackData})
-    const { trigger } = useSWRMutation('/api/ks2/', updateApi)
-    const { trigger: deleteData } = useSWRMutation('/api/ks2/', deleteApi)
+    const {data, error, isLoading} = useSWR<Ks2Ext>(`/api/ks2/${id}`, {fallbackData})
+    const {trigger} = useSWRMutation(`/api/ks2/${id}`, updateApi)
+    const {trigger: deleteData} = useSWRMutation(`/api/ks2/${id}`, deleteApi)
 
     //Локальный стейт
     const [name, setName] = useState<string>(data.name)

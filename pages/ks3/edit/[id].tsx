@@ -45,10 +45,10 @@ export default function Edit({fallbackData}:{fallbackData: Ks3}){
     const {data: session} = useSession()
 
     //Асинхронная дата и мутации
-    const {data, error, isLoading} = useSWR<Ks3>(`/api/ks3/findUnique?id=${id}`, {fallbackData})
+    const {data, error, isLoading} = useSWR<Ks3>(`/api/ks3/${id}`, {fallbackData})
     const {data: parents} = useSWR<Contract[]>(`/api/contracts/`)
-    const {trigger} = useSWRMutation('/api/ks3/', updateApi)
-    const {trigger: deleteData} = useSWRMutation('/api/ks3/', deleteApi)
+    const {trigger} = useSWRMutation(`/api/ks3/${id}`, updateApi)
+    const {trigger: deleteData} = useSWRMutation(`/api/ks3/${id}`, deleteApi)
 
     //Локальный стейт
     const [name, setName] = useState<string>(data.name)

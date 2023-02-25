@@ -2,8 +2,8 @@ import { Button, Table, TextInput } from "flowbite-react";
 import useSWRMutation from 'swr/mutation'
 import { useEffect, useState } from "react";
 import useSWR from 'swr'
-import { createApi } from "./../../lib/myFns";
-import Layout from "./../../components/layout/Layout";
+import { createApi } from "../../lib/myFns";
+import Layout from "../../components/layout/Layout";
 import { useSession } from "next-auth/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";

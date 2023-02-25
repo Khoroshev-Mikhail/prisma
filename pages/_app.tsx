@@ -3,6 +3,7 @@ import '../styles/globals.css';
 import 'tailwindcss/tailwind.css'
 import { SWRConfig } from "swr/_internal";
 import { SessionProvider, useSession } from "next-auth/react"
+import { Spinner } from "flowbite-react";
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
@@ -25,7 +26,11 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
 function Auth({ children }) {
   const { status } = useSession({ required: true })
   if (status === "loading") {
-    return <div>Loading...</div>
+    return <div className="flex flex-col gap-2">
+      <div className="text-center">
+        <Spinner aria-label="Center-aligned spinner example" size="xl" />
+      </div>
+    </div>
   }
   return children
 }

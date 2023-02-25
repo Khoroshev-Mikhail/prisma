@@ -47,10 +47,10 @@ export default function Edit({fallbackData}:{fallbackData: ContractExt}){
     const {data: session} = useSession()
 
     //Асинхронная дата и мутации
-    const {data, error, isLoading} = useSWR<ContractExt>(`/api/contracts/findUnique?id=${id}`, {fallbackData})
+    const {data, error, isLoading} = useSWR<ContractExt>(`/api/contracts/${id}`, {fallbackData})
     const {data: parents} = useSWR<Partner[]>(`/api/partners/`)
-    const {trigger} = useSWRMutation('/api/contracts/', updateApi)
-    const {trigger: deleteData} = useSWRMutation('/api/contracts/', deleteApi)
+    const {trigger} = useSWRMutation(`/api/contracts/${id}`, updateApi)
+    const {trigger: deleteData} = useSWRMutation(`/api/contracts/${id}`, deleteApi)
 
     //Локальный стейт
     const [name, setName] = useState<string>(data.name)
