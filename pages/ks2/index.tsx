@@ -61,9 +61,7 @@ export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
             Комментарий
           </Table.HeadCell>
           <Table.HeadCell>
-            <span className="sr-only">
-              Edit
-            </span>
+            <Link href='/ks2/create'><Button>+</Button></Link>
           </Table.HeadCell>
         </Table.Head>
       

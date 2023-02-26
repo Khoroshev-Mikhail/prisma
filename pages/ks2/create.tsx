@@ -7,24 +7,22 @@ import Layout from "../../components/layout/Layout";
 import { useSession } from "next-auth/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Partner } from "@prisma/client";
+import { Ks2 } from "@prisma/client";
 
 export default function Create(){
     //UserData
     const {data: session} = useSession()
 
     //Асинхронная дата и мутации
-    const {trigger} = useSWRMutation('/api/contracts/', createApi)
-    const {data: parents} = useSWR<Partner[]>(`/api/partners/`)
+    const {trigger} = useSWRMutation('/api/ks2/', createApi)
+    const {data: parents} = useSWR<Ks2[]>(`/api/ks3/`)
 
     //Локальный стейт
     const [name, setName] = useState<string>('')
-    const [description, setDescription] = useState<string>('')
     const [date, setDate] = useState<Date>(new Date())
-    const [expireDate, setExpireData] = useState<Date>(new Date())
     const [parentId, setParentId] = useState<number>()
 
-    //Рефакторинг? Костыль
+    //Эффекты
     useEffect(()=>{
         parents && setParentId(parents[parents.length-1].id) //Либо достань из строки. когда сделаешь кнопку "добавить договор" со страницы контрагента
     }, [parents])
@@ -34,22 +32,16 @@ export default function Create(){
             <Table hoverable={true}>
                 <Table.Head>
                     <Table.HeadCell>
-                        Номер договора*
+                        Номер КС-2*
                     </Table.HeadCell>
                     <Table.HeadCell>
                         Дата*
-                    </Table.HeadCell>
-                    <Table.HeadCell>
-                        Дата окончания
                     </Table.HeadCell>
                     <Table.HeadCell>
                         Вышестоящий документ
                     </Table.HeadCell>
                     <Table.HeadCell>
                         Скан*
-                    </Table.HeadCell>
-                    <Table.HeadCell>
-                        Описание
                     </Table.HeadCell>
                     <Table.HeadCell>
                         
@@ -62,9 +54,6 @@ export default function Create(){
                         </Table.Cell>
                         <Table.Cell>
                             <DatePicker selected={date} onChange={(value: Date) => setDate(value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg" />
-                        </Table.Cell>
-                        <Table.Cell>
-                            <DatePicker selected={date} onChange={(value: Date) => setExpireData(value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg" />
                         </Table.Cell>
                         <Table.Cell>
                             { parents &&
@@ -83,10 +72,7 @@ export default function Create(){
                             Скан
                         </Table.Cell>
                         <Table.Cell>
-                            <TextInput value={description} onChange={(e)=>{setDescription(e.target.value)}}/>
-                        </Table.Cell>
-                        <Table.Cell>
-                            <Button onClick={()=>trigger({name, date, expireDate, parentId, description, email: session?.user?.email})}>Создать</Button>
+                            <Button onClick={()=>trigger({name, date, parentId, email: session?.user?.email})}>Создать</Button>
                         </Table.Cell>
                     </Table.Row>
                 </Table.Body>

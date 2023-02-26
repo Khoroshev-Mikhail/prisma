@@ -51,7 +51,7 @@ export default function Edit({fallbackData}:{fallbackData: Ks2Ext}){
     const [date, setDate] = useState<Date>(data.date)
     const [ks3Id, setContractId] = useState<number>(data.ks3Id)
 
-    //Рефакторинг???
+    //Рефакторинг
     useEffect(()=>{
         setName(data.name)
         setDate(data.date)

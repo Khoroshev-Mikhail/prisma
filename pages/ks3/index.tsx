@@ -62,9 +62,7 @@ export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
             Комментарий
           </Table.HeadCell>
           <Table.HeadCell>
-            <span className="sr-only">
-              Edit
-            </span>
+            <Link href='/ks3/create'><Button>+</Button></Link>
           </Table.HeadCell>
         </Table.Head>
       

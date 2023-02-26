@@ -33,23 +33,31 @@ export default function Edit({fallbackData}:{fallbackData: Partner}){
 
     //Асинхронная дата и мутации
     const {data, error, isLoading} = useSWR<Partner>(`/api/partners/${id}`, {fallbackData})
-    const {trigger} = useSWRMutation(`/api/partners/${id}`, updateApi)
-    const {trigger: deleteData} = useSWRMutation(`/api/partners/${id}`, deleteApi)
+    const {trigger, error: updateError} = useSWRMutation(`/api/partners/${id}`, updateApi)
+    const {trigger: deleteData, error: deleteError} = useSWRMutation(`/api/partners/${id}`, deleteApi)
 
     //Локальный стейт
-    const [inn, setInn] = useState<string>(data.inn)
-    const [form, setForm] = useState<string>(data.form)
-    const [name, setName] = useState<string>(data.name)
-    const [contacts, setContacts] = useState<string>(data.contacts)
+    const [inn, setInn] = useState<string>('')
+    const [form, setForm] = useState<string>('')
+    const [name, setName] = useState<string>('')
+    const [contacts, setContacts] = useState<string>('')
 
-    //Рефакторинг???
+    //Эффекты
     useEffect(()=>{
-        setInn(data.inn)
-        setForm(data.form)
-        setName(data.name)
-        setContacts(data.contacts)
+        if(data){
+            setInn(data.inn)
+            setForm(data.form)
+            setName(data.name)
+            setContacts(data.contacts)
+        }
+        if(data == null){
+            router.push('/404')
+        }
     }, [data])
 
+    if(error || updateError || deleteError){
+        //реализуй логику
+    }    
     return (
         <Layout>
             <Table hoverable={true}>

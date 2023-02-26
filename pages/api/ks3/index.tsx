@@ -39,8 +39,9 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 res.status(401).json('Не авторизирован.');
                 return;
             }
-            const {name, date, contractId, email, rejected, accepted, comment} = JSON.parse(req.body)
-            if(!name || !date || !contractId || !email) throw new Error('Указаны не все данные.')
+            //Иправить везде contractId и тп на parentId
+            const {name, date, parentId, email, rejected, accepted, comment} = JSON.parse(req.body)
+            if(!name || !date || !parentId || !email) throw new Error('Указаны не все данные.')
 
             const {id: authorId} = await prisma.user.findUnique({
                 where: {
@@ -53,11 +54,11 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 data: {
                     name: String(name),
                     date: String(date),
-                    contractId: Number(contractId),
+                    contractId: Number(parentId),
                     authorId: Number(authorId),
-                    rejected: !!rejected || undefined,
-                    accepted: !!accepted || undefined,
-                    comment: String(comment) || undefined
+                    rejected: rejected ? !!rejected : undefined,
+                    accepted: accepted ? !!accepted : undefined,
+                    comment: comment ? String(comment) : undefined,
                 }
             })
             res.status(200).json(data);
