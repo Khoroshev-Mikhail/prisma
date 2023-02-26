@@ -4,13 +4,13 @@ import prisma from '../../../lib/prisma';
 import { authOptions } from '../auth/[...nextauth]';
 import formidable from "formidable";
 
-// export const config = {
-//     api: {
-//         bodyParser: false
-//     }
-// };
+export const config = {
+    api: {
+        bodyParser: false
+    }
+};
 
-export default async function handler(req: NextApiRequest, res:NextApiResponse) {
+export default async function handler(req, res) {
     try{
         if(req.method === "GET"){
             const {id, name, date, createdAt, contractId, authorId, rejected, accepted, comment} = req.query
@@ -46,8 +46,21 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 res.status(401).json('Не авторизирован.');
                 return;
             }
+
+            //Парсинг new FormData() с помощью билиотеки formidable. А родной парсинг отключаем с помощью export const config = {...}
+            const form = formidable({ multiples: true });
+            const formData = new Promise((resolve, reject) => {
+              form.parse(req, async (err, fields, files) => {
+                if (err) {
+                  reject("error");
+                }
+                resolve({ fields, files });
+              });
+            });
+            const { fields, files } = await formData;
+
             //Иправить везде contractId и тп на parentId
-            const {name, date, parentId, email, rejected, accepted, comment} = req.body
+            const {name, date, parentId, email, rejected, accepted, comment} = await fields
             if(!name || !date || !parentId || !email) throw new Error('Указаны не все данные.')
 
             const {id: authorId} = await prisma.user.findUnique({

@@ -27,7 +27,7 @@ export default function Create(){
     function handler(){
         const formData = new FormData()
         formData.append('name', String(name))
-        formData.append('date', String(date))
+        formData.append('date', date.toJSON())
         formData.append('parentId', String(parentId))
         formData.append('document', document)
         formData.append('email', session.user.email)
