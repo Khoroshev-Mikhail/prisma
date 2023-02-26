@@ -2,6 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 import prisma from '../../../lib/prisma';
 import { authOptions } from '../auth/[...nextauth]';
+import formidable from "formidable";
+
+// export const config = {
+//     api: {
+//         bodyParser: false
+//     }
+// };
 
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
@@ -40,7 +47,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 return;
             }
             //Иправить везде contractId и тп на parentId
-            const {name, date, parentId, email, rejected, accepted, comment} = JSON.parse(req.body)
+            const {name, date, parentId, email, rejected, accepted, comment} = req.body
             if(!name || !date || !parentId || !email) throw new Error('Указаны не все данные.')
 
             const {id: authorId} = await prisma.user.findUnique({

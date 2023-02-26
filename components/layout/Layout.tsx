@@ -9,7 +9,7 @@ type Props = {
 const Layout: React.FC<Props> = ({children}) => (
   <div className="flex flex-col h-screen justify-between">
     <Nav />
-    <div className="my-3 mb-auto">{children}</div>
+    <div className="mb-auto">{children}</div>
     <Footer />
   </div>
 );

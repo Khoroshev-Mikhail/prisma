@@ -16,6 +16,12 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
+  function ara(){
+      fetch('https://script.google.com/macros/s/AKfycbyKzIQW9nWMi_oDCwUP5abKpuRNG1NzXHAaSzjai42nAXBkJmeJdrACE8HdNGspy0e4wA/exec', {
+          method: 'POST',
+          body: JSON.stringify({ara: 2})
+      })
+  } 
   const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/`, {fallbackData})
   return (
     <Layout>
@@ -29,7 +35,7 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
             Название
           </Table.HeadCell>
           <Table.HeadCell>
-            Контакты
+            Контакты <Button onClick={()=>ara()}>sds</Button>
           </Table.HeadCell>
           <Table.HeadCell>
             <Link href='/partners/create'><Button>+</Button></Link>

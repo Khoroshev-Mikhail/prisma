@@ -1,7 +1,7 @@
 export async function createApi(url, {arg}) {
     await fetch(url, {
         method: 'POST',
-        body: JSON.stringify(arg)
+        body: arg //Внимание, не используется JSON.stringify - этот фетчер для отправки типа new FormData()
     })
 }
 export async function updateApi(url, {arg}) {
