@@ -1,7 +1,7 @@
 import { Button, Table, TextInput } from "flowbite-react";
 import useSWRMutation from 'swr/mutation'
 import { useState } from "react";
-import { createApi } from "./../../lib/myFns";
+import { createApi } from "../../lib/fnsAPI";
 import Layout from "./../../components/layout/Layout";
 import { useSession } from "next-auth/react";
 

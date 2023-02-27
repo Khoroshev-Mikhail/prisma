@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { GetServerSideProps } from "next"
 import prisma from '../../lib/prisma';
 import Layout from "../../components/layout/Layout";
@@ -7,6 +7,7 @@ import useSWR from 'swr'
 import Link from "next/link";
 import { Contract, Prisma } from "@prisma/client";
 import ContractRow from "../../components/ui/СontractRow";
+import { sortByDate, sortByName, sortByStatus } from "../../lib/comparators";
 
 export type ContractExt = Contract & {
   partner: {
@@ -38,13 +39,27 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
   const {data, error, isLoading} = useSWR<ContractExt[]>(`/api/contracts/`, {fallbackData})
+  const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortByStatus, increase: true})
+  const sorted = data 
+    ? comparator.increase
+      ? [...data].sort(comparator.fn)
+      : [...data].sort(comparator.fn).reverse()
+    : undefined
+  function toggleComparator(currentComparator: any){
+    setComparator(({fn, increase}) => {
+      return {
+        fn: currentComparator,
+        increase: fn === currentComparator ? !increase : true
+      };
+    })
+  }
   return (
     <Layout>
         <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
-            <div className="col-span-2 text-center border-r border-gray-200">Номер договора</div>
-            <div className="col-span-2 text-center border-r border-gray-200">Дата</div>
+            <div onClick={()=>toggleComparator(sortByName)} className="cursor-pointer col-span-2 text-center border-r border-gray-200">Номер договора</div>
+            <div onClick={()=>toggleComparator(sortByDate)} className="cursor-pointer col-span-2 text-center border-r border-gray-200">Дата</div>
             <div className="col-span-2 text-center border-r border-gray-200">Контрагент</div>
-            <div className="col-span-2 text-center border-r border-gray-200">Принять / Отклонить</div>
+            <div onClick={()=>toggleComparator(sortByStatus)} className="cursor-pointer col-span-2 text-center border-r border-gray-200">Статус</div>
             <div className="col-span-1 text-center border-r border-gray-200">Скан</div>
             <div className="col-span-2 text-center border-r border-gray-200">Комментарий</div>
             <div className="col-span-1 text-center flex justify-center">
@@ -53,7 +68,7 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
               </Link>
             </div>
         </div>
-        {data && data.map((el, i) => {
+        {data && sorted.map((el, i) => {
             return (
                 <ContractRow {...el} key={i}/>
             )

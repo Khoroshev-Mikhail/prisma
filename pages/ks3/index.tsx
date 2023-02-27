@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { GetServerSideProps } from "next"
 import prisma from '../../lib/prisma';
 import Layout from "../../components/layout/Layout";
@@ -7,6 +7,7 @@ import useSWR from 'swr'
 import Link from "next/link";
 import { Ks3, Prisma } from "@prisma/client";
 import Ks3Row from "../../components/ui/Ks3Row";
+import { sortByDate, sortById, sortByName, sortByStatus } from "../../lib/comparators";
 
 export type ks3Ext = Ks3 & {
   contract: {
@@ -39,14 +40,27 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
     const {data, error, isLoading} = useSWR<ks3Ext[]>(`/api/ks3/`, {fallbackData})
-    
+    const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortByStatus, increase: true})
+    const sorted = data 
+      ? comparator.increase
+        ? [...data].sort(comparator.fn)
+        : [...data].sort(comparator.fn).reverse()
+      : undefined
+    function toggleComparator(currentComparator: any){
+      setComparator(({fn, increase}) => {
+        return {
+          fn: currentComparator,
+          increase: fn === currentComparator ? !increase : true
+        };
+      })
+    }
     return (
         <Layout>
             <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
-                <div className="col-span-2 text-center border-r border-gray-200">Номер Кс-3</div>
-                <div className="col-span-2 text-center border-r border-gray-200">Дата Кс-3</div>
+                <div onClick={()=>toggleComparator(sortByName)} className="col-span-2 text-center border-r border-gray-200 cursor-pointer">Номер Кс-3</div>
+                <div onClick={()=>toggleComparator(sortByDate)} className="col-span-2 text-center border-r border-gray-200">Дата Кс-3</div>
                 <div className="col-span-2 text-center border-r border-gray-200">Вышестоящий документ</div>
-                <div className="col-span-2 text-center border-r border-gray-200">Принять / Отклонить</div>
+                <div onClick={()=>toggleComparator(sortByStatus)} className="col-span-2 text-center border-r border-gray-200">Cтатус</div>
                 <div className="col-span-1 text-center border-r border-gray-200">Скан</div>
                 <div className="col-span-2 text-center border-r border-gray-200">Комментарий</div>
                 <div className="col-span-1 text-center flex justify-center">
@@ -55,7 +69,7 @@ export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
                     </Link>
                 </div>
             </div>
-            {data && data.map((el, i) => {
+            {data && sorted.map((el, i) => {
                 return (
                   <Ks3Row {...el} key={i}/>
                 )

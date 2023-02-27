@@ -1,7 +1,7 @@
 import { Button } from "flowbite-react";
 import Link from "next/link";
 import useSWRMutation from 'swr/mutation'
-import { updateApi } from "../../lib/myFns";
+import { updateApi } from "../../lib/fnsAPI";
 import { useSession } from "next-auth/react";
 import { Ks2Ext } from "../../pages/ks2";
 
@@ -42,10 +42,10 @@ export default function Ks2Row({...props}:Ks2Ext){
             <div className="p-2 col-span-2 border-r border-gray-200">{props.ks3.name}</div>
             <div className="p-2 col-span-2 border-r border-gray-200 flex justify-center">
               <Button.Group>
-                  <Button onClick={()=>handlerAccepted(props.accepted)} color={props.accepted === true ? 'success' : 'gray'}>
+                  <Button onClick={()=>handlerAccepted(props.accepted)} color={props.accepted === true ? 'success' : 'gray'} className="w-1/2">
                     {props.accepted === true ? 'Принят' : 'Принять'}
                   </Button>
-                  <Button onClick={()=>handlerRejected(props.accepted)} color={props.accepted === false ? 'failure' : 'gray'}>
+                  <Button onClick={()=>handlerRejected(props.accepted)} color={props.accepted === false ? 'failure' : 'gray'} className="w-1/2">
                     {props.accepted === false ? 'Отклонён' : 'Отклонить'}
                   </Button>
               </Button.Group>
