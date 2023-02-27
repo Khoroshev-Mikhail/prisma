@@ -7,6 +7,7 @@ import useSWR from 'swr'
 import Link from "next/link";
 import { Partner } from "@prisma/client";
 import { sortById, sortByINN, sortByName } from "./../lib/comparators";
+import Image from "next/image";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const partners = await prisma.partner.findMany()
@@ -35,8 +36,12 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
   return (
       <Layout>
           <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
-              <div className="col-span-5 text-center border-r border-gray-200 cursor-pointer" onClick={()=>toggleComparator(sortByName)}>Название</div>
-              <div className="col-span-3 text-center border-r border-gray-200 cursor-pointer" onClick={()=>toggleComparator(sortByINN)}>ИНН</div>
+              <div onClick={()=>toggleComparator(sortByName)} className="col-span-5 text-center border-r border-gray-200 cursor-pointer underline">
+                Название {comparator.fn === sortByName && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
+              </div>
+              <div onClick={()=>toggleComparator(sortByINN)} className="col-span-3 text-center border-r border-gray-200 cursor-pointer underline">
+                ИНН {comparator.fn === sortByINN && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
+              </div>
               <div className="col-span-3 text-center border-r border-gray-200">Контакты</div>
               <div className="col-span-1 text-center flex justify-center">
                 <Link href='/partners/create'>

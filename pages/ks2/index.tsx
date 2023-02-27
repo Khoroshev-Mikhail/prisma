@@ -77,7 +77,7 @@ export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
       </div>
       {data && sorted.map((el, i) => {
             return (
-              <Ks2Row {...el} mutate={mutate}/>
+              <Ks2Row {...el} mutate={mutate} key={i}/>
             )
       })} 
     </Layout>
