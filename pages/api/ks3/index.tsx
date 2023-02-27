@@ -1,4 +1,3 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 import prisma from '../../../lib/prisma';
 import { authOptions } from '../auth/[...nextauth]';
@@ -47,9 +46,8 @@ export default async function handler(req, res) {
                 return;
             }
 
-            //Парсинг new FormData() с помощью билиотеки formidable. А родной парсинг отключаем с помощью export const config = {...}
-            const form = formidable({ multiples: true });
-            const formData = new Promise((resolve, reject) => {
+            const form = await formidable({ multiples: true });
+            const formData: Promise<{fields: any, files?: File}> = new Promise((resolve, reject) => {
               form.parse(req, async (err, fields, files) => {
                 if (err) {
                   reject("error");
@@ -58,9 +56,17 @@ export default async function handler(req, res) {
               });
             });
             const { fields, files } = await formData;
-
+            //{"document":{
+            //     "size":645379,
+            //     "filepath":"/var/folders/8r/bhnfn59n7w57zp43ytnnlj5m0000gn/T/e3596d8a79dcd6c5928eb5703",
+            //     "newFilename":"e3596d8a79dcd6c5928eb5703",
+            //     "mimetype":"application/pdf",
+            //     "mtime":"2023-02-26T16:22:20.808Z",
+            //     "originalFilename":"05.10.2021.pdf"
+            // }}
             //Иправить везде contractId и тп на parentId
-            const {name, date, parentId, email, rejected, accepted, comment} = await fields
+            
+            const {name, date, parentId, email, rejected, accepted, comment} = fields
             if(!name || !date || !parentId || !email) throw new Error('Указаны не все данные.')
 
             const {id: authorId} = await prisma.user.findUnique({

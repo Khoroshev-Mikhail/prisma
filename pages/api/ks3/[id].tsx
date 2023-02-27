@@ -2,6 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 import prisma from '../../../lib/prisma';
 import { authOptions } from '../auth/[...nextauth]';
+import formidable from "formidable";
+
+export const config = {
+    api: {
+        bodyParser: false
+    }
+};
 
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
@@ -26,22 +33,31 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             res.status(200).json(data);
             return;
         }
+
+        const form = await formidable({ multiples: true });
+        const formData: Promise<{fields: any, files?: File}> = new Promise((resolve, reject) => {
+            form.parse(req, async (err, fields, files) => {
+                if (err) {
+                    reject("error");
+                }
+                resolve({ fields, files });
+            });
+        });
+        const {fields, files} = await formData;
+
         if(req.method === "PUT"){
             const session = await getServerSession(req, res, authOptions)
             if(!session) {
                 res.status(401).json('Не авторизирован.');
                 return;
             }
-            const {id, name, date, updatedAt, contractId, email, rejected, accepted, comment} = JSON.parse(req.body)
-            if(!id || !email) throw new Error('Не указан Id или автор обновления.')
-
+            const {id, name, date, parentId, email, rejected, accepted, comment} = fields
             const {id: authorId} = await prisma.user.findUnique({
                 where: {
                     email: String(email)
                 }
             })        
             if(!authorId) throw new Error('Не указан автор.')
-
             const data = await prisma.ks3.update({
                 where: {
                     id: Number(id)
@@ -50,7 +66,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     name: name ? String(name) : undefined,
                     date: date ? String(date) : undefined,
                     updatedAt: new Date(),
-                    contractId: contractId ? Number(contractId) : undefined,
+                    contractId: parentId ? Number(parentId) : undefined,
                     authorId: authorId ? Number(authorId) : undefined,
                     rejected:  rejected ? !!rejected : undefined,
                     accepted: accepted ? !!accepted : undefined,
@@ -66,9 +82,9 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 res.status(401).json('Не авторизирован.');
                 return;
             }
-            const {id} = JSON.parse(req.body)
+            const {id} = fields
             if(!id) throw new Error('Не указан Id.')
-    
+            
             const data = await prisma.ks3.delete({
                 where: {
                     id: Number(id)

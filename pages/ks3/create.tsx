@@ -2,7 +2,7 @@ import { Button, FileInput, Table, TextInput } from "flowbite-react";
 import useSWRMutation from 'swr/mutation'
 import { useEffect, useState } from "react";
 import useSWR from 'swr'
-import { createApi } from "../../lib/myFns";
+import { createApi, sendGoogle } from "../../lib/myFns";
 import Layout from "../../components/layout/Layout";
 import { useSession } from "next-auth/react";
 import DatePicker from "react-datepicker";
@@ -31,6 +31,7 @@ export default function Create(){
         formData.append('parentId', String(parentId))
         formData.append('document', document)
         formData.append('email', session.user.email)
+        // sendGoogle(document)
         trigger(formData)
     }
 
@@ -41,41 +42,41 @@ export default function Create(){
 
     return (
         <Layout>
-                <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
-                    <div className="col-span-3 text-center border-r border-gray-200">Номер Кс-3</div>
-                    <div className="col-span-2 text-center border-r border-gray-200">Дата Кс-3</div>
-                    <div className="col-span-3 text-center border-r border-gray-200">Вышестоящий документ</div>
-                    <div className="col-span-4 text-center">Скан</div>
+            <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
+                <div className="col-span-3 text-center border-r border-gray-200">Номер Кс-3</div>
+                <div className="col-span-2 text-center border-r border-gray-200">Дата Кс-3</div>
+                <div className="col-span-3 text-center border-r border-gray-200">Вышестоящий документ</div>
+                <div className="col-span-4 text-center">Скан</div>
+            </div>
+            <div className="py-2 grid grid-cols-12 border-t border-gray-200">
+                <div className="p-2 col-span-3 border-r border-gray-200">
+                    <TextInput value={name} onChange={(e)=>{setName(e.target.value)}}/>
                 </div>
-                <div className="py-2 grid grid-cols-12 border-t border-gray-200">
-                    <div className="p-2 col-span-3 border-r border-gray-200">
-                        <TextInput value={name} onChange={(e)=>{setName(e.target.value)}}/>
-                    </div>
-                    <div className="p-2 col-span-2 border-r border-gray-200">
-                        <DatePicker selected={date} onChange={(value: Date) => setDate(value)} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg" />
-                    </div>
-                    <div className="p-2 col-span-3 border-r border-gray-200">
-                        {parents &&
-                            <select id="countries" value={parentId} onChange={(e)=>setParentId(Number(e.target.value))} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                {parents && parents.map((el, i) => {
-                                    return (
-                                        <option key={i} value={el.id}>
-                                            {el.name}
-                                        </option>
-                                    )
-                                })}
-                            </select>
-                        }
-                    </div>
-                    <div className="p-2 col-span-4 text-center">
-                        <FileInput onChange={(e)=>setDocument(e.target.files && e.target.files[0])}/>
-                    </div>
+                <div className="p-2 col-span-2 border-r border-gray-200">
+                    <DatePicker selected={date} onChange={(value: Date) => setDate(value)} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg" />
                 </div>
-                <div className="grid grid-cols-12 border-y border-gray-200">
-                    <div className="p-2 col-span-12 flex justify-end">
-                        <Button onClick={()=>handler()}>Создать</Button>
-                    </div>
+                <div className="p-2 col-span-3 border-r border-gray-200">
+                    {parents &&
+                        <select id="countries" value={parentId} onChange={(e)=>setParentId(Number(e.target.value))} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            {parents && parents.map((el, i) => {
+                                return (
+                                    <option key={i} value={el.id}>
+                                        {el.name}
+                                    </option>
+                                )
+                            })}
+                        </select>
+                    }
                 </div>
+                <div className="p-2 col-span-4 text-center">
+                    <FileInput onChange={(e)=>setDocument(e.target.files && e.target.files[0])}/>
+                </div>
+            </div>
+            <div className="grid grid-cols-12 border-y border-gray-200">
+                <div className="p-2 col-span-12 flex justify-end">
+                    <Button onClick={()=>handler()}>Создать</Button>
+                </div>
+            </div>
         </Layout>
     )
 }

@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from 'next/router';
 import useSWR from 'swr'
-import { Button, Table, TextInput } from "flowbite-react";
+import { Button, FileInput, Table, TextInput } from "flowbite-react";
 import useSWRMutation from 'swr/mutation'
 import { useEffect, useState } from "react";
 import { deleteApi, updateApi } from "../../../lib/myFns";
@@ -9,6 +9,9 @@ import Layout from "../../../components/layout/Layout";
 import prisma from "../../../lib/prisma";
 import { useSession } from "next-auth/react";
 import { Ks2Ext } from "..";
+import { Ks3 } from "@prisma/client";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const {id} = context.query
@@ -43,67 +46,87 @@ export default function Edit({fallbackData}:{fallbackData: Ks2Ext}){
 
     //Асинхронная дата и мутации
     const {data, error, isLoading} = useSWR<Ks2Ext>(`/api/ks2/${id}`, {fallbackData})
+    const {data: parents, error: parentsError} = useSWR<Ks3[]>(`/api/ks3/`)
     const {trigger} = useSWRMutation(`/api/ks2/${id}`, updateApi)
     const {trigger: deleteData} = useSWRMutation(`/api/ks2/${id}`, deleteApi)
 
     //Локальный стейт
-    const [name, setName] = useState<string>(data.name)
-    const [date, setDate] = useState<Date>(data.date)
-    const [ks3Id, setContractId] = useState<number>(data.ks3Id)
+    const [name, setName] = useState<string>(data?.name)
+    const [date, setDate] = useState<Date>(new Date(data?.date))
+    const [parentId, setParentId] = useState<number>(data?.ks3Id)
+    const [document, setDocument] = useState<File>(null)
+
+    //Локальные функции
+    function handler(id: number){
+        const formData = new FormData()
+        formData.append('id', String(id))
+        formData.append('name', String(name))
+        formData.append('date', date.toJSON())
+        formData.append('parentId', String(parentId))
+        document && formData.append('document', document)
+        formData.append('email', session.user.email)
+        trigger(formData)
+    }
+    function deleteHandler(id: number){
+        const formData = new FormData()
+        formData.append('id', String(id))
+        deleteData(formData)
+    }
 
     //Рефакторинг
     useEffect(()=>{
-        setName(data.name)
-        setDate(data.date)
-        setContractId(data.ks3Id)
+        if(!error && data == null){
+            router.push('/404')
+        }
+        if(data){
+            setName(data.name)
+            setDate(new Date(data.date))
+            setParentId(data.ks3Id)
+        }
     }, [data])
 
     return (
         <Layout>
-            <Table hoverable={true}>
-                <Table.Head>
-                    <Table.HeadCell>
-                        Номер КС-2
-                    </Table.HeadCell>
-                    <Table.HeadCell>
-                        Дата
-                    </Table.HeadCell>
-                    <Table.HeadCell>
-                        Вышестоящий док-т
-                    </Table.HeadCell>
-                    <Table.HeadCell>
-                        Скан
-                    </Table.HeadCell>
-                    <Table.HeadCell>
-                        
-                    </Table.HeadCell>
-                </Table.Head>
-                <Table.Body className="divide-y">
-                    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                        <Table.Cell>
+            <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
+                <div className="col-span-3 text-center border-r border-gray-200">Номер Кс-2</div>
+                <div className="col-span-2 text-center border-r border-gray-200">Дата Кс-2</div>
+                <div className="col-span-3 text-center border-r border-gray-200">Вышестоящий документ</div>
+                <div className="col-span-4 text-center">Скан</div>
+            </div>
+            {data &&
+                <>
+                    <div className="py-2 grid grid-cols-12 border-t border-gray-200">
+                        <div className="p-2 col-span-3 border-r border-gray-200">
                             <TextInput value={name} onChange={(e)=>{setName(e.target.value)}}/>
-                        </Table.Cell>
-                        <Table.Cell>
-
-                        </Table.Cell>
-                        <Table.Cell>
-                           Select
-                        </Table.Cell>
-                        <Table.Cell>
-                            Скан
-                        </Table.Cell>
-                        <Table.Cell>
-                            <Button onClick={()=>trigger({id: data.id, name, date, email: session?.user?.email, ks3Id})}>Сохранить</Button>
-                        </Table.Cell>
-                    </Table.Row>
-                    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                            <Button color='failure' onClick={()=>deleteData({id: data.id})}>Удалить навсегда</Button>
-                        </Table.Cell>
-                    </Table.Row>
-                </Table.Body>
-
-            </Table>
+                        </div>
+                        <div className="p-2 col-span-2 border-r border-gray-200">
+                            <DatePicker selected={date} onChange={(value: Date) => setDate(value)} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg" />
+                        </div>
+                        <div className="p-2 col-span-3 border-r border-gray-200">
+                            {parents &&
+                                <select id="countries" value={parentId} onChange={(e)=>setParentId(Number(e.target.value))} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    {parents && parents.map((el, i) => {
+                                        return (
+                                            <option key={i} value={el.id}>
+                                                {el.name}
+                                            </option>
+                                        )
+                                    })}
+                                </select>
+                            }
+                        </div>
+                        <div className="p-2 col-span-4 text-center">
+                            <FileInput onChange={(e)=>setDocument(e.target.files && e.target.files[0])}/>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-12 border-y border-gray-200">
+                        <div className="p-2 col-span-12 flex justify-end">
+                            <Button className="mr-10" color='failure' onClick={()=>deleteHandler(data.id)}>Удалить навсегда</Button>
+                            <Button onClick={()=>handler(data.id)}>Изменить</Button>
+                        </div>
+                    </div>
+                </>
+            }
         </Layout>
     )
 }

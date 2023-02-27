@@ -1,8 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
-
 import prisma from '../../../lib/prisma';
 import { authOptions } from '../auth/[...nextauth]';
+import formidable from "formidable";
+
+export const config = {
+    api: {
+        bodyParser: false
+    }
+};
 
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
@@ -43,7 +49,19 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 res.status(401).json('Не авторизирован.');
                 return;
             }
-            const {name, description, date, expireDate, parentId, email, rejected, accepted } = JSON.parse(req.body)
+
+            const form = await formidable({ multiples: true });
+            const formData: Promise<{fields: any, files?: File}> = new Promise((resolve, reject) => {
+              form.parse(req, async (err, fields, files) => {
+                if (err) {
+                  reject("error");
+                }
+                resolve({ fields, files });
+              });
+            });
+            const { fields, files } = await formData;
+            
+            const {name, description, date, expireDate, parentId, email, rejected, accepted } = fields
             if(!name || !date || !parentId || !email) throw new Error('Указаны не все данные.')
 
             const {id: authorId} = await prisma.user.findUnique({

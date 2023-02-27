@@ -39,51 +39,41 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
   const {data, error, isLoading} = useSWR<ContractExt[]>(`/api/contracts/`, {fallbackData})
   return (
     <Layout>
-      <Table hoverable={true}>
-
-        <Table.Head>
-          <Table.HeadCell>
-            № Договора
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Дата
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Контрагент
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Доп.инфо
-          </Table.HeadCell>
-          <Table.HeadCell>
-              <Link href='/contracts/create'><Button>+</Button></Link>
-          </Table.HeadCell>
-        </Table.Head>
-        
-        <Table.Body className="divide-y">
-          {data && data.map((el, i) => {
+        <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
+            <div className="col-span-2 text-center border-r border-gray-200">Номер договора</div>
+            <div className="col-span-2 text-center border-r border-gray-200">Дата</div>
+            <div className="col-span-2 text-center border-r border-gray-200">Контрагент</div>
+            <div className="col-span-2 text-center border-r border-gray-200">Принять / Отклонить</div>
+            <div className="col-span-1 text-center border-r border-gray-200">Скан</div>
+            <div className="col-span-2 text-center border-r border-gray-200">Комментарий</div>
+            <div className="col-span-1 text-center flex justify-center">
+              <Link href='/contracts/create'>
+                <Button>+</Button>
+              </Link>
+            </div>
+        </div>
+        {data && data.map((el, i) => {
             return (
-              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={i}>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {el.name}
-                </Table.Cell>
-                <Table.Cell>
-                  {new Date(el.date).toLocaleDateString()}
-                </Table.Cell>
-                <Table.Cell>
-                  {el.partner.form} {el.partner.name}
-                </Table.Cell>
-                <Table.Cell>
-                  {el.description}
-                </Table.Cell>
-                <Table.Cell>
-                  <Link href={`/contracts/edit/${el.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</Link>
-                </Table.Cell>
-              </Table.Row>
+              <div className="py-2 grid grid-cols-12 border-t border-gray-200" key={i}>
+                <div className="p-2 col-span-2 border-r border-gray-200">{el.name}</div>
+                <div className="p-2 col-span-2 border-r border-gray-200">{new Date(el.date).toLocaleDateString()}</div>
+                <div className="p-2 col-span-2 border-r border-gray-200">{el.partner.form} {el.partner.name}</div>
+                <div className="p-2 col-span-2 border-r border-gray-200 flex justify-center">
+                  <Button.Group>
+                      <Button color={el.accepted ? 'success' : 'gray'}>
+                        Принять
+                      </Button>
+                      <Button  color={el.rejected ? 'failure' : 'gray'}>
+                        Отклонить
+                      </Button>
+                  </Button.Group>
+                </div>
+                <div className="p-2 col-span-1 border-r border-gray-200 text-center">Скачать</div>
+                <div className="p-2 col-span-2 border-r border-gray-200">{el.description}</div>
+                <div className="p-2 col-span-1 text-center"><Link href={`/contracts/edit/${el.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</Link></div>
+              </div>
             )
-          })} 
-        </Table.Body>
-
-      </Table>
+      })} 
     </Layout>
   )
 }
