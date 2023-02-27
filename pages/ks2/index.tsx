@@ -7,7 +7,7 @@ import useSWR from 'swr'
 import Link from "next/link";
 import { Ks2, Prisma } from "@prisma/client";
 import Ks2Row from "../../components/ui/Ks2Row";
-import { sortByDate, sortByName, sortByStatus } from "../../lib/comparators";
+import { sortByDate, sortById, sortByINN, sortByName, sortByStatus } from "../../lib/comparators";
 
 export type Ks2Ext = Ks2 & {
   ks3: {
@@ -38,8 +38,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
 }
 
 export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
-  const {data, error, isLoading} = useSWR<Ks2Ext[]>(`/api/ks2/`, {fallbackData})
-  const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortByStatus, increase: true})
+  const {data, mutate, error, isLoading} = useSWR<Ks2Ext[]>(`/api/ks2/`, {fallbackData})
+  const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortById, increase: true})
   const sorted = data 
   ? comparator.increase
     ? [...data].sort(comparator.fn)
@@ -70,7 +70,7 @@ export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
       </div>
       {data && data.map((el, i) => {
             return (
-              <Ks2Row {...el}/>
+              <Ks2Row {...el} mutate={mutate}/>
             )
       })} 
     </Layout>

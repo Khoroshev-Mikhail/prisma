@@ -39,8 +39,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 
 export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
-    const {data, error, isLoading} = useSWR<ks3Ext[]>(`/api/ks3/`, {fallbackData})
-    const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortByStatus, increase: true})
+    const {data, mutate, error, isLoading} = useSWR<ks3Ext[]>(`/api/ks3/`, {fallbackData})
+    const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortById, increase: true})
     const sorted = data 
       ? comparator.increase
         ? [...data].sort(comparator.fn)
@@ -71,7 +71,7 @@ export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
             </div>
             {data && sorted.map((el, i) => {
                 return (
-                  <Ks3Row {...el} key={i}/>
+                  <Ks3Row {...el} mutate={mutate} key={i}/>
                 )
             })} 
         </Layout>

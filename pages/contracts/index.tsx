@@ -7,7 +7,7 @@ import useSWR from 'swr'
 import Link from "next/link";
 import { Contract, Prisma } from "@prisma/client";
 import ContractRow from "../../components/ui/СontractRow";
-import { sortByDate, sortByName, sortByStatus } from "../../lib/comparators";
+import { sortByDate, sortById, sortByName, sortByStatus } from "../../lib/comparators";
 
 export type ContractExt = Contract & {
   partner: {
@@ -38,9 +38,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
 }
 
 export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
-  const {data, error, isLoading} = useSWR<ContractExt[]>(`/api/contracts/`, {fallbackData})
-  const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortByStatus, increase: true})
-  const sorted = data 
+  const {data, mutate, error, isLoading} = useSWR<ContractExt[]>(`/api/contracts/`, {fallbackData})
+  const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortById, increase: true})
+  const sorted = data
     ? comparator.increase
       ? [...data].sort(comparator.fn)
       : [...data].sort(comparator.fn).reverse()
@@ -70,7 +70,7 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
         </div>
         {data && sorted.map((el, i) => {
             return (
-                <ContractRow {...el} key={i}/>
+                <ContractRow {...el} mutate={mutate} key={i}/>
             )
       })} 
     </Layout>

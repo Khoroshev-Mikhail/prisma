@@ -4,35 +4,42 @@ import useSWRMutation from 'swr/mutation'
 import { updateApi } from "../../lib/fnsAPI";
 import { useSession } from "next-auth/react";
 import { ContractExt } from "../../pages/contracts";
-
-export default function ContractRow({...props}:ContractExt){
+import { mutate } from "swr";
+type incomingProps = ContractExt & {
+    mutate: any
+}
+export default function ContractRow({...props}:incomingProps){
     const {data: session} = useSession()
     const {trigger} = useSWRMutation(`/api/contracts/${props.id}`, updateApi)
 
-    function handlerAccepted(val: boolean | null){
+    async function handlerAccepted(val: boolean | null){
         const formData = new FormData()
         formData.append('id', String(props.id))
         formData.append('email', String(session.user.email))
         if(val === true){
             formData.append('accepted', '')
-            trigger(formData)
+            await trigger(formData)
+            await props.mutate()
         }
         if(!val){
             formData.append('accepted', 'true')
-            trigger(formData)
+            await trigger(formData)
+            await props.mutate()
         }
     }
-    function handlerRejected(val: boolean | null){
+    async function handlerRejected(val: boolean | null){
         const formData = new FormData()
         formData.append('id', String(props.id))
         formData.append('email', String(session.user.email))
         if(val === false){
             formData.append('accepted', '')
-            trigger(formData)
+            await trigger(formData)
+            await props.mutate()
         }
         if(val === true || val === null){
             formData.append('accepted', 'false')
-            trigger(formData)
+            await trigger(formData)
+            await props.mutate()
         }
     }
     return (

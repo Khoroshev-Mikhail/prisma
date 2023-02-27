@@ -5,34 +5,42 @@ import { updateApi } from "../../lib/fnsAPI";
 import { useSession } from "next-auth/react";
 import { Ks2Ext } from "../../pages/ks2";
 
-export default function Ks2Row({...props}:Ks2Ext){
+type incomingProps = Ks2Ext & {
+    mutate: any
+}
+
+export default function Ks2Row({...props}:incomingProps){
     const {data: session} = useSession()
     const {trigger} = useSWRMutation(`/api/ks2/${props.id}`, updateApi)
 
-    function handlerAccepted(val: boolean | null){
+    async function handlerAccepted(val: boolean | null){
         const formData = new FormData()
         formData.append('id', String(props.id))
         formData.append('email', String(session.user.email))
         if(val === true){
             formData.append('accepted', '')
-            trigger(formData)
+            await trigger(formData)
+            await props.mutate()
         }
         if(!val){
             formData.append('accepted', 'true')
-            trigger(formData)
+            await trigger(formData)
+            await props.mutate()
         }
     }
-    function handlerRejected(val: boolean | null){
+    async function handlerRejected(val: boolean | null){
         const formData = new FormData()
         formData.append('id', String(props.id))
         formData.append('email', String(session.user.email))
         if(val === false){
             formData.append('accepted', '')
-            trigger(formData)
+            await trigger(formData)
+            await props.mutate()
         }
         if(val === true || val === null){
             formData.append('accepted', 'false')
-            trigger(formData)
+            await trigger(formData)
+            await props.mutate()
         }
     }
     return (
