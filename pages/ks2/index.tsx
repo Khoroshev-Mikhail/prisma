@@ -60,7 +60,7 @@ export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
           <div onClick={()=>toggleComparator(sortByName)} className="cursor-pointer underline col-span-2 text-center border-r border-gray-200">
             Номер Кс-2 {comparator.fn === sortByName && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
           </div>
-          <div onClick={()=>toggleComparator(sortByDate)} className="cursor-pointer  underlinecol-span-2 text-center border-r border-gray-200">
+          <div onClick={()=>toggleComparator(sortByDate)} className="cursor-pointer underline col-span-2 text-center border-r border-gray-200">
             Дата Кс-2 {comparator.fn === sortByDate && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
           </div>
           <div className="col-span-2 text-center border-r border-gray-200">Вышестоящий документ</div>

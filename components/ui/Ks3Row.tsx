@@ -2,7 +2,7 @@ import { Button } from "flowbite-react";
 import Link from "next/link";
 import { ks3Ext } from "../../pages/ks3";
 import useSWRMutation from 'swr/mutation'
-import { updateApi } from "../../lib/fnsAPI";
+import { updateApi } from "../../lib/APIFns";
 import { useSession } from "next-auth/react";
 
 type incomingProps = ks3Ext & {
@@ -18,7 +18,7 @@ export default function Ks3Row({...props}:incomingProps){
         formData.append('id', String(props.id))
         formData.append('email', String(session.user.email))
         if(val === true){
-            formData.append('accepted', '')
+            formData.append('accepted', 'null')
             await trigger(formData)
             await props.mutate()
         }
@@ -33,7 +33,7 @@ export default function Ks3Row({...props}:incomingProps){
         formData.append('id', String(props.id))
         formData.append('email', String(session.user.email))
         if(val === false){
-            formData.append('accepted', '')
+            formData.append('accepted', 'null')
             await trigger(formData)
             await props.mutate()
         }

@@ -74,7 +74,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     updatedAt: new Date(),
                     partnerId: partnerId ? Number(partnerId) : undefined,
                     authorId: authorId ? Number(authorId) : undefined,
-                    accepted: accepted === 'true' ? true : accepted === 'false' ? false : null,
+                    accepted: (accepted === '' || !accepted) ? undefined : (accepted === 'true' ? true : accepted === 'false' ? false : null),
                 }
             })
             res.status(200).json(data);

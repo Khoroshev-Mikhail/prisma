@@ -1,7 +1,7 @@
 import { Button } from "flowbite-react";
 import Link from "next/link";
 import useSWRMutation from 'swr/mutation'
-import { updateApi } from "../../lib/fnsAPI";
+import { updateApi } from "../../lib/APIFns";
 import { useSession } from "next-auth/react";
 import { Ks2Ext } from "../../pages/ks2";
 
@@ -18,7 +18,7 @@ export default function Ks2Row({...props}:incomingProps){
         formData.append('id', String(props.id))
         formData.append('email', String(session.user.email))
         if(val === true){
-            formData.append('accepted', '')
+            formData.append('accepted', 'null')
             await trigger(formData)
             await props.mutate()
         }
@@ -60,7 +60,7 @@ export default function Ks2Row({...props}:incomingProps){
             </div>
             <div className="p-2 col-span-1 border-r border-gray-200 text-center">Скачать</div>
             <div className="p-2 col-span-2 border-r border-gray-200">{props.comment}</div>
-            <div className="p-2 col-span-1 text-center"><Link href={`/ks3/edit/${props.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</Link></div>
+            <div className="p-2 col-span-1 text-center"><Link href={`/ks2/edit/${props.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</Link></div>
         </div>
       )
 }

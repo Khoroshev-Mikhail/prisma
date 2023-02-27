@@ -2,7 +2,7 @@ import { Button, FileInput, Table, TextInput } from "flowbite-react";
 import useSWRMutation from 'swr/mutation'
 import { useEffect, useState } from "react";
 import useSWR from 'swr'
-import { createApi, sendGoogle } from "../../lib/fnsAPI";
+import { createApi, sendGoogle } from "../../lib/APIFns";
 import Layout from "../../components/layout/Layout";
 import { useSession } from "next-auth/react";
 import DatePicker from "react-datepicker";

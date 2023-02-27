@@ -4,7 +4,7 @@ import useSWR from 'swr'
 import { Button, Table, TextInput } from "flowbite-react";
 import useSWRMutation from 'swr/mutation'
 import { useEffect, useState } from "react";
-import { deleteApi, updateApi } from "../../../lib/fnsAPI";
+import { deleteApi, updateApi } from "../../../lib/APIFns";
 import Layout from "../../../components/layout/Layout";
 import prisma from "../../../lib/prisma";
 import { useSession } from "next-auth/react";

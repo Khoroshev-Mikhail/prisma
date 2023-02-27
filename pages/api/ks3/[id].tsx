@@ -68,7 +68,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     updatedAt: new Date(),
                     contractId: parentId ? Number(parentId) : undefined,
                     authorId: authorId ? Number(authorId) : undefined,
-                    accepted: accepted === 'true' ? true : accepted === 'false' ? false : null,
+                    accepted: (accepted === '' || !accepted) ? undefined : (accepted === 'true' ? true : accepted === 'false' ? false : null),
                     comment: comment ? String(comment) : undefined,
                 }
             })
