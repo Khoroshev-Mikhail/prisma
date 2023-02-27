@@ -43,10 +43,11 @@ export default function Ks3Row({...props}:incomingProps){
             await props.mutate()
         }
     }
+    const date = new Date(props.date).toLocaleDateString()
     return (
         <div className="py-2 grid grid-cols-12 border-t border-gray-200">
             <div className="p-2 col-span-2 border-r border-gray-200">{props.name}</div>
-            <div className="p-2 col-span-2 border-r border-gray-200">{new Date(props.date).toLocaleDateString()}</div>
+            <div className="p-2 col-span-2 border-r border-gray-200">{date}</div>
             <div className="p-2 col-span-2 border-r border-gray-200">{props.contract.name}</div>
             <div className="p-2 col-span-2 border-r border-gray-200 flex justify-center">
               <Button.Group>
