@@ -44,7 +44,7 @@ export default function ContractRow({...props}:incomingProps){
     }
     return (
         <div className="py-2 grid grid-cols-12 border-t border-gray-200">
-        {/* <div className="p-2 col-span-2 border-r border-gray-200">{props.name}</div>
+        <div className="p-2 col-span-2 border-r border-gray-200">{props.name}</div>
         <div className="p-2 col-span-2 border-r border-gray-200">{new Date(props.date).toLocaleDateString()}</div>
         <div className="p-2 col-span-2 border-r border-gray-200">{props.partner.form} {props.partner.name}</div>
         <div className="p-2 col-span-2 border-r border-gray-200 flex justify-center">
@@ -61,7 +61,7 @@ export default function ContractRow({...props}:incomingProps){
         <div className="p-2 col-span-2 border-r border-gray-200">{props.description}</div>
         <div className="p-2 col-span-1 text-center">
             <Link href={`/contracts/edit/${props.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</Link>
-        </div> */}
+        </div>
       </div>
       )
 }

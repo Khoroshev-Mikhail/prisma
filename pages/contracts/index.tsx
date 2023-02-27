@@ -33,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   })
   return {
     props: {
-      fallbackData: JSON.parse(JSON.stringify(data))
+      fallbackData: []
     },
   }
 }
@@ -77,8 +77,7 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
         </div>
         {data && sorted.map((el, i) => {
             return (
-              <></>
-                // <ContractRow {...el} mutate={mutate} key={i}/>
+                <ContractRow {...el} mutate={mutate} key={i}/>
             )
       })} 
     </Layout>
