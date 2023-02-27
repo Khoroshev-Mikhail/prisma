@@ -8,7 +8,7 @@ import { mutate } from "swr";
 type incomingProps = ContractExt & {
     mutate: any
 }
-export default function ContractRow({...props}:any){
+export default function ContractRow({...props}:incomingProps){
     const {data: session} = useSession()
     const {trigger} = useSWRMutation(`/api/contracts/${props.id}`, updateApi)
 
@@ -49,12 +49,12 @@ export default function ContractRow({...props}:any){
         <div className="p-2 col-span-2 border-r border-gray-200">{props.partner.form} {props.partner.name}</div>
         <div className="p-2 col-span-2 border-r border-gray-200 flex justify-center">
         <Button.Group>
-            <Button onClick={()=>handlerAccepted(props.accepted)} color={props.accepted === true ? 'success' : 'gray'} className="w-1/2">
+            {/* <Button onClick={()=>handlerAccepted(props.accepted)} color={props.accepted === true ? 'success' : 'gray'} className="w-1/2">
                 {props.accepted === true ? 'Принят' : 'Принять'}
             </Button>
             <Button onClick={()=>handlerRejected(props.accepted)} color={props.accepted === false ? 'failure' : 'gray'} className="w-1/2">
                 {props.accepted === false ? 'Отклонён' : 'Отклонить'}
-            </Button>
+            </Button> */}
         </Button.Group>
         </div>
         <div className="p-2 col-span-1 border-r border-gray-200 text-center">Скачать</div>
