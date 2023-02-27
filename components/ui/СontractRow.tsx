@@ -17,7 +17,7 @@ export default function ContractRow({...props}:incomingProps){
         formData.append('id', String(props.id))
         formData.append('email', String(session.user.email))
         if(val === true){
-            formData.append('accepted', '')
+            formData.append('accepted', 'null')
             await trigger(formData)
             await props.mutate()
         }
