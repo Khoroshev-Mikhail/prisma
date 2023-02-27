@@ -77,7 +77,7 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
         </div>
         {data && sorted.map((el, i) => {
             return (
-                <ContractRow {...el} mutate={mutate} key={i}/>
+                <ContractRow {...el}  key={i}/>
             )
       })} 
     </Layout>

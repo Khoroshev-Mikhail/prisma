@@ -8,40 +8,40 @@ import { mutate } from "swr";
 type incomingProps = ContractExt & {
     mutate: any
 }
-export default function ContractRow({...props}:incomingProps){
+export default function ContractRow({...props}:any){
     const {data: session} = useSession()
     const {trigger} = useSWRMutation(`/api/contracts/${props.id}`, updateApi)
 
-    async function handlerAccepted(val: boolean | null){
-        const formData = new FormData()
-        formData.append('id', String(props.id))
-        formData.append('email', String(session.user.email))
-        if(val === true){
-            formData.append('accepted', '')
-            await trigger(formData)
-            await props.mutate()
-        }
-        if(!val){
-            formData.append('accepted', 'true')
-            await trigger(formData)
-            await props.mutate()
-        }
-    }
-    async function handlerRejected(val: boolean | null){
-        const formData = new FormData()
-        formData.append('id', String(props.id))
-        formData.append('email', String(session.user.email))
-        if(val === false){
-            formData.append('accepted', '')
-            await trigger(formData)
-            await props.mutate()
-        }
-        if(val === true || val === null){
-            formData.append('accepted', 'false')
-            await trigger(formData)
-            await props.mutate()
-        }
-    }
+    // async function handlerAccepted(val: boolean | null){
+    //     const formData = new FormData()
+    //     formData.append('id', String(props.id))
+    //     formData.append('email', String(session.user.email))
+    //     if(val === true){
+    //         formData.append('accepted', '')
+    //         await trigger(formData)
+    //         await props.mutate()
+    //     }
+    //     if(!val){
+    //         formData.append('accepted', 'true')
+    //         await trigger(formData)
+    //         await props.mutate()
+    //     }
+    // }
+    // async function handlerRejected(val: boolean | null){
+    //     const formData = new FormData()
+    //     formData.append('id', String(props.id))
+    //     formData.append('email', String(session.user.email))
+    //     if(val === false){
+    //         formData.append('accepted', '')
+    //         await trigger(formData)
+    //         await props.mutate()
+    //     }
+    //     if(val === true || val === null){
+    //         formData.append('accepted', 'false')
+    //         await trigger(formData)
+    //         await props.mutate()
+    //     }
+    // }
     return (
         <div className="py-2 grid grid-cols-12 border-t border-gray-200">
         <div className="p-2 col-span-2 border-r border-gray-200">{props.name}</div>
