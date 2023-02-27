@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Ks3, Prisma } from "@prisma/client";
 import Ks3Row from "../../components/ui/Ks3Row";
 import { sortByDate, sortById, sortByName, sortByStatus } from "../../lib/comparators";
+import Image from "next/image";
 
 export type ks3Ext = Ks3 & {
   contract: {
@@ -57,10 +58,16 @@ export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
     return (
         <Layout>
             <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
-                <div onClick={()=>toggleComparator(sortByName)} className="col-span-2 text-center border-r border-gray-200 cursor-pointer">Номер Кс-3</div>
-                <div onClick={()=>toggleComparator(sortByDate)} className="col-span-2 text-center border-r border-gray-200">Дата Кс-3</div>
+                <div onClick={()=>toggleComparator(sortByName)} className="col-span-2 text-center border-r border-gray-200 cursor-pointer">
+                  Номер Кс-3 {comparator.fn === sortByName && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
+                </div>
+                <div onClick={()=>toggleComparator(sortByDate)} className="col-span-2 text-center border-r border-gray-200">
+                  Дата Кс-3 {comparator.fn === sortByDate && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
+                </div>
                 <div className="col-span-2 text-center border-r border-gray-200">Вышестоящий документ</div>
-                <div onClick={()=>toggleComparator(sortByStatus)} className="col-span-2 text-center border-r border-gray-200">Cтатус</div>
+                <div onClick={()=>toggleComparator(sortByStatus)} className="col-span-2 text-center border-r border-gray-200">
+                  Cтатус {comparator.fn === sortByStatus && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
+                </div>
                 <div className="col-span-1 text-center border-r border-gray-200">Скан</div>
                 <div className="col-span-2 text-center border-r border-gray-200">Комментарий</div>
                 <div className="col-span-1 text-center flex justify-center">
