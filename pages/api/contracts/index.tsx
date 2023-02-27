@@ -13,7 +13,7 @@ export const config = {
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
         if(req.method === "GET"){
-            const {id, name, date, createdAt, partnerId, authorId, rejected, accepted, description, expireDate, updatedAt} = req.query
+            const {id, name, date, createdAt, partnerId, authorId, accepted, description, expireDate, updatedAt} = req.query
             const data = await prisma.contract.findMany({
                 where: {
                     id: id ? Number(id) : undefined,

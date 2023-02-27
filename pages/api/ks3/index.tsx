@@ -12,7 +12,7 @@ export const config = {
 export default async function handler(req, res) {
     try{
         if(req.method === "GET"){
-            const {id, name, date, createdAt, contractId, authorId, rejected, accepted, comment} = req.query
+            const {id, name, date, createdAt, contractId, authorId, accepted, comment} = req.query
             const data = await prisma.ks3.findMany({
                 where: {
                     id: id ? Number(id) : undefined,
