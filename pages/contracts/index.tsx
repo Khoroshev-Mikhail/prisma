@@ -57,14 +57,14 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
   return (
     <Layout>
         <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
-            <div onClick={()=>toggleComparator(sortByName)} className="cursor-pointer col-span-2 text-center border-r border-gray-200">
+            <div onClick={()=>toggleComparator(sortByName)} className="cursor-pointer underline col-span-2 text-center border-r border-gray-200">
               Номер договора {comparator.fn === sortByName && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
             </div>
-            <div onClick={()=>toggleComparator(sortByDate)} className="cursor-pointer col-span-2 text-center border-r border-gray-200">
+            <div onClick={()=>toggleComparator(sortByDate)} className="cursor-pointer underline col-span-2 text-center border-r border-gray-200">
               Дата {comparator.fn === sortByDate && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
             </div>
             <div className="col-span-2 text-center border-r border-gray-200">Контрагент</div>
-            <div onClick={()=>toggleComparator(sortByStatus)} className="cursor-pointer col-span-2 text-center border-r border-gray-200">
+            <div onClick={()=>toggleComparator(sortByStatus)} className="cursor-pointer underline col-span-2 text-center border-r border-gray-200">
               Статус {comparator.fn === sortByStatus && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
             </div>
             <div className="col-span-1 text-center border-r border-gray-200">Скан</div>
