@@ -22,7 +22,6 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     updatedAt: updatedAt ? String(updatedAt) : undefined,
                     ks3Id: ks3Id ? Number(ks3Id) : undefined,
                     authorId: authorId ? Number(authorId) : undefined,
-                    rejected:  rejected ? !!rejected : undefined,
                     accepted: accepted ? !!accepted : undefined,
                     comment: comment ? String(comment) : undefined,
                 },
@@ -56,7 +55,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
               });
             });
             const { fields, files } = await formData;
-            const {name, date, parentId, email, rejected, accepted, comment} = fields
+            const {name, date, parentId, email, accepted, comment} = fields
             if(!name || !date || !parentId || !email) throw new Error('Указаны не все данные.')
 
             const {id: authorId} = await prisma.user.findUnique({
@@ -72,7 +71,6 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     date: String(date),
                     ks3Id: Number(parentId),
                     authorId: Number(authorId),
-                    rejected: rejected ? !!rejected : undefined,
                     accepted: accepted ? !!accepted : undefined,
                     comment: comment ? String(comment) : undefined,
                 }

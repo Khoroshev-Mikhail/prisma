@@ -51,7 +51,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 return;
             }
             const {fields, files} = await formData;
-            const {id, name, date, parentId, email, rejected, accepted, comment} = fields
+            const {id, name, date, parentId, email, accepted, comment} = fields
             if(!id || !email) throw new Error('Не указан Id или автор обновления.')
 
             const {id: authorId} = await prisma.user.findUnique({
@@ -71,8 +71,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     updatedAt: new Date(),
                     ks3Id: parentId ? Number(parentId) : undefined,
                     authorId: authorId ? Number(authorId) : undefined,
-                    rejected:  rejected ? !!rejected : undefined,
-                    accepted: accepted ? !!accepted : undefined,
+                    accepted: accepted === 'true' ? true : accepted === 'false' ? false : null,
                     comment: comment ? String(comment) : undefined,
                 }
             })

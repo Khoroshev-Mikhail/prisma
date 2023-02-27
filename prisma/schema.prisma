@@ -52,7 +52,6 @@ model Contract {
   partnerId     Int
   author        User @relation(fields: [authorId], references: [id])
   authorId      Int
-  rejected      Boolean?
   accepted      Boolean?
   ks3           Ks3[]
 }
@@ -67,7 +66,6 @@ model Ks3 {
   author        User @relation(fields: [authorId], references: [id])
   authorId      Int
   ks2           Ks2[]
-  rejected      Boolean?
   accepted      Boolean?
   comment       String?
 }
@@ -81,7 +79,6 @@ model Ks2{
   ks3Id         Int
   author        User @relation(fields: [authorId], references: [id])
   authorId      Int
-  rejected      Boolean?
   accepted      Boolean?
   comment       String?
 }

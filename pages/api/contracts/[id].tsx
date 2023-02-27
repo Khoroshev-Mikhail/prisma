@@ -52,7 +52,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 return;
             }
 
-            const {id, name, description, date, expireDate, partnerId, email, rejected, accepted,} = fields
+            const {id, name, description, date, expireDate, partnerId, email, accepted,} = fields
             if(!id || !email) throw new Error('Не указан Id или автор обновления.')
 
             const {id: authorId} = await prisma.user.findUnique({
@@ -74,8 +74,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     updatedAt: new Date(),
                     partnerId: partnerId ? Number(partnerId) : undefined,
                     authorId: authorId ? Number(authorId) : undefined,
-                    rejected:  rejected ? !!rejected : undefined,
-                    accepted: accepted ? !!accepted : undefined,
+                    accepted: accepted === 'true' ? true : accepted === 'false' ? false : null,
                 }
             })
             res.status(200).json(data);

@@ -25,7 +25,6 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     updatedAt: updatedAt ? String(updatedAt) : undefined,
                     partnerId: partnerId ? Number(partnerId) : undefined,
                     authorId: authorId ? Number(authorId) : undefined,
-                    rejected:  rejected ? !!rejected : undefined,
                     accepted: accepted ? !!accepted : undefined,
                 },
                 include: {
@@ -61,7 +60,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             });
             const { fields, files } = await formData;
             
-            const {name, description, date, expireDate, parentId, email, rejected, accepted } = fields
+            const {name, description, date, expireDate, parentId, email, accepted } = fields
             if(!name || !date || !parentId || !email) throw new Error('Указаны не все данные.')
 
             const {id: authorId} = await prisma.user.findUnique({
@@ -79,7 +78,6 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     expireDate: expireDate ? String(expireDate) : undefined,
                     partnerId: Number(parentId),
                     authorId: Number(authorId),
-                    rejected:  rejected ? !!rejected : undefined,
                     accepted: accepted ? !!accepted : undefined,
                 }
             })

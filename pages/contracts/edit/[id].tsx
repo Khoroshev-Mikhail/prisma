@@ -13,7 +13,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ContractExt } from "..";
 
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const {id} = context.query
     const data = await prisma.contract.findUnique({

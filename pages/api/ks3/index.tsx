@@ -21,7 +21,6 @@ export default async function handler(req, res) {
                     createdAt: createdAt ? String(createdAt) : undefined,
                     contractId: contractId ? Number(contractId) : undefined,
                     authorId: authorId ? Number(authorId) : undefined,
-                    rejected:  rejected ? !!rejected : undefined,
                     accepted: accepted ? !!accepted : undefined,
                     comment: comment ? String(comment) : undefined,
                 },
@@ -66,7 +65,7 @@ export default async function handler(req, res) {
             // }}
             //Иправить везде contractId и тп на parentId
             
-            const {name, date, parentId, email, rejected, accepted, comment} = fields
+            const {name, date, parentId, email, accepted, comment} = fields
             if(!name || !date || !parentId || !email) throw new Error('Указаны не все данные.')
 
             const {id: authorId} = await prisma.user.findUnique({
@@ -82,7 +81,6 @@ export default async function handler(req, res) {
                     date: String(date),
                     contractId: Number(parentId),
                     authorId: Number(authorId),
-                    rejected: rejected ? !!rejected : undefined,
                     accepted: accepted ? !!accepted : undefined,
                     comment: comment ? String(comment) : undefined,
                 }

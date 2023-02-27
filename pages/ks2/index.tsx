@@ -6,6 +6,7 @@ import { Button, Table, TextInput } from "flowbite-react";
 import useSWR from 'swr'
 import Link from "next/link";
 import { Ks2, Prisma } from "@prisma/client";
+import Ks2Row from "../../components/ui/Ks2Row";
 
 export type Ks2Ext = Ks2 & {
   ks3: {
@@ -54,24 +55,7 @@ export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
       </div>
       {data && data.map((el, i) => {
             return (
-              <div className="py-2 grid grid-cols-12 border-t border-gray-200" key={i}>
-                <div className="p-2 col-span-2 border-r border-gray-200">{el.name}</div>
-                <div className="p-2 col-span-2 border-r border-gray-200">{new Date(el.date).toLocaleDateString()}</div>
-                <div className="p-2 col-span-2 border-r border-gray-200">{el.ks3.name}</div>
-                <div className="p-2 col-span-2 border-r border-gray-200 flex justify-center">
-                  <Button.Group>
-                      <Button color={el.accepted ? 'success' : 'gray'}>
-                        Принять
-                      </Button>
-                      <Button  color={el.rejected ? 'failure' : 'gray'}>
-                        Отклонить
-                      </Button>
-                  </Button.Group>
-                </div>
-                <div className="p-2 col-span-1 border-r border-gray-200 text-center">Скачать</div>
-                <div className="p-2 col-span-2 border-r border-gray-200">{el.comment}</div>
-                <div className="p-2 col-span-1 text-center"><Link href={`/ks2/edit/${el.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</Link></div>
-              </div>
+              <Ks2Row {...el}/>
             )
       })} 
     </Layout>

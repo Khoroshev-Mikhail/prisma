@@ -51,7 +51,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 res.status(401).json('Не авторизирован.');
                 return;
             }
-            const {id, name, date, parentId, email, rejected, accepted, comment} = fields
+            const {id, name, date, parentId, email, accepted, comment} = fields
             const {id: authorId} = await prisma.user.findUnique({
                 where: {
                     email: String(email)
@@ -68,8 +68,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     updatedAt: new Date(),
                     contractId: parentId ? Number(parentId) : undefined,
                     authorId: authorId ? Number(authorId) : undefined,
-                    rejected:  rejected ? !!rejected : undefined,
-                    accepted: accepted ? !!accepted : undefined,
+                    accepted: accepted === 'true' ? true : accepted === 'false' ? false : null,
                     comment: comment ? String(comment) : undefined,
                 }
             })

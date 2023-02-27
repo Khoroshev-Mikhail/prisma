@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from 'next/router';
 import useSWR from 'swr'
-import { Button, Dropdown, FileInput, Label, Table, TextInput } from "flowbite-react";
+import { Button, FileInput, TextInput } from "flowbite-react";
 import useSWRMutation from 'swr/mutation'
 import { useEffect, useState } from "react";
 import { deleteApi, updateApi } from "../../../lib/myFns";
