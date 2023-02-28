@@ -4,14 +4,12 @@ import { ks3Ext } from "../../pages/ks3";
 import useSWRMutation from 'swr/mutation'
 import { updateApi } from "../../lib/APIFns";
 import { useSession } from "next-auth/react";
+import useSWR from "swr";
 
-type incomingProps = ks3Ext & {
-    mutate: any
-}
-
-export default function Ks3Row({...props}:incomingProps){
+export default function Ks3Row({...props}:ks3Ext){
     const {data: session} = useSession()
     const {trigger} = useSWRMutation(`/api/ks3/${props.id}`, updateApi)
+    const {mutate} = useSWR(`/api/ks3/`)
 
     async function handlerAccepted(val: boolean | null){
         const formData = new FormData()
@@ -20,12 +18,12 @@ export default function Ks3Row({...props}:incomingProps){
         if(val === true){
             formData.append('accepted', 'null')
             await trigger(formData)
-            await props.mutate()
+            await mutate()
         }
         if(!val){
             formData.append('accepted', 'true')
             await trigger(formData)
-            await props.mutate()
+            await mutate()
         }
     }
     async function handlerRejected(val: boolean | null){
@@ -35,12 +33,12 @@ export default function Ks3Row({...props}:incomingProps){
         if(val === false){
             formData.append('accepted', 'null')
             await trigger(formData)
-            await props.mutate()
+            await mutate()
         }
         if(val === true || val === null){
             formData.append('accepted', 'false')
             await trigger(formData)
-            await props.mutate()
+            await mutate()
         }
     }
     //const date = new Date(props.date).toLocaleDateString() по поводу ошибок 418 425 423 - так не сработает

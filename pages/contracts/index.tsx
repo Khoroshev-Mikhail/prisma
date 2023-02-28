@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 }
 
 export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
-  const {data, mutate, error, isLoading} = useSWR<ContractExt[]>(`/api/contracts/`, {fallbackData})
+  const {data, error, isLoading} = useSWR<ContractExt[]>(`/api/contracts/`, {fallbackData})
   const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortById, increase: true})
   const sorted = data
     ? comparator.increase
@@ -77,7 +77,7 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
         </div>
         {data && sorted.map((el, i) => {
             return (
-                <ContractRow {...el} mutate={mutate} key={i}/>
+                <ContractRow {...el} key={i}/>
             )
       })} 
     </Layout>

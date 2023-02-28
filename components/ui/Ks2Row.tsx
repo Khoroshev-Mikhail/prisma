@@ -4,14 +4,12 @@ import useSWRMutation from 'swr/mutation'
 import { updateApi } from "../../lib/APIFns";
 import { useSession } from "next-auth/react";
 import { Ks2Ext } from "../../pages/ks2";
+import useSWR from "swr";
 
-type incomingProps = Ks2Ext & {
-    mutate: any
-}
-
-export default function Ks2Row({...props}:incomingProps){
+export default function Ks2Row({...props}:Ks2Ext){
     const {data: session} = useSession()
     const {trigger} = useSWRMutation(`/api/ks2/${props.id}`, updateApi)
+    const {mutate} = useSWR(`/api/ks2/`)
 
     async function handlerAccepted(val: boolean | null){
         const formData = new FormData()
@@ -20,12 +18,12 @@ export default function Ks2Row({...props}:incomingProps){
         if(val === true){
             formData.append('accepted', 'null')
             await trigger(formData)
-            await props.mutate()
+            await mutate()
         }
         if(!val){
             formData.append('accepted', 'true')
             await trigger(formData)
-            await props.mutate()
+            await mutate()
         }
     }
     async function handlerRejected(val: boolean | null){
@@ -35,12 +33,12 @@ export default function Ks2Row({...props}:incomingProps){
         if(val === false){
             formData.append('accepted', 'null')
             await trigger(formData)
-            await props.mutate()
+            await mutate()
         }
         if(val === true || val === null){
             formData.append('accepted', 'false')
             await trigger(formData)
-            await props.mutate()
+            await mutate()
         }
     }
     return (

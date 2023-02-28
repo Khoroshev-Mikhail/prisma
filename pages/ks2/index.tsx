@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 }
 
 export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
-  const {data, mutate, error, isLoading} = useSWR<Ks2Ext[]>(`/api/ks2/`, {fallbackData})
+  const {data, error, isLoading} = useSWR<Ks2Ext[]>(`/api/ks2/`, {fallbackData})
   const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortById, increase: true})
   const sorted = data 
   ? comparator.increase
@@ -77,7 +77,7 @@ export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
       </div>
       {data && sorted.map((el, i) => {
             return (
-              <Ks2Row {...el} mutate={mutate} key={i}/>
+              <Ks2Row {...el} key={i}/>
             )
       })} 
     </Layout>
