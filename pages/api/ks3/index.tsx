@@ -55,6 +55,7 @@ export default async function handler(req, res) {
               });
             });
             const { fields, files } = await formData;
+
             //{"document":{
             //     "size":645379,
             //     "filepath":"/var/folders/8r/bhnfn59n7w57zp43ytnnlj5m0000gn/T/e3596d8a79dcd6c5928eb5703",

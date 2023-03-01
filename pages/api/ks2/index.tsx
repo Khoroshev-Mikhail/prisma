@@ -12,15 +12,20 @@ export const config = {
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
         if(req.method === "GET"){
-            const {id, name, date, createdAt, updatedAt, ks3Id, authorId, accepted, comment} = req.query
+            const {id, name, date, createdAt, updatedAt, parentId, authorId, accepted, comment} = req.query
             const data = await prisma.ks2.findMany({
                 where: {
                     id: id ? Number(id) : undefined,
-                    name: name ? String(name) : undefined,
+                    name: {
+                        contains: name ? String(name) : undefined,
+                        mode: 'insensitive'
+                    },
                     date: date ? String(date) : undefined,
                     createdAt: createdAt ? String(createdAt) : undefined,
                     updatedAt: updatedAt ? String(updatedAt) : undefined,
-                    ks3Id: ks3Id ? Number(ks3Id) : undefined,
+                    ks3Id: {
+                        equals: parentId ? Number(parentId) : undefined
+                    },
                     authorId: authorId ? Number(authorId) : undefined,
                     accepted: accepted ? !!accepted : undefined,
                     comment: comment ? String(comment) : undefined,

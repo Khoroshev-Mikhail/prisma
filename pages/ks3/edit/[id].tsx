@@ -48,7 +48,7 @@ export default function Edit({fallbackData}:{fallbackData: Ks3}){
     const {data, error, isLoading} = useSWR<Ks3>(`/api/ks3/${id}`, {fallbackData})
     const {data: parents, error: parentsError} = useSWR<Contract[]>(`/api/contracts/`)
     const {trigger} = useSWRMutation(`/api/ks3/${id}`, updateApi)
-    const {trigger: deleteData} = useSWRMutation(`/api/ks3/${id}`, deleteApi)
+    const {trigger: deleteTrigger} = useSWRMutation(`/api/ks3/${id}`, deleteApi)
 
     //Локальный стейт
     const [name, setName] = useState<string>(data?.name)
@@ -70,7 +70,7 @@ export default function Edit({fallbackData}:{fallbackData: Ks3}){
     function deleteHandler(id: number){
         const formData = new FormData()
         formData.append('id', String(id))
-        deleteData(formData)
+        deleteTrigger(formData)
     }
 
     //Эффекты

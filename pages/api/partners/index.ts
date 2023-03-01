@@ -17,8 +17,14 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             const data = await prisma.partner.findMany({
                 where: {
                     id: id ? Number(id) : undefined,
-                    inn: inn ? String(inn) : undefined,
-                    name: name ? String(name) : undefined,
+                    inn: {
+                        contains: inn ? String(inn) : undefined,
+                        mode: 'insensitive'
+                    },
+                    name: {
+                        contains: name ? String(name) : undefined,
+                        mode: 'insensitive'
+                    },
                     authorId: authorId ? Number(authorId) : undefined
                 }
             })

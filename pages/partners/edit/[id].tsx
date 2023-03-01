@@ -35,7 +35,7 @@ export default function Edit({fallbackData}:{fallbackData: Partner}){
     //Асинхронная дата и мутации
     const {data, error, isLoading} = useSWR<Partner>(`/api/partners/${id}`, {fallbackData})
     const {trigger, error: updateError} = useSWRMutation(`/api/partners/${id}`, updateApi)
-    const {trigger: deleteData, error: deleteError} = useSWRMutation(`/api/partners/${id}`, deleteApi)
+    const {trigger: deleteTrigger, error: deleteError} = useSWRMutation(`/api/partners/${id}`, deleteApi)
 
     //Локальный стейт
     const [inn, setInn] = useState<string>(data?.inn)
@@ -57,7 +57,7 @@ export default function Edit({fallbackData}:{fallbackData: Partner}){
     function deleteHandler(id: number){
         const formData = new FormData()
         formData.append('id', String(id))
-        deleteData(formData)
+        deleteTrigger(formData)
     }
 
     //Эффекты

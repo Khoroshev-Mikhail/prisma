@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { GetServerSideProps } from "next"
 import prisma from '../../lib/prisma';
 import Layout from "../../components/layout/Layout";
-import { Button, Table} from "flowbite-react";
+import { Button, Table, TextInput} from "flowbite-react";
 import useSWR from 'swr'
 import Link from "next/link";
 import { Partner } from "@prisma/client";
@@ -18,7 +18,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
-  const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/`, {fallbackData})
+  const [filterName, setFilterName] = useState('')
+  const [filterInn, setFilterInn] = useState('')
+
+  const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/?name=${filterName}&inn=${filterInn}`, {fallbackData})
   const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortById, increase: true})
   const sorted = data 
     ? comparator.increase
@@ -33,9 +36,10 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
       };
     })
   }
+
   return (
       <Layout>
-          <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
+          <div className="pt-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
               <div onClick={()=>toggleComparator(sortByName)} className="col-span-5 text-center border-r border-gray-200 cursor-pointer underline">
                 Название {comparator.fn === sortByName && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
               </div>
@@ -49,7 +53,19 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
                 </Link>
               </div>
           </div>
-          {data && sorted.map((el, i) => {
+          <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
+              <div className="col-span-5 px-2 text-center border-r border-gray-200 cursor-pointer">
+                <TextInput value={filterName} onChange={(e)=>setFilterName(e.target.value)} placeholder="Фильтр по названию договора"/>
+              </div>
+              <div className="col-span-3 px-2 text-center border-r border-gray-200 cursor-pointer">
+                <TextInput value={filterInn} onChange={(e)=>setFilterInn(e.target.value)} placeholder="Фильтр по ИНН"/>
+              </div>
+              <div className="col-span-3 text-center border-r border-gray-200"></div>
+              <div className="col-span-1 text-center flex justify-center">
+                
+              </div>
+          </div>
+          {!isLoading && data && sorted.map((el, i) => {
               return (
                 <div className="py-2 grid grid-cols-12 border-t border-gray-200" key={i}>
                     <div className="p-2 col-span-5 border-r border-gray-200">{el.form} {el.name}</div>

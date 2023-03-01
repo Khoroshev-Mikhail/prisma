@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from 'next/router';
 import useSWR from 'swr'
-import { Button, Dropdown, FileInput, Label, Table, TextInput } from "flowbite-react";
+import { Button, FileInput, TextInput } from "flowbite-react";
 import useSWRMutation from 'swr/mutation'
 import { useEffect, useState } from "react";
 import { deleteApi, updateApi } from "../../../lib/APIFns";
@@ -49,7 +49,7 @@ export default function Edit({fallbackData}:{fallbackData: ContractExt}){
     const {data, error, isLoading} = useSWR<ContractExt>(`/api/contracts/${id}`, {fallbackData})
     const {data: parents} = useSWR<Partner[]>(`/api/partners/`)
     const {trigger} = useSWRMutation(`/api/contracts/${id}`, updateApi)
-    const {trigger: deleteData} = useSWRMutation(`/api/contracts/${id}`, deleteApi)
+    const {trigger: deleteTrigger, data: deleteData, error: deleteError} = useSWRMutation(`/api/contracts/${id}`, deleteApi)
 
     //Локальный стейт
     const [name, setName] = useState<string>(data?.name)
@@ -75,7 +75,7 @@ export default function Edit({fallbackData}:{fallbackData: ContractExt}){
     function deleteHandler(id: number){
         const formData = new FormData()
         formData.append('id', String(id))
-        deleteData(formData)
+        deleteTrigger(formData)
     }
 
     //Эффекты
@@ -91,7 +91,7 @@ export default function Edit({fallbackData}:{fallbackData: ContractExt}){
             setParentId(data.partner.id)
         }
     }, [data])
-
+    console.log(deleteData)
     return (
         <Layout>
             <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
