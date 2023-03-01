@@ -13,19 +13,26 @@ export const config = {
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
         if(req.method === "GET"){
-            const {id, name, date, createdAt, partnerId, authorId, accepted, description, expireDate, updatedAt} = req.query
+            const {id, name, date, createdAt, parentId, authorId, accepted, description, expireDate, updatedAt} = req.query
             const data = await prisma.contract.findMany({
                 where: {
                     id: id ? Number(id) : undefined,
-                    name: name ? String(name) : undefined,
+                    name: {
+                        contains: name ? String(name) : undefined,
+                        mode: 'insensitive'
+                    },
                     description: description ? String(description) : undefined,
                     date: date ? String(date) : undefined,
                     expireDate: expireDate ? String(expireDate) : undefined,
                     createdAt: createdAt ? String(createdAt) : undefined,
                     updatedAt: updatedAt ? String(updatedAt) : undefined,
-                    partnerId: partnerId ? Number(partnerId) : undefined,
+                    partnerId: {
+                        equals: parentId ? Number(parentId) : undefined
+                    },
                     authorId: authorId ? Number(authorId) : undefined,
-                    accepted: accepted ? !!accepted : undefined,
+                    accepted: {
+                        equals: (accepted === '' || !accepted || accepted === 'undefined') ? undefined : (accepted === 'true' ? true : accepted === 'false' ? false : null),
+                    },
                 },
                 include: {
                   partner: {

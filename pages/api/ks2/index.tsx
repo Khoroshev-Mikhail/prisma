@@ -27,7 +27,9 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                         equals: parentId ? Number(parentId) : undefined
                     },
                     authorId: authorId ? Number(authorId) : undefined,
-                    accepted: accepted ? !!accepted : undefined,
+                    accepted: {
+                        equals: (accepted === '' || !accepted || accepted === 'undefined') ? undefined : (accepted === 'true' ? true : accepted === 'false' ? false : null),
+                    },
                     comment: comment ? String(comment) : undefined,
                 },
                 include: {

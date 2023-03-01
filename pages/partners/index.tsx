@@ -40,7 +40,10 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
   return (
       <Layout>
           <div className="pt-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
-              <div onClick={()=>toggleComparator(sortByName)} className="col-span-5 text-center border-r border-gray-200 cursor-pointer underline">
+              <div className="col-span-1 text-center border-r border-gray-200">
+                Форма
+              </div>
+              <div onClick={()=>toggleComparator(sortByName)} className="col-span-4 text-center border-r border-gray-200 cursor-pointer underline">
                 Название {comparator.fn === sortByName && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
               </div>
               <div onClick={()=>toggleComparator(sortByINN)} className="col-span-3 text-center border-r border-gray-200 cursor-pointer underline">
@@ -54,7 +57,10 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
               </div>
           </div>
           <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
-              <div className="col-span-5 px-2 text-center border-r border-gray-200 cursor-pointer">
+              <div className="col-span-1 px-2 text-center border-r border-gray-200">
+               
+              </div>
+              <div className="col-span-4 px-2 text-center border-r border-gray-200 cursor-pointer">
                 <TextInput value={filterName} onChange={(e)=>setFilterName(e.target.value)} placeholder="Фильтр по названию договора"/>
               </div>
               <div className="col-span-3 px-2 text-center border-r border-gray-200 cursor-pointer">
@@ -68,7 +74,8 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
           {!isLoading && data && sorted.map((el, i) => {
               return (
                 <div className="py-2 grid grid-cols-12 border-t border-gray-200" key={i}>
-                    <div className="p-2 col-span-5 border-r border-gray-200">{el.form} {el.name}</div>
+                    <div className="p-2 col-span-1 border-r border-gray-200">{el.form}</div>
+                    <div className="p-2 col-span-4 border-r border-gray-200">{el.name}</div>
                     <div className="p-2 col-span-3 border-r border-gray-200">{el.inn}</div>
                     <div className="p-2 col-span-3 border-r border-gray-200">{el.contacts}</div>
                     <div className="p-2 col-span-1 text-center"><Link href={`/partners/edit/${el.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</Link></div>
