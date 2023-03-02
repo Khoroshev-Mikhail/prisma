@@ -13,7 +13,7 @@ export const config = {
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
         if(req.method === "GET"){
-            const {id, name, date, createdAt, parentId, authorId, accepted, description, expireDate, updatedAt} = req.query
+            const {id, name, parentId, authorId, accepted, sortBy, orderBy} = req.query
             const data = await prisma.contract.findMany({
                 where: {
                     id: id ? Number(id) : undefined,
@@ -21,11 +21,6 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                         contains: name ? String(name) : undefined,
                         mode: 'insensitive'
                     },
-                    description: description ? String(description) : undefined,
-                    date: date ? String(date) : undefined,
-                    expireDate: expireDate ? String(expireDate) : undefined,
-                    createdAt: createdAt ? String(createdAt) : undefined,
-                    updatedAt: updatedAt ? String(updatedAt) : undefined,
                     partnerId: {
                         equals: parentId ? Number(parentId) : undefined
                     },
@@ -33,6 +28,10 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     accepted: {
                         equals: (accepted === '' || !accepted || accepted === 'undefined') ? undefined : (accepted === 'true' ? true : accepted === 'false' ? false : null),
                     },
+                },                
+                orderBy: {
+                    id: sortBy === 'id' ? (orderBy === 'asc' ? 'asc' : 'desc') : undefined, 
+                    name: sortBy === 'name' ? (orderBy === 'asc' ? 'asc' : 'desc') : undefined, 
                 },
                 include: {
                   partner: {

@@ -12,25 +12,24 @@ export const config = {
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
         if(req.method === "GET"){
-            const {id, name, date, createdAt, updatedAt, parentId, authorId, accepted, comment} = req.query
+            const {name, parentId, sortBy, orderBy, accepted, } = req.query
+            if(sortBy != undefined && !['id', 'name', 'accepted'].includes(String(sortBy))) throw new Error('Невозможная сортировка')
             const data = await prisma.ks2.findMany({
                 where: {
-                    id: id ? Number(id) : undefined,
                     name: {
                         contains: name ? String(name) : undefined,
                         mode: 'insensitive'
                     },
-                    date: date ? String(date) : undefined,
-                    createdAt: createdAt ? String(createdAt) : undefined,
-                    updatedAt: updatedAt ? String(updatedAt) : undefined,
                     ks3Id: {
                         equals: parentId ? Number(parentId) : undefined
                     },
-                    authorId: authorId ? Number(authorId) : undefined,
                     accepted: {
                         equals: (accepted === '' || !accepted || accepted === 'undefined') ? undefined : (accepted === 'true' ? true : accepted === 'false' ? false : null),
                     },
-                    comment: comment ? String(comment) : undefined,
+                },
+                orderBy: {
+                    id: sortBy === 'id' ? (orderBy === 'asc' ? 'asc' : 'desc') : undefined, 
+                    name: sortBy === 'name' ? (orderBy === 'asc' ? 'asc' : 'desc') : undefined, 
                 },
                 include: {
                   ks3: {

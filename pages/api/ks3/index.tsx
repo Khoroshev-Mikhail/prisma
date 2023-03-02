@@ -12,10 +12,10 @@ export const config = {
 export default async function handler(req, res) {
     try{
         if(req.method === "GET"){
-            const {id, name, date, createdAt, parentId, authorId, accepted, comment} = req.query
+            const {name, parentId, accepted, comment, sortBy, orderBy} = req.query
+            if(sortBy != undefined && !['id', 'name', 'accepted'].includes(String(sortBy))) throw new Error('Невозможная сортировка')
             const data = await prisma.ks3.findMany({
                 where: {
-                    id: id ? Number(id) : undefined,
                     name: {
                         contains: name ? String(name) : undefined,
                         mode: 'insensitive'
@@ -23,14 +23,15 @@ export default async function handler(req, res) {
                     contractId: {
                         equals: parentId ? Number(parentId) : undefined
                     },
-                    //Проблема по фильтру дат заключается в том, что: даты хранятся с часами, минутами и секундами и более. Дата 01.01.23-00-00-00 после метода toJSON вернет строку 31.12.2022-21-00-00 для московского времени! ПОТОМУ ЧТО МОСКВА ЮТС + 3
-                    date: date ? String(date) : undefined,
-                    createdAt: createdAt ? String(createdAt) : undefined,
-                    authorId: authorId ? Number(authorId) : undefined,
+                    //Проблема фильтра по датам заключается в том, что: даты хранятся с часами, минутами и секундами и более. Дата 01.01.23-00-00-00 после метода toJSON вернет строку 31.12.2022-21-00-00 для московского времени! ПОТОМУ ЧТО МОСКВА ЮТС + 3
                     accepted: {
                         equals: (accepted === '' || !accepted || accepted === 'undefined') ? undefined : (accepted === 'true' ? true : accepted === 'false' ? false : null),
                     },
                     comment: comment ? String(comment) : undefined,
+                },
+                orderBy: {
+                    id: sortBy === 'id' ? (orderBy === 'asc' ? 'asc' : 'desc') : undefined, 
+                    name: sortBy === 'name' ? (orderBy === 'asc' ? 'asc' : 'desc') : undefined, 
                 },
                 include: {
                   contract: {

@@ -47,52 +47,24 @@ export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
     const [filterParentId, setfilterParentId] = useState<string>(null)
     const [filterDate, setFilterDate] = useState<Date>(null)
     const [filterAccepted, setfilterAccepted] = useState<string>(null)
-    const {data, error, isLoading} = useSWR<ks3Ext[]>(`/api/ks3/?name=${filterName}&parentId=${filterParentId ?? ''}&accepted=${filterAccepted ?? ''}&date=${filterDate?.toJSON() ?? ''}`, {fallbackData})
+    const [comparator, setComparator] = useState<{sortBy: 'id' | 'name' | 'accepted', isOrderByAsc: boolean}>({sortBy: 'name', isOrderByAsc: true})
+    const {data, error, isLoading} = useSWR<ks3Ext[]>(`/api/ks3/?name=${filterName}&parentId=${filterParentId ?? ''}&accepted=${filterAccepted ?? ''}&date=${filterDate?.toJSON() ?? ''}&sortBy=${comparator.sortBy}&orderBy=${comparator.isOrderByAsc ? 'asc' : 'desc'}`, {fallbackData})
     const {data: parents} = useSWR<ContractExt[]>(`/api/contracts/`)
-    const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortById, increase: true})
-    const sorted = data 
-      ? comparator.increase
-        ? [...data].sort(comparator.fn)
-        : [...data].sort(comparator.fn).reverse()
-      : undefined
-    function toggleComparator(currentComparator: any){
-      setComparator(({fn, increase}) => {
-        return {
-          fn: currentComparator,
-          increase: fn === currentComparator ? !increase : true
-        };
-      })
-    }
+    
     return (
         <Layout>
             <div className="pt-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
                 <div 
-                  onClick={()=>toggleComparator(sortByName)} 
+                  onClick={()=>setComparator({sortBy: 'name', isOrderByAsc: !comparator.isOrderByAsc})}
                   className="underline cursor-pointer col-span-2 text-center border-r border-gray-200"
                 >
-                  Номер Кс-3 {comparator.fn === sortByName && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
+                  Номер Кс-3 {comparator.sortBy === 'name' && <Image className="inline-block" src={`/images/${comparator.isOrderByAsc ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
                 </div>
-                <div 
-                  onClick={()=>toggleComparator(sortByDate)} 
-                  className="underline cursor-pointer col-span-2 text-center border-r border-gray-200"
-                >
-                  Дата Кс-3 {comparator.fn === sortByDate && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
-                </div>
-                <div className="col-span-2 text-center border-r border-gray-200">
-                  Вышестоящий документ
-                </div>
-                <div 
-                  onClick={()=>toggleComparator(sortByStatus)} 
-                  className="underline cursor-pointer col-span-2 text-center border-r border-gray-200"
-                >
-                  Cтатус {comparator.fn === sortByStatus && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
-                </div>
-                <div className="col-span-1 text-center border-r border-gray-200">
-                  Скан
-                </div>
-                <div className="col-span-2 text-center border-r border-gray-200">
-                  Комментарий
-                </div>
+                <div className="col-span-2 text-center border-r border-gray-200">Дата Кс-3</div>
+                <div className="col-span-2 text-center border-r border-gray-200">Вышестоящий документ</div>
+                <div className="col-span-2 text-center border-r border-gray-200">Статус</div>
+                <div className="col-span-1 text-center border-r border-gray-200">Скан</div>
+                <div className="col-span-2 text-center border-r border-gray-200">Комментарий</div>
                 <div className="col-span-1 text-center flex justify-center">
                     <Link href='/ks3/create'>
                         <Button>+</Button>
@@ -132,7 +104,7 @@ export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
           <div className="col-span-2 px-2 text-center border-r border-gray-200"></div>
           <div className="col-span-1 px-2 text-center border-r border-gray-200"></div>
         </div>
-        {!isLoading && data && sorted.map((el, i) => {
+        {!isLoading && data && data.map((el, i) => {
             return (
               <Ks3Row {...el} key={i}/>
             )
