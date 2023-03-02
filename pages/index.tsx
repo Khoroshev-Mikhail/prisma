@@ -2,12 +2,13 @@ import React, { useState } from "react"
 import { GetServerSideProps } from "next"
 import prisma from './../lib/prisma';
 import Layout from "./../components/layout/Layout";
-import { Button, Table, TextInput} from "flowbite-react";
+import { Button, TextInput} from "flowbite-react";
 import useSWR from 'swr'
 import Link from "next/link";
 import { Partner } from "@prisma/client";
-import { sortById, sortByINN, sortByName } from "./../lib/comparators";
 import Image from "next/image";
+import ErrorPlug from "./../components/layout/ErrorPlug";
+import LoadingPlug from "./../components/layout/LoadingPlug";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const partners = await prisma.partner.findMany()
@@ -20,22 +21,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
 export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
   const [filterName, setFilterName] = useState('')
   const [filterInn, setFilterInn] = useState('')
-
-  const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/?name=${filterName}&inn=${filterInn}`, {fallbackData})
-  const [comparator, setComparator] = useState<{fn: any, increase: boolean}>({fn: sortById, increase: true})
-  const sorted = data 
-    ? comparator.increase
-      ? [...data].sort(comparator.fn)
-      : [...data].sort(comparator.fn).reverse()
-    : undefined
-  function toggleComparator(currentComparator: any){
-    setComparator(({fn, increase}) => {
-      return {
-        fn: currentComparator,
-        increase: fn === currentComparator ? !increase : true
-      };
-    })
-  }
+  const [comparator, setComparator] = useState<{sortBy: 'id' | 'name' | 'inn', isOrderByAsc: boolean}>({sortBy: 'name', isOrderByAsc: true})
+  const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/?name=${filterName}&inn=${filterInn}&sortBy=${comparator.sortBy}&orderBy=${comparator.isOrderByAsc ? 'asc' : 'desc'}`, {fallbackData})
 
   return (
       <Layout>
@@ -43,11 +30,11 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
               <div className="col-span-1 text-center border-r border-gray-200">
                 Форма
               </div>
-              <div onClick={()=>toggleComparator(sortByName)} className="col-span-4 text-center border-r border-gray-200 cursor-pointer underline">
-                Название {comparator.fn === sortByName && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
+              <div onClick={()=>setComparator({sortBy: 'name', isOrderByAsc: !comparator.isOrderByAsc})} className="col-span-4 text-center border-r border-gray-200 cursor-pointer underline">
+                Название {comparator.sortBy === 'name' && <Image className="inline-block" src={`/images/${comparator.isOrderByAsc ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
               </div>
-              <div onClick={()=>toggleComparator(sortByINN)} className="col-span-3 text-center border-r border-gray-200 cursor-pointer underline">
-                ИНН {comparator.fn === sortByINN && <Image className="inline-block" src={`/images/${comparator.increase ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
+              <div onClick={()=>setComparator({sortBy: 'inn', isOrderByAsc: !comparator.isOrderByAsc})} className="col-span-3 text-center border-r border-gray-200 cursor-pointer underline">
+                ИНН {comparator.sortBy === 'inn' && <Image className="inline-block" src={`/images/${comparator.isOrderByAsc ? 'arrow-down' : 'arrow-up'}.svg`} alt='arrow' width={20} height={20}/>}
               </div>
               <div className="col-span-3 text-center border-r border-gray-200">Контакты</div>
               <div className="col-span-1 text-center flex justify-center">
@@ -71,7 +58,13 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
                 
               </div>
           </div>
-          {!isLoading && data && sorted.map((el, i) => {
+          {error && 
+            <ErrorPlug />
+          }
+          {isLoading &&
+            <LoadingPlug />
+          }
+          {!isLoading && data && data.map((el, i) => {
               return (
                 <div className="py-2 grid grid-cols-12 border-t border-gray-200" key={i}>
                     <div className="p-2 col-span-1 border-r border-gray-200">{el.form}</div>

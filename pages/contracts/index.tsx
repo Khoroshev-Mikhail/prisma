@@ -2,13 +2,14 @@ import React, { useState } from "react"
 import { GetServerSideProps } from "next"
 import prisma from '../../lib/prisma';
 import Layout from "../../components/layout/Layout";
-import { Button, Table, TextInput } from "flowbite-react";
+import { Button, TextInput } from "flowbite-react";
 import useSWR from 'swr'
 import Link from "next/link";
 import { Contract, Partner, Prisma } from "@prisma/client";
 import ContractRow from "../../components/ui/СontractRow";
-import { sortByDate, sortById, sortByName, sortByStatus } from "../../lib/comparators";
 import Image from "next/image";
+import ErrorPlug from "../../components/layout/ErrorPlug";
+import LoadingPlug from "../../components/layout/LoadingPlug";
 
 export type ContractExt = Contract & {
   partner: {
@@ -108,6 +109,12 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
             <div className="col-span-1 text-center flex justify-center">
             </div>
         </div>
+        {error && 
+          <ErrorPlug />
+        }
+        {isLoading &&
+          <LoadingPlug />
+        }
         {!isLoading && data && data.map((el, i) => {
             return (
                 <ContractRow {...el} key={i}/>

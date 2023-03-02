@@ -2,16 +2,16 @@ import React, { useState } from "react"
 import { GetServerSideProps } from "next"
 import prisma from '../../lib/prisma';
 import Layout from "../../components/layout/Layout";
-import { Button, Table, TextInput } from "flowbite-react";
+import { Button, TextInput } from "flowbite-react";
 import useSWR from 'swr'
 import Link from "next/link";
 import { Ks2, Prisma } from "@prisma/client";
 import Ks2Row from "../../components/ui/Ks2Row";
-import { sortByDate, sortById, sortByINN, sortByName, sortByStatus } from "../../lib/comparators";
 import Image from "next/image";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ks3Ext } from "../ks3";
+import ErrorPlug from "../../components/layout/ErrorPlug";
+import LoadingPlug from "../../components/layout/LoadingPlug";
 
 export type Ks2Ext = Ks2 & {
   ks3: {
@@ -105,6 +105,12 @@ export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
           <div className="col-span-2 px-2 text-center border-r border-gray-200"></div>
           <div className="col-span-1 px-2 text-center border-r border-gray-200"></div>
         </div>
+        {error && 
+          <ErrorPlug />
+        }
+        {isLoading &&
+          <LoadingPlug />
+        }
         {!isLoading && data && data.map((el, i) => {
               return (
                 <Ks2Row {...el} key={i}/>

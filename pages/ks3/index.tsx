@@ -5,13 +5,13 @@ import Layout from "../../components/layout/Layout";
 import { Button, TextInput } from "flowbite-react";
 import useSWR from 'swr'
 import Link from "next/link";
-import { Contract, Ks3, Prisma } from "@prisma/client";
+import { Ks3, Prisma } from "@prisma/client";
 import Ks3Row from "../../components/ui/Ks3Row";
-import { sortByDate, sortById, sortByName, sortByStatus } from "../../lib/comparators";
 import Image from "next/image";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ContractExt } from "../contracts";
+import ErrorPlug from "../../components/layout/ErrorPlug";
+import LoadingPlug from "../../components/layout/LoadingPlug";
 
 export type ks3Ext = Ks3 & {
   contract: {
@@ -104,6 +104,12 @@ export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
           <div className="col-span-2 px-2 text-center border-r border-gray-200"></div>
           <div className="col-span-1 px-2 text-center border-r border-gray-200"></div>
         </div>
+        {error && 
+          <ErrorPlug />
+        }
+        {isLoading &&
+          <LoadingPlug />
+        }
         {!isLoading && data && data.map((el, i) => {
             return (
               <Ks3Row {...el} key={i}/>

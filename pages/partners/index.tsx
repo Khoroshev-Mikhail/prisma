@@ -2,12 +2,13 @@ import React, { useState } from "react"
 import { GetServerSideProps } from "next"
 import prisma from '../../lib/prisma';
 import Layout from "../../components/layout/Layout";
-import { Button, Table, TextInput} from "flowbite-react";
+import { Button, TextInput} from "flowbite-react";
 import useSWR from 'swr'
 import Link from "next/link";
 import { Partner } from "@prisma/client";
-import { sortById, sortByINN, sortByName } from "../../lib/comparators";
 import Image from "next/image";
+import ErrorPlug from "../../components/layout/ErrorPlug";
+import LoadingPlug from "../../components/layout/LoadingPlug";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const partners = await prisma.partner.findMany()
@@ -57,6 +58,12 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
                 
               </div>
           </div>
+          {error && 
+            <ErrorPlug />
+          }
+          {isLoading &&
+            <LoadingPlug />
+          }
           {!isLoading && data && data.map((el, i) => {
               return (
                 <div className="py-2 grid grid-cols-12 border-t border-gray-200" key={i}>
