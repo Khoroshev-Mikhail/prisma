@@ -1,4 +1,11 @@
-# Добавить сортировку по updateAt || CreatedAt
-# Добавить работу с файлами
-# в select со списком parentId может добавлять только те у которых accepted === true
-# Ошибки # 418, # 423, # 425 https://stackoverflow.com/questions/73894158/about-nextjs-minified-error-after-i-upgraded-to-latest-versions
+# 1.Попробовать реализовать загрузку файлов на гугл через телеграм апи, для этого:
+### Отправить файл по форме
+### Получить id файла
+### Отправить на гугл скриптс
+#### Если такой вариант не сработает значит реализовать бэкенд логику
+# 2.Разграничить права на клиенте (и желательно api)
+# 3.Написать тесты
+
+
+
+# ошибки # 418, # 423, # 425 https://stackoverflow.com/questions/73894158/about-nextjs-minified-error-after-i-upgraded-to-latest-versions

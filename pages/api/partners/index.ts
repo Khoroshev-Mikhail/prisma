@@ -13,7 +13,7 @@ export const config = {
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
         if(req.method === "GET"){
-            const {id, inn, name, authorId, sortBy, orderBy} = req.query
+            const {inn, name, sortBy, orderBy} = req.query
             if(sortBy != undefined && !['id', 'name', 'inn'].includes(String(sortBy))) throw new Error('Невозможная сортировка')
             const data = await prisma.partner.findMany({
                 where: {
