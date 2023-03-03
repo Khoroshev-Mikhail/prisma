@@ -5,7 +5,7 @@ import { createApi } from "../../lib/APIFns";
 import Layout from "./../../components/layout/Layout";
 import { useSession } from "next-auth/react";
 
-export const forms = ['ООО', 'ИП', 'ЗАО', 'ОАО']
+export const forms: ReadonlyArray<string> = ['ООО', 'ИП', 'ЗАО', 'ОАО']
 
 export default function Create(){
     //UserData
@@ -16,7 +16,7 @@ export default function Create(){
 
     //Локальный стейт
     const [inn, setInn] = useState<string>('')
-    const [form, setForm] = useState<string>('')
+    const [form, setForm] = useState<string>(forms[0])
     const [name, setName] = useState<string>('')
     const [contacts, setContacts] = useState<string>('')
 
@@ -27,7 +27,6 @@ export default function Create(){
         formData.append('name', String(name))
         formData.append('inn', String(inn))
         formData.append('contacts', String(contacts))
-        formData.append('email', session.user.email)
         trigger(formData)
     }
 

@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import prisma from '../../../lib/prisma';
 import { authOptions } from '../auth/[...nextauth]';
 import formidable from "formidable";
+import { ACCEPTED_ROLES, UPDATED_ROLES } from '../../../lib/constants';
 
 export const config = {
     api: {
@@ -31,7 +32,6 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 }
             })
             res.status(200).json(data);
-            return;
         }
 
         const form = await formidable({ multiples: true });
@@ -43,24 +43,27 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
               resolve({ fields, files });
             });
         });
+        const {fields, files} = await formData;
 
         if(req.method === "PUT"){
-            const session = await getServerSession(req, res, authOptions)
-            if(!session) {
-                res.status(401).json('Не авторизирован.');
-                return;
+            const {user: {id : userId, role}} = await getServerSession(req, res, authOptions)
+            if(!userId || !role) res.status(401).json('Не авторизован.')
+            if(!UPDATED_ROLES.includes(role)) return res.status(403).json('Нет прав для совершения операции.')
+
+            const {id, name, date, parentId, accepted, comment} = fields   
+            if(!id) throw new Error('Не указан id.')
+            
+            if(accepted && !ACCEPTED_ROLES.includes(role)) res.status(403).json('Нет прав для совершения операции.')
+            if(accepted && ACCEPTED_ROLES.includes(role)){
+                await prisma.ks2.update({
+                    where: {
+                        id: Number(id)
+                    },
+                    data: {
+                        accepted: (accepted === '' || !accepted) ? undefined : (accepted === 'true' ? true : accepted === 'false' ? false : null),
+                    }
+                })
             }
-            const {fields, files} = await formData;
-            const {id, name, date, parentId, email, accepted, comment} = fields
-            if(!id || !email) throw new Error('Не указан Id или автор обновления.')
-
-            const {id: authorId} = await prisma.user.findUnique({
-                where: {
-                    email: String(email)
-                }
-            })        
-            if(!authorId) throw new Error('Не указан автор.')
-
             const data = await prisma.ks2.update({
                 where: {
                     id: Number(id)
@@ -70,33 +73,28 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     date: date ? String(date) : undefined,
                     updatedAt: new Date(),
                     ks3Id: parentId ? Number(parentId) : undefined,
-                    authorId: authorId ? Number(authorId) : undefined,
-                    accepted: (accepted === '' || !accepted) ? undefined : (accepted === 'true' ? true : accepted === 'false' ? false : null),
+                    authorId: Number(userId),
                     comment: comment ? String(comment) : undefined,
                 }
             })
-            res.status(200).json(data);
-            return;
+            return res.status(200).json(data);
         }
         if(req.method === "DELETE"){
-            const session = await getServerSession(req, res, authOptions)
-            if(!session) {
-                res.status(401).json('Не авторизирован.');
-                return;
-            }
-            const {fields} = await formData;
+            const {user: {id : userId, role}} = await getServerSession(req, res, authOptions)
+            if(!userId || !role) return res.status(401).json('Не авторизован.')
+            if(!UPDATED_ROLES.includes(role)) return res.status(403).json('Нет прав для совершения операции.')
+
             const {id} = fields
             if(!id) throw new Error('Не указан Id.')
-    
+
             const data = await prisma.ks2.delete({
                 where: {
                     id: Number(id)
                 }
             })
-            res.status(200).json(data);
-            return;
+            return res.status(200).json(data);
         }
     }catch(e){
-        res.status(500).json(e.message);
+        return res.status(500).json(e.message);
     }
 }

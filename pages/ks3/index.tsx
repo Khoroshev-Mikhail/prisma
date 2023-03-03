@@ -48,7 +48,7 @@ export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
     const [filterDate, setFilterDate] = useState<Date>(null)
     const [filterAccepted, setfilterAccepted] = useState<string>(null)
     const [comparator, setComparator] = useState<{sortBy: 'id' | 'name' | 'accepted', isOrderByAsc: boolean}>({sortBy: 'name', isOrderByAsc: true})
-    const {data, error, isLoading} = useSWR<ks3Ext[]>(`/api/ks3/?name=${filterName}&parentId=${filterParentId ?? ''}&accepted=${filterAccepted ?? ''}&date=${filterDate?.toJSON() ?? ''}&sortBy=${comparator.sortBy}&orderBy=${comparator.isOrderByAsc ? 'asc' : 'desc'}`, {fallbackData})
+    const {data, error, isLoading, mutate} = useSWR<ks3Ext[]>(`/api/ks3/?name=${filterName}&parentId=${filterParentId ?? ''}&accepted=${filterAccepted ?? ''}&date=${filterDate?.toJSON() ?? ''}&sortBy=${comparator.sortBy}&orderBy=${comparator.isOrderByAsc ? 'asc' : 'desc'}`, {fallbackData})
     const {data: parents} = useSWR<ContractExt[]>(`/api/contracts/`)
     
     return (
@@ -112,7 +112,7 @@ export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
         }
         {!isLoading && data && data.map((el, i) => {
             return (
-              <Ks3Row {...el} key={i}/>
+              <Ks3Row {...el} mutate={mutate} key={i}/>
             )
         })} 
         </Layout>

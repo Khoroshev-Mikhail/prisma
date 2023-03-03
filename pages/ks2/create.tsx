@@ -30,7 +30,6 @@ export default function Create(){
         formData.append('date', date.toJSON())
         formData.append('parentId', String(parentId))
         formData.append('document', document)
-        formData.append('email', session.user.email)
         trigger(formData)
     }
 
@@ -42,8 +41,8 @@ export default function Create(){
     return (
         <Layout>
                 <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
-                    <div className="col-span-3 text-center border-r border-gray-200">Номер Кс-3</div>
-                    <div className="col-span-2 text-center border-r border-gray-200">Дата Кс-3</div>
+                    <div className="col-span-3 text-center border-r border-gray-200">Номер Кс-2</div>
+                    <div className="col-span-2 text-center border-r border-gray-200">Дата Кс-2</div>
                     <div className="col-span-3 text-center border-r border-gray-200">Вышестоящий документ</div>
                     <div className="col-span-4 text-center">Скан</div>
                 </div>

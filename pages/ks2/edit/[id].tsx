@@ -64,7 +64,6 @@ export default function Edit({fallbackData}:{fallbackData: Ks2Ext}){
         formData.append('date', date.toJSON())
         formData.append('parentId', String(parentId))
         document && formData.append('document', document)
-        formData.append('email', session.user.email)
         trigger(formData)
     }
     function deleteHandler(id: number){

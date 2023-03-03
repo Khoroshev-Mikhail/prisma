@@ -45,7 +45,7 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
   const [filterDate, setFilterDate] = useState<Date>(null)
   const [filterAccepted, setfilterAccepted] = useState<string>(null)
   const [comparator, setComparator] = useState<{sortBy: 'id' | 'name' | 'accepted', isOrderByAsc: boolean}>({sortBy: 'name', isOrderByAsc: true})
-  const {data, error, isLoading} = useSWR<ContractExt[]>(`/api/contracts/?name=${filterName}&parentId=${filterParentId ?? ''}&accepted=${filterAccepted ?? ''}&date=${filterDate?.toJSON() ?? ''}&sortBy=${comparator.sortBy}&orderBy=${comparator.isOrderByAsc ? 'asc' : 'desc'}`, {fallbackData})
+  const {data, error, isLoading, mutate} = useSWR<ContractExt[]>(`/api/contracts/?name=${filterName}&parentId=${filterParentId ?? ''}&accepted=${filterAccepted ?? ''}&date=${filterDate?.toJSON() ?? ''}&sortBy=${comparator.sortBy}&orderBy=${comparator.isOrderByAsc ? 'asc' : 'desc'}`, {fallbackData})
   const {data: parents} = useSWR<Partner[]>(`/api/partners/`)
 
   return (
@@ -117,7 +117,7 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
         }
         {!isLoading && data && data.map((el, i) => {
             return (
-                <ContractRow {...el} key={i}/>
+                <ContractRow {...el} mutate={mutate} key={i}/>
             )
         })} 
     </Layout>

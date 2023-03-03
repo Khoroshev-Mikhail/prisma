@@ -9,6 +9,7 @@ import { Partner } from "@prisma/client";
 import Image from "next/image";
 import ErrorPlug from "./../components/layout/ErrorPlug";
 import LoadingPlug from "./../components/layout/LoadingPlug";
+import { useSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const partners = await prisma.partner.findMany()
@@ -19,11 +20,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
+  const {data: session} = useSession()
   const [filterName, setFilterName] = useState('')
   const [filterInn, setFilterInn] = useState('')
   const [comparator, setComparator] = useState<{sortBy: 'id' | 'name' | 'inn', isOrderByAsc: boolean}>({sortBy: 'name', isOrderByAsc: true})
   const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/?name=${filterName}&inn=${filterInn}&sortBy=${comparator.sortBy}&orderBy=${comparator.isOrderByAsc ? 'asc' : 'desc'}`, {fallbackData})
-
   return (
       <Layout>
           <div className="pt-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">

@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
 import prisma from '../../../lib/prisma';
 import formidable from "formidable";
+import { ACCEPTED_ROLES, UPDATED_ROLES } from '../../../lib/constants';
 
 export const config = {
     api: {
@@ -46,21 +47,24 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
         const { fields, files } = await formData;
 
         if(req.method === "PUT"){
-            const session = await getServerSession(req, res, authOptions)
-            if(!session) {
-                res.status(401).json('Не авторизирован.');
-                return;
+            const {user: {id : userId, role}} = await getServerSession(req, res, authOptions)
+            if(!userId || !role) return res.status(401).json('Не авторизован.')
+            if(!UPDATED_ROLES.includes(role)) return res.status(403).json('Нет прав для совершения операции.')
+            
+            const {id, name, description, date, expireDate, partnerId, accepted} = fields
+            if(!id) throw new Error('Не указан id.') 
+
+            if(accepted && !ACCEPTED_ROLES.includes(role)) return res.status(403).json('Нет прав для совершения операции.')
+            if(accepted && ACCEPTED_ROLES.includes(role)){
+                await prisma.contract.update({
+                    where: {
+                        id: Number(id)
+                    },
+                    data: {
+                        accepted: (accepted === '' || !accepted) ? undefined : (accepted === 'true' ? true : accepted === 'false' ? false : null),
+                    }
+                })
             }
-
-            const {id, name, description, date, expireDate, partnerId, email, accepted,} = fields
-            if(!id || !email) throw new Error('Не указан Id или автор обновления.')
-
-            const {id: authorId} = await prisma.user.findUnique({
-                where: {
-                    email: String(email)
-                }
-            })        
-            if(!authorId) throw new Error('Не указан автор.')
 
             const data = await prisma.contract.update({
                 where: {
@@ -73,19 +77,16 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     expireDate: expireDate ? String(expireDate) : undefined,
                     updatedAt: new Date(),
                     partnerId: partnerId ? Number(partnerId) : undefined,
-                    authorId: authorId ? Number(authorId) : undefined,
-                    accepted: (accepted === '' || !accepted) ? undefined : (accepted === 'true' ? true : accepted === 'false' ? false : null),
+                    authorId: Number(userId),
                 }
             })
-            res.status(200).json(data);
-            return;
+            return res.status(200).json(data);
         }
         if(req.method === "DELETE"){
-            const session = await getServerSession(req, res, authOptions)
-            if(!session) {
-                res.status(401).json('Не авторизирован.');
-                return;
-            }
+            const {user: {id : userId, role}} = await getServerSession(req, res, authOptions)
+            if(!userId || !role) return res.status(401).json('Не авторизован.')
+            if(!UPDATED_ROLES.includes(role)) return res.status(403).json('Нет прав для совершения операции.')
+            
             const {id} = fields
             if(!id) throw new Error('Не указан Id.')
     
@@ -94,10 +95,9 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     id: Number(id)
                 }
             })
-            res.status(200).json(data);
-            return;
+            return res.status(200).json(data);
         }
     }catch(e){
-        res.status(500).json(e.message);
+        return res.status(500).json(e.message);
     }
 }

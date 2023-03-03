@@ -34,7 +34,6 @@ export default function Create(){
         formData.append('expireDate', expireDate.toJSON())
         formData.append('parentId', String(parentId))
         formData.append('document', document)
-        formData.append('email', session.user.email)
         trigger(formData)
     }
     

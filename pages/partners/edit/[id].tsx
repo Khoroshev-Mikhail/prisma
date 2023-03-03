@@ -51,7 +51,6 @@ export default function Edit({fallbackData}:{fallbackData: Partner}){
         formData.append('name', String(name))
         formData.append('inn', String(inn))
         formData.append('contacts', String(contacts))
-        formData.append('email', session.user.email)
         trigger(formData)
     }
     function deleteHandler(id: number){

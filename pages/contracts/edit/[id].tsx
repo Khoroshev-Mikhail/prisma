@@ -69,7 +69,6 @@ export default function Edit({fallbackData}:{fallbackData: ContractExt}){
         formData.append('expireDate', expireDate.toJSON())
         formData.append('parentId', String(parentId))
         document && formData.append('document', document)
-        formData.append('email', session.user.email)
         trigger(formData)
     }
     function deleteHandler(id: number){

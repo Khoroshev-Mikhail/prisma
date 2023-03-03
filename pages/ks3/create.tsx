@@ -30,16 +30,7 @@ export default function Create(){
         formData.append('date', date.toJSON())
         formData.append('parentId', String(parentId))
         formData.append('document', document)
-        formData.append('email', session.user.email)
         trigger(formData)
-    }
-    async function sendGoogle(){
-        const formData = new FormData()
-        formData.append('document', document)
-        await fetch('/api/ks3/', {
-            method: 'POST',
-            body: formData
-        })
     }
 
     //Эффекты
@@ -82,7 +73,6 @@ export default function Create(){
             <div className="grid grid-cols-12 border-y border-gray-200">
                 <div className="p-2 col-span-12 flex justify-end">
                     <Button onClick={()=>handler()}>Создать</Button>
-                    <Button onClick={()=>sendGoogle()}>Гугл</Button>
                 </div>
             </div>
         </Layout>
