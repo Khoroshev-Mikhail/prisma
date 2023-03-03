@@ -79,18 +79,16 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
             <div className="col-span-2 text-center border-r border-gray-200">
             </div>
             <div className="px-2 col-span-2 text-center border-r border-gray-200">
-            {parents &&
-                  <select value={filterParentId ?? ''} onChange={(e)=>setfilterParentId(String(e.target.value))} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                      <option value=''>Все</option>
-                      {parents && parents.map((el, i) => {
-                          return (
-                              <option key={i} value={el.id}>
-                                  {el.name}
-                              </option>
-                          )
-                      })}
-                  </select>
-              }
+                <select value={filterParentId ?? ''} onChange={(e)=>setfilterParentId(String(e.target.value))} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value=''>Все</option>
+                    {parents && parents.map((el, i) => {
+                        return (
+                            <option key={i} value={el.id}>
+                                {el.name}
+                            </option>
+                        )
+                    })}
+                </select>
             </div>
             <div className="col-span-2 px-2 text-center border-r border-gray-200 ">
             <select value={filterAccepted ?? ''} onChange={(e)=>setfilterAccepted(String(e.target.value))} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -115,7 +113,7 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
         {isLoading &&
           <LoadingPlug />
         }
-        {!isLoading && data && data.map((el, i) => {
+        {!error && !isLoading && data && data.map((el, i) => {
             return (
                 <ContractRow {...el} mutate={mutate} key={i}/>
             )

@@ -7,6 +7,7 @@ import { ContractExt } from "../../pages/contracts";
 import useSWR, { KeyedMutator } from "swr";
 import Image from "next/image";
 import { useState } from "react";
+import { ACCEPTED_ROLES } from "../../lib/constants";
 
 export default function ContractRow({...props}:ContractExt & {mutate: KeyedMutator<ContractExt[]>}){
     const [isLoading, setLoading] = useState<boolean>(false)
@@ -47,11 +48,9 @@ export default function ContractRow({...props}:ContractExt & {mutate: KeyedMutat
             <div className="p-2 col-span-2 border-r border-gray-200">{new Date(props.date).toLocaleDateString()}</div>
             <div className="p-2 col-span-2 border-r border-gray-200">{props.partner.form} {props.partner.name}</div>
             <div className="px-2 col-span-2 border-r border-gray-200 flex justify-center">
-                {isLoading 
-                    ?
-                        <Spinner size="xl" />
-                    :
-                    <Button.Group>
+                {ACCEPTED_ROLES.includes(session?.user?.role) && (isLoading 
+                    ? <Spinner size="xl" />
+                    : <Button.Group>
                         <Button onClick={()=>handlerAccepted(props.accepted)} color={props.accepted === true ? 'success' : 'gray'} className="w-1/2">
                             {props.accepted === true ? 'Принят' : 'Принять'}
                         </Button>
@@ -59,6 +58,11 @@ export default function ContractRow({...props}:ContractExt & {mutate: KeyedMutat
                             {props.accepted === false ? 'Отклонён' : 'Отклонить'}
                         </Button>
                     </Button.Group>
+                )}
+                {!ACCEPTED_ROLES.includes(session?.user?.role) &&
+                    <div className="py-2">
+                        {props.accepted === true ? 'Принят' : props.accepted === false ? 'Отклонён' : 'На рассмотрении'}
+                    </div>
                 }
             </div>
             <div className="p-2 col-span-1 border-r border-gray-200 text-center">

@@ -4,7 +4,7 @@ import { ks3Ext } from "../../pages/ks3";
 import useSWRMutation from 'swr/mutation'
 import { updateApi } from "../../lib/APIFns";
 import { useSession } from "next-auth/react";
-import useSWR, { KeyedMutator } from "swr";
+import { KeyedMutator } from "swr";
 import Image from "next/image";
 import { useState } from "react";
 //const date = new Date(props.date).toLocaleDateString() по поводу ошибок 418 425 423 - так не сработает
@@ -47,21 +47,19 @@ export default function Ks3Row({...props}:ks3Ext & {mutate: KeyedMutator<ks3Ext[
             <div className="p-2 col-span-2 border-r border-gray-200">{new Date(props.date).toLocaleDateString()}</div>
             <div className="p-2 col-span-2 border-r border-gray-200">{props.contract.name}</div>
             <div className="px-2 col-span-2 border-r border-gray-200 flex justify-center">
-              <Button.Group>
-                    {isLoading 
-                        ?
-                            <Spinner size="xl" />
-                        :
-                        <Button.Group>
-                            <Button onClick={()=>handlerAccepted(props.accepted)} color={props.accepted === true ? 'success' : 'gray'} className="w-1/2">
-                                {props.accepted === true ? 'Принят' : 'Принять'}
-                            </Button>
-                            <Button onClick={()=>handlerRejected(props.accepted)} color={props.accepted === false ? 'failure' : 'gray'} className="w-1/2">
-                                {props.accepted === false ? 'Отклонён' : 'Отклонить'}
-                            </Button>
-                        </Button.Group>
-                    }
-              </Button.Group>
+                {isLoading 
+                    ?
+                        <Spinner size="xl" />
+                    :
+                    <Button.Group>
+                        <Button onClick={()=>handlerAccepted(props.accepted)} color={props.accepted === true ? 'success' : 'gray'} className="w-1/2">
+                            {props.accepted === true ? 'Принят' : 'Принять'}
+                        </Button>
+                        <Button onClick={()=>handlerRejected(props.accepted)} color={props.accepted === false ? 'failure' : 'gray'} className="w-1/2">
+                            {props.accepted === false ? 'Отклонён' : 'Отклонить'}
+                        </Button>
+                    </Button.Group>
+                }
             </div>
             <div className="p-2 col-span-1 border-r border-gray-200 flex justify-evenly">
                 <Link href={''}><Image className="inline-block" src="/images/eye.svg" alt='arrow' width={30} height={30} /></Link>

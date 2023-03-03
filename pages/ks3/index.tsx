@@ -79,18 +79,16 @@ export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
             {/* <DatePicker selected={filterDate} onChange={(value: Date) => setFilterDate(value)} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg" /> */}
           </div>
           <div className="col-span-2 px-2 text-center border-r border-gray-200">
-            {parents &&
-                <select value={filterParentId ?? ''} onChange={(e)=>setfilterParentId(String(e.target.value))} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value=''>Все</option>
-                    {parents && parents.map((el, i) => {
-                        return (
-                            <option key={i} value={el.id}>
-                                {el.name} с {el.partner.name} от {new Date(el.date).toLocaleDateString()}
-                            </option>
-                        )
-                    })}
-                </select>
-            }
+              <select value={filterParentId ?? ''} onChange={(e)=>setfilterParentId(String(e.target.value))} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  <option value=''>Все</option>
+                  {parents && parents.map((el, i) => {
+                      return (
+                          <option key={i} value={el.id}>
+                              {el.name} с {el.partner.name} от {new Date(el.date).toLocaleDateString()}
+                          </option>
+                      )
+                  })}
+              </select>
           </div>
           <div className="col-span-2 px-2 text-center border-r border-gray-200">
             <select value={filterAccepted ?? ''} onChange={(e)=>setfilterAccepted(String(e.target.value))} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">

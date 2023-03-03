@@ -64,7 +64,7 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
           {isLoading &&
             <LoadingPlug />
           }
-          {!isLoading && data && data.map((el, i) => {
+          {!error && !isLoading && data && data.map((el, i) => {
               return (
                 <div className="py-2 grid grid-cols-12 border-t border-gray-200" key={i}>
                     <div className="p-2 col-span-1 border-r border-gray-200">{el.form}</div>

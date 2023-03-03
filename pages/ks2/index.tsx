@@ -80,7 +80,6 @@ export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
             {/* <DatePicker selected={filterDate} onChange={(value: Date) => setFilterDate(value)} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg" /> */}
           </div>
           <div className="col-span-2 px-2 text-center border-r border-gray-200">
-            {parents &&
                 <select id="countries" value={filterParentId ?? ''} onChange={(e)=>setfilterParentId(String(e.target.value))} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option value=''>Все</option>
                     {parents && parents.map((el, i) => {
@@ -91,7 +90,6 @@ export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
                         )
                     })}
                 </select>
-            }
           </div>
           <div className="col-span-2 px-2 text-center border-r border-gray-200">
             <select value={filterAccepted ?? ''} onChange={(e)=>setfilterAccepted(String(e.target.value))} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -111,7 +109,7 @@ export default function Ks2Page({fallbackData}:{fallbackData: Ks2Ext[]}){
         {isLoading &&
           <LoadingPlug />
         }
-        {!isLoading && data && data.map((el, i) => {
+        {!error && !isLoading && data && data.map((el, i) => {
               return (
                 <Ks2Row {...el} mutate={mutate} key={i}/>
               )
