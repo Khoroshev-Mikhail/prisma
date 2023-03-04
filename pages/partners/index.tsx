@@ -73,7 +73,7 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
           }
           {!error && !isLoading && data && data.map((el, i) => {
               return (
-                <div className={`py-4 grid bg-gray-50 border-t border-gray-200 ${session?.user.accessLevel >= 2 ? 'grid-cols-12' : 'grid-cols-11'}`} key={i}>
+                <div className={`py-2 grid bg-gray-50 border-t border-gray-200 ${session?.user.accessLevel >= 2 ? 'grid-cols-12' : 'grid-cols-11'}`} key={i}>
                     <div className="p-2 col-span-1 border-r border-gray-200">{el.form}</div>
                     <div className="p-2 col-span-4 border-r border-gray-200">{el.name}</div>
                     <div className="p-2 col-span-3 border-r border-gray-200">{el.inn}</div>
