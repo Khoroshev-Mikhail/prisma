@@ -19,15 +19,10 @@ model User {
   contracts     Contract[]
   ks3           Ks3[]
   ks2           Ks2[]
-  role          Role @default(USER)
+  accessLevel   Int
   @@map(name: "users")
 }
-enum Role {
-  USER
-  ADMIN
-  BOOKKEEPER
-  SDO
-}
+
 model Partner {
   id            Int @unique @default(autoincrement()) @id
   inn           String @unique

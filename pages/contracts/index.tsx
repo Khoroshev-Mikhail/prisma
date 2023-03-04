@@ -10,6 +10,7 @@ import ContractRow from "../../components/ui/СontractRow";
 import Image from "next/image";
 import ErrorPlug from "../../components/layout/ErrorPlug";
 import LoadingPlug from "../../components/layout/LoadingPlug";
+import { useSession } from "next-auth/react";
 
 export type ContractExt = Contract & {
   partner: {
@@ -40,6 +41,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 }
 
 export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
+  const {data: session} = useSession()
   const [filterName, setFilterName] = useState('')
   const [filterParentId, setfilterParentId] = useState<string>(null)
   const [filterDate, setFilterDate] = useState<Date>(null)
@@ -50,7 +52,7 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
 
   return (
     <Layout>
-        <div className="pt-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
+        <div className={`grid bg-gray-50 border-t border-gray-200 ${session?.user.accessLevel >= 2 ? 'pt-4 grid-cols-12' : 'py-4 grid-cols-11'}`}>
             <div 
               onClick={()=>setComparator({sortBy: 'name', isOrderByAsc: !comparator.isOrderByAsc})}
               className="underline cursor-pointer col-span-2 text-center border-r border-gray-200"
@@ -64,15 +66,17 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
             <div className="col-span-2 text-center border-r border-gray-200">
               Статус
             </div>
-            <div className="col-span-1 text-center border-r border-gray-200">Скан</div>
             <div className="col-span-2 text-center border-r border-gray-200">Комментарий</div>
-            <div className="col-span-1 text-center flex justify-center">
-              <Link href='/contracts/create'>
-                <Button>+</Button>
-              </Link>
-            </div>
+            <div className="col-span-1 text-center border-r border-gray-200">Скан</div>
+            {session?.user.accessLevel >= 2 &&
+              <div className="col-span-1 text-center flex justify-center">
+                  <Link href='/contracts/create'>
+                      <Button>+</Button>
+                  </Link>
+              </div>
+              }
         </div>
-        <div className="py-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">
+        <div className={`py-4 grid bg-gray-50 border-t border-gray-200 ${session?.user.accessLevel >= 2 ? 'grid-cols-12' : 'grid-cols-11'}`}>
             <div className="col-span-2 px-2 text-center border-r border-gray-200 ">
               <TextInput value={filterName} onChange={(e)=>setFilterName(e.target.value)} placeholder="Фильтр по названию"/>
             </div>
@@ -98,14 +102,17 @@ export default function Contracts({fallbackData}:{fallbackData: ContractExt[]}){
                 <option value="null">Не обработан</option>
               </select>
             </div>
-            <div className="col-span-1 text-center border-r border-gray-200">
-
-            </div>
             <div className="col-span-2 text-center border-r border-gray-200">
 
             </div>
-            <div className="col-span-1 text-center flex justify-center">
+            <div className="col-span-1 text-center border-r border-gray-200">
+
             </div>
+            {session?.user.accessLevel >= 2 &&
+            <div className="col-span-1 text-center flex justify-center">
+            
+            </div>
+            }
         </div>
         {error && 
           <ErrorPlug />

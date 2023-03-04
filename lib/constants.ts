@@ -1,2 +1,4 @@
-export const ACCEPTED_ROLES = ['BOOKKEEPER', 'ADMIN'] // Role пользователей кто может изменять статус документов (принять / отклонить)
-export const UPDATED_ROLES = ['BOOKKEEPER', 'ADMIN', 'SDO'] //// Role пользователей кто может обновлять и удалять документы 
+export const roleUser = 1 
+export const roleSDO = 2
+export const roleBOOKKEEPER = 3
+export const roleADMIN = 4

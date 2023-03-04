@@ -3,7 +3,6 @@ import { getServerSession } from 'next-auth';
 import prisma from '../../../lib/prisma';
 import { authOptions } from '../auth/[...nextauth]';
 import formidable from "formidable";
-import { UPDATED_ROLES } from '../../../lib/constants';
 
 export const config = {
     api: {
@@ -49,9 +48,9 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             return res.status(200).json(data);
         }
         if(req.method === "POST"){
-            const {user: {id : userId, role}} = await getServerSession(req, res, authOptions)
-            if(!userId || !role) return res.status(401).json('Не авторизован.')
-            if(!UPDATED_ROLES.includes(role)) return res.status(403).json('Нет прав для совершения операции.')
+            const {user: {id : userId, accessLevel}} = await getServerSession(req, res, authOptions)
+            if(!userId || !accessLevel) return res.status(401).json('Не авторизован.')
+            if(accessLevel < 2) return res.status(403).json('Нет прав для совершения операции.')
 
             const form = await formidable({ multiples: true });
             const formData: Promise<{fields: any, files?: File}> = new Promise((resolve, reject) => {

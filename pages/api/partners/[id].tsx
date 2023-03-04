@@ -3,7 +3,6 @@ import { getServerSession } from 'next-auth';
 import prisma from '../../../lib/prisma';
 import { authOptions } from '../auth/[...nextauth]';
 import formidable from "formidable";
-import { UPDATED_ROLES } from '../../../lib/constants';
 
 export const config = {
     api: {
@@ -36,9 +35,9 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
         const {fields, files} = await formData;
 
         if(req.method === "PUT"){
-            const {user: {id : userId, role}} = await getServerSession(req, res, authOptions)
-            if(!userId || !role) return res.status(401).json('Не авторизован.')
-            if(!UPDATED_ROLES.includes(role)) return res.status(403).json('Нет прав для совершения операции.')
+            const {user: {id : userId, accessLevel}} = await getServerSession(req, res, authOptions)
+            if(!userId || !accessLevel) return res.status(401).json('Не авторизован.')
+            if(accessLevel < 2) return res.status(403).json('Нет прав для совершения операции.')
 
             const {id, inn, form, contacts, name, } = fields
             if(!id ) throw new Error('Указан id.')      
@@ -57,9 +56,9 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             return res.status(200).json(data);
         }
         if(req.method === "DELETE"){
-            const {user: {id : userId, role}} = await getServerSession(req, res, authOptions)
-            if(!userId || !role) return res.status(401).json('Не авторизован.')
-            if(!UPDATED_ROLES.includes(role)) return res.status(403).json('Нет прав для совершения операции.')
+            const {user: {id : userId, accessLevel}} = await getServerSession(req, res, authOptions)
+            if(!userId || !accessLevel) return res.status(401).json('Не авторизован.')
+            if(accessLevel < 3) return res.status(403).json('Нет прав для совершения операции.')
 
             const {id} = fields
             if(!id) throw new Error('Не указан Id.')

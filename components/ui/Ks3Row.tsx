@@ -42,31 +42,43 @@ export default function Ks3Row({...props}:ks3Ext & {mutate: KeyedMutator<ks3Ext[
         setLoading(false)
     }
     return (
-        <div className="py-2 grid grid-cols-12 border-t border-gray-200">
+        <div className={`py-2 grid bg-gray-50 border-t border-gray-200 ${session?.user.accessLevel >= 2 ? 'grid-cols-12' : 'grid-cols-11'}`}>
             <div className="p-2 col-span-2 border-r border-gray-200">{props.name}</div>
             <div className="p-2 col-span-2 border-r border-gray-200">{new Date(props.date).toLocaleDateString()}</div>
             <div className="p-2 col-span-2 border-r border-gray-200">{props.contract.name}</div>
             <div className="px-2 col-span-2 border-r border-gray-200 flex justify-center">
-                {isLoading 
-                    ?
+            {session?.user.accessLevel >= 3 && (isLoading 
+                    ? 
                         <Spinner size="xl" />
-                    :
-                    <Button.Group>
-                        <Button onClick={()=>handlerAccepted(props.accepted)} color={props.accepted === true ? 'success' : 'gray'} className="w-1/2">
-                            {props.accepted === true ? 'Принят' : 'Принять'}
-                        </Button>
-                        <Button onClick={()=>handlerRejected(props.accepted)} color={props.accepted === false ? 'failure' : 'gray'} className="w-1/2">
-                            {props.accepted === false ? 'Отклонён' : 'Отклонить'}
-                        </Button>
-                    </Button.Group>
+                    : 
+                        <Button.Group>
+                            <Button onClick={()=>handlerAccepted(props.accepted)} color={props.accepted === true ? 'success' : 'gray'} className="w-1/2">
+                                {props.accepted === true ? 'Принят' : 'Принять'}
+                            </Button>
+                            <Button onClick={()=>handlerRejected(props.accepted)} color={props.accepted === false ? 'failure' : 'gray'} className="w-1/2">
+                                {props.accepted === false ? 'Отклонён' : 'Отклонить'}
+                            </Button>
+                        </Button.Group>
+                )}
+                {(session?.user.accessLevel ?? 0) < 3 &&
+                    <div className="py-2">
+                        {props.accepted === true ? 'Принят' : props.accepted === false ? 'Отклонён' : 'На рассмотрении'}
+                    </div>
                 }
             </div>
+            <div className="p-2 col-span-2 border-r border-gray-200">{props.comment}</div>
             <div className="p-2 col-span-1 border-r border-gray-200 flex justify-evenly">
                 <Link href={''}><Image className="inline-block" src="/images/eye.svg" alt='arrow' width={30} height={30} /></Link>
                 <Link href={''}><Image className="inline-block" src="/images/archive-box-arrow-down.svg" alt='arrow' width={30} height={30} /></Link>
             </div>
-            <div className="p-2 col-span-2 border-r border-gray-200">{props.comment}</div>
-            <div className="p-2 col-span-1 text-center"><Link href={`/ks3/edit/${props.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">Edit</Link></div>
+            {session?.user.accessLevel >= 2 &&
+            <div className="p-2 col-span-1 text-center">
+                <Link href={`/ks3/edit/${props.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-500">
+                    Edit
+                </Link>
+            </div>
+            }
+            
         </div>
       )
 }

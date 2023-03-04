@@ -2,7 +2,6 @@ import { getServerSession } from 'next-auth';
 import prisma from '../../../lib/prisma';
 import { authOptions } from '../auth/[...nextauth]';
 import formidable from "formidable";
-import { ACCEPTED_ROLES, UPDATED_ROLES } from '../../../lib/constants';
 
 export const config = {
     api: {
@@ -48,9 +47,9 @@ export default async function handler(req, res) {
             return res.status(200).json(data);
         }
         if(req.method === "POST"){
-            const {user: {id : userId, role}} = await getServerSession(req, res, authOptions)
-            if(!userId || !role) return res.status(401).json('Не авторизован.')
-            if(!UPDATED_ROLES.includes(role)) return res.status(403).json('Нет прав для совершения операции.')
+            const {user: {id : userId, accessLevel}} = await getServerSession(req, res, authOptions)
+            if(!userId || !accessLevel) return res.status(401).json('Не авторизован.')
+            if(accessLevel < 2) return res.status(403).json('Нет прав для совершения операции.')
 
             const form = await formidable({ multiples: true });
             const formData: Promise<{fields: any, files?: File}> = new Promise((resolve, reject) => {
@@ -66,7 +65,7 @@ export default async function handler(req, res) {
             const {name, date, parentId, accepted, comment} = fields
             if(!name || !date || !parentId) throw new Error('Указаны не все данные.')
 
-            if(accepted && !ACCEPTED_ROLES.includes(role)) return res.status(403).json('Нет прав для создания документа с уже установленным статусом (принят / отклонён).')
+            if(accepted && accessLevel < 3) return res.status(403).json('Нет прав для создания документа с уже установленным статусом (принят / отклонён).')
             const data = await prisma.ks3.create({
                 data: {
                     name: String(name),
