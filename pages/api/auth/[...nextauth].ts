@@ -2,6 +2,25 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import prisma from '../../../lib/prisma';
 import type { NextAuthOptions } from 'next-auth'
+import { DefaultSession } from "next-auth";
+
+
+declare module "next-auth" {
+    interface User {
+        accessLevel: number
+        id: number | string
+    }
+
+    interface Session extends DefaultSession {
+        user?: User;
+    }
+}
+declare module "next-auth/jwt" {
+    interface JWT {
+      accessLevel: number
+      id: number | string
+    }
+}
 
 export const authOptions: NextAuthOptions = {
     secret: process.env.AUTH_SECRET,

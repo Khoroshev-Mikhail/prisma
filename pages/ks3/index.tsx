@@ -114,7 +114,7 @@ export default function Ks3Page({fallbackData}:{fallbackData: ks3Ext[]}){
         {isLoading &&
           <LoadingPlug />
         }
-        {!isLoading && data && data.map((el, i) => {
+        {!error && !isLoading && data && data.map((el, i) => {
             return (
               <Ks3Row {...el} mutate={mutate} key={i}/>
             )
