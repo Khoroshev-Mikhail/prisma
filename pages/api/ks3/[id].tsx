@@ -15,6 +15,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
         if(req.method === "GET"){
             const {id} = req.query
             if(!id) throw new Error('Не указан id.')
+            
             const data = await prisma.ks3.findUnique({
                 where: {
                     id: Number(id),
@@ -46,13 +47,13 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
 
         if(req.method === "PUT"){
             const {user: {id : userId, accessLevel}} = await getServerSession(req, res, authOptions)
+            const {id, name, date, parentId, accepted, comment} = fields
+
+            if(!id) throw new Error('Не указан id.')
             if(!userId || !accessLevel) return res.status(401).json('Не авторизован.')
             if(accessLevel < 2) return res.status(403).json('Нет прав для совершения операции.')
-            
-            const {id, name, date, parentId, accepted, comment} = fields
-            if(!id) throw new Error('Не указан id.')
-   
             if(accepted && accessLevel < 3) return res.status(403).json('Нет прав для совершения операции.')
+
             if(accepted && accessLevel >= 3){
                 await prisma.ks3.update({
                     where: {
@@ -80,11 +81,11 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
         }
         if(req.method === "DELETE"){
             const {user: {id : userId, accessLevel}} = await getServerSession(req, res, authOptions)
+            const {id} = fields
+
+            if(!id) throw new Error('Не указан Id.')
             if(!userId || !accessLevel) return res.status(401).json('Не авторизован.')
             if(accessLevel < 2) return res.status(403).json('Нет прав для совершения операции.')
-
-            const {id} = fields
-            if(!id) throw new Error('Не указан Id.')
             
             const data = await prisma.ks3.delete({
                 where: {

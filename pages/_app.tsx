@@ -9,20 +9,9 @@ import LoadingPlug from "../components/layout/LoadingPlug";
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
-    <SessionProvider session={session}>
-      <SWRConfig value={{
-        // refreshInterval: 3000,
-        fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
-      }}>
-        {Component.auth ? (
-        <Auth>
-          <Component {...pageProps} />
-        </Auth>
-      ) : (
+
         <Component {...pageProps} />
-      )}
-      </SWRConfig>
-    </SessionProvider>
+
   );
 };
 function Auth({ children }) {

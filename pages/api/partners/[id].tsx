@@ -15,6 +15,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
         if(req.method === 'GET'){
             const {id} = req.query
             if(!id) throw new Error('Не указан id.')
+            
             const data = await prisma.partner.findUnique({
                 where: {
                     id: Number(id),
@@ -36,11 +37,12 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
 
         if(req.method === "PUT"){
             const {user: {id : userId, accessLevel}} = await getServerSession(req, res, authOptions)
+            const {id, inn, form, contacts, name, } = fields
+
+            if(!id ) throw new Error('Указан id.')      
             if(!userId || !accessLevel) return res.status(401).json('Не авторизован.')
             if(accessLevel < 2) return res.status(403).json('Нет прав для совершения операции.')
 
-            const {id, inn, form, contacts, name, } = fields
-            if(!id ) throw new Error('Указан id.')      
             const data = await prisma.partner.update({
                 where: {
                     id: Number(id)
@@ -57,11 +59,11 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
         }
         if(req.method === "DELETE"){
             const {user: {id : userId, accessLevel}} = await getServerSession(req, res, authOptions)
+            const {id} = fields
+
+            if(!id) throw new Error('Не указан Id.')
             if(!userId || !accessLevel) return res.status(401).json('Не авторизован.')
             if(accessLevel < 3) return res.status(403).json('Нет прав для совершения операции.')
-
-            const {id} = fields
-            if(!id) throw new Error('Не указан Id.')
     
             const data = await prisma.partner.delete({
                 where: {

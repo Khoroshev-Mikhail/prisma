@@ -19,15 +19,16 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
   }
 }
-export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
+export default function PartnerPage(){
   const {data: session} = useSession()
   const [filterName, setFilterName] = useState('')
   const [filterInn, setFilterInn] = useState('')
   const [comparator, setComparator] = useState<{sortBy: 'id' | 'name' | 'inn', isOrderByAsc: boolean}>({sortBy: 'name', isOrderByAsc: true})
-  const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/?name=${filterName}&inn=${filterInn}&sortBy=${comparator.sortBy}&orderBy=${comparator.isOrderByAsc ? 'asc' : 'desc'}`, {fallbackData})
+  const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/?name=${filterName}&inn=${filterInn}&sortBy=${comparator.sortBy}&orderBy=${comparator.isOrderByAsc ? 'asc' : 'desc'}`)
 
   return (
       <Layout>
+        <h1>ara</h1>
           <div className={`grid bg-gray-50 border-t border-gray-200 ${session?.user.accessLevel >= 2 ? 'pt-4 grid-cols-12' : 'py-4 grid-cols-11'}`}>
               <div className="col-span-1 text-center border-r border-gray-200">
                 Форма

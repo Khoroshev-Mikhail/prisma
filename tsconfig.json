@@ -17,7 +17,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "paths": {
+      "@/pages/*": ["pages/*"]
+    }
   },
   "exclude": [
     "node_modules"
@@ -26,5 +29,5 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ]
+, "lib/constants.js"  ]
 }
