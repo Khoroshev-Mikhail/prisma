@@ -4,9 +4,9 @@ import { SWRConfig } from "swr";
 
 const Wrapper = ({ children }) => {
   return (
-        <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
-            {children}
-        </SWRConfig>
+      <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
+          {children}
+      </SWRConfig>
   )
   
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { GetServerSideProps } from "next"
 import prisma from './../lib/prisma';
 import Layout from "./../components/layout/Layout";
@@ -25,6 +25,12 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
   const [filterInn, setFilterInn] = useState('')
   const [comparator, setComparator] = useState<{sortBy: 'id' | 'name' | 'inn', isOrderByAsc: boolean}>({sortBy: 'name', isOrderByAsc: true})
   const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/?name=${filterName}&inn=${filterInn}&sortBy=${comparator.sortBy}&orderBy=${comparator.isOrderByAsc ? 'asc' : 'desc'}`, {fallbackData})
+  useEffect(()=>{
+    fetch('/api/osv', {
+      method: 'POST',
+      body: JSON.stringify({test: 'its working'})
+    })
+  },[])
   return (
       <Layout>
           <div className="pt-4 grid grid-cols-12 bg-gray-50 border-t border-gray-200">

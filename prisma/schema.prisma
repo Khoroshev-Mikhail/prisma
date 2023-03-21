@@ -22,7 +22,11 @@ model User {
   accessLevel   Int
   @@map(name: "users")
 }
-
+model Osv {
+  id            Int @unique @default(autoincrement()) @id
+  date          DateTime @default(now())
+  body          String
+}
 model Partner {
   id            Int @unique @default(autoincrement()) @id
   inn           String @unique

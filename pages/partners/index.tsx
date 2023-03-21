@@ -19,12 +19,12 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
   }
 }
-export default function PartnerPage(){
+export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
   const {data: session} = useSession()
   const [filterName, setFilterName] = useState('')
   const [filterInn, setFilterInn] = useState('')
   const [comparator, setComparator] = useState<{sortBy: 'id' | 'name' | 'inn', isOrderByAsc: boolean}>({sortBy: 'name', isOrderByAsc: true})
-  const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/?name=${filterName}&inn=${filterInn}&sortBy=${comparator.sortBy}&orderBy=${comparator.isOrderByAsc ? 'asc' : 'desc'}`)
+  const {data, error, isLoading} = useSWR<Partner[]>(`/api/partners/?name=${filterName}&inn=${filterInn}&sortBy=${comparator.sortBy}&orderBy=${comparator.isOrderByAsc ? 'asc' : 'desc'}`, {fallbackData})
 
   return (
       <Layout>
