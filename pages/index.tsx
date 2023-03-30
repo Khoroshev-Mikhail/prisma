@@ -28,7 +28,7 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
   useEffect(()=>{
     fetch('/api/osv', {
       method: 'POST',
-      body: JSON.stringify({test: 'its working'})
+      body: JSON.stringify({test: 'its working2'})
     })
   },[])
   return (
