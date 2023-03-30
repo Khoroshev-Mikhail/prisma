@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             // const body = JSON.parse(req.body)
             const data = await prisma.osv.create({
                 data: {
-                    body: req.body
+                    body: JSON.stringify(req.body)
                 }
             })
             return res.status(200).json(data);
