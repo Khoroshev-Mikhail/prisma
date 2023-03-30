@@ -22,13 +22,13 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             return res.status(200).send(data);
         }
         if(req.method === 'POST'){
-            // const body = JSON.parse(req.body)
+            const string = JSON.parse(req.body)
             const data = await prisma.osv.create({
                 data: {
-                    body: JSON.stringify(req.body)
+                    body: JSON.stringify(string)
                 }
             })
-            return res.status(200).json(data);
+            return res.status(200).json(string);
         }
     }catch(e){
         const data = await prisma.osv.create({
