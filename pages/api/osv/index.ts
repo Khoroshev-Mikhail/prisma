@@ -14,12 +14,12 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 },
                 take: 1
             })
-            if(data.length > 0){
-                const body = JSON.parse(data[0].body)
-                const date = data[0].date.toLocaleString()
-                return res.status(200).json({ date, body });
-            }
-            return res.status(200).send('Server waitig requests...');
+            // if(data.length > 0){
+            //     const body = JSON.parse(data[0].body)
+            //     const date = data[0].date.toLocaleString()
+            //     return res.status(200).json({ date, body });
+            // }
+            return res.status(200).send(data);
         }
         if(req.method === 'POST'){
             const body = JSON.parse(req.body)
