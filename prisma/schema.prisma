@@ -22,13 +22,6 @@ model User {
   accessLevel   Int
   @@map(name: "users")
 }
-model Osv {
-  id            Int @unique @default(autoincrement()) @id
-  acc           String?
-  name          String?
-  stock         String?
-  qty           String?         
-}
 model Partner {
   id            Int @unique @default(autoincrement()) @id
   inn           String @unique
@@ -82,4 +75,21 @@ model Ks2{
   authorId      Int
   accepted      Boolean?
   comment       String?
+}
+
+model Osv {
+  id            Int @unique @default(autoincrement()) @id
+  acc           String?
+  name          String?
+  stock         String?
+  qty           String?         
+}
+model Account {
+  id            Int @unique @default(autoincrement()) @id
+  name          String @unique
+  desc          String?
+}
+model Mrp {
+  id            Int @unique @default(autoincrement()) @id
+  name          String @unique
 }

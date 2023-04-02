@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 export const config = {
     api: {
         bodyParser: {
-            sizeLimit: '100mb' // Set desired value here
+            sizeLimit: '100mb'
         }
     }
 }
@@ -24,21 +24,20 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             //     throw new Error('Доступ запрещен')
             // }
 
-            await prisma.osv.deleteMany({})
             await prisma.account.deleteMany({})
-            await prisma.mrp.deleteMany({})
-
             const account = await prisma.account.createMany({
-                data: body.map(el => el.acc),
+                data: body.map(el => ({ name: el.acc, desc: el.desc })),
                 skipDuplicates: true,
             })
             //mrp - materially responsible person
+            await prisma.mrp.deleteMany({})
             const mol = await prisma.mrp.createMany({
-                data: body.map(el => el.mrp),
+                data: body.map(el => ({ name: el.mrp })),
                 skipDuplicates: true,
             })
             //Нужно ли здесь создавать добавлять связи? протестируй как быстрее извлекается, если обращается по связи или просто фильтрует по строке mrp | acc
             //UPD вроде при использовании метода createMany нельзя создавать связи
+            await prisma.osv.deleteMany({})
             const data = await prisma.osv.createMany({
                 data: body
             })
