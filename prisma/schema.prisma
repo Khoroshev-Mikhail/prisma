@@ -24,8 +24,10 @@ model User {
 }
 model Osv {
   id            Int @unique @default(autoincrement()) @id
-  date          DateTime @default(now())
-  body          String
+  acc           String?
+  name          String?
+  stock         String?
+  qty           String?         
 }
 model Partner {
   id            Int @unique @default(autoincrement()) @id
