@@ -12,7 +12,20 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
     try{
         if(req.method === 'GET'){
             const data = await prisma.osv.findMany()
-            return res.status(200).send(data);
+            const instruction = `
+                <h1>API</h1>
+                <span>Get a array of objects with keys</span>
+                <ul>
+                    <li>acc?: string (Account)</li>
+                    <li>acc_desc?: string (Account description)</li>
+                    <li>mrp?: string (Matrtially responsible person)</li>
+                    <li>name?: string (Name of material)</li>
+                    <li>stock?: string (Material's stock)</li>
+                    <li>unit?: string (Material'l unit)</li>
+                    <li>qty?: string (Material'l quantity)</li>
+                </ul>
+            `
+            return res.status(200).json(data);
         }
         if(req.method === 'POST'){
             // const { token } =JSON.parse(req.body)

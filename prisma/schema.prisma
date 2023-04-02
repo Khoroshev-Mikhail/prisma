@@ -82,6 +82,7 @@ model Osv {
   acc           String?
   name          String?
   stock         String?
+  unit          String?
   qty           String?         
 }
 model Account {
