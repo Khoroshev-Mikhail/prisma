@@ -19,9 +19,9 @@ export default function PartnerPage({fallbackData}:{fallbackData: Partner[]}){
   //   })
   // },[])
   return (
-      <Layout>
+      <div>
           {ara[0].acc}
-      </Layout>
+      </div>
   )
 }
 
