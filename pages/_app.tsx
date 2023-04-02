@@ -11,13 +11,15 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
       <SWRConfig value={{
         fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
       }}>
+      <Layout>
         {Component.auth ? (
-        <Auth>
+          <Auth>
+            <Component {...pageProps} />
+          </Auth>
+        ) : (
           <Component {...pageProps} />
-        </Auth>
-      ) : (
-        <Component {...pageProps} />
-      )}
+        )}
+      </Layout>
       </SWRConfig>
     </SessionProvider>
   );
@@ -31,10 +33,6 @@ function Auth({ children }) {
       </Layout>
     )
   }
-  return (
-    <Layout>
-      {children}
-    </Layout>
-  )
+  return children
 }
 export default App;
