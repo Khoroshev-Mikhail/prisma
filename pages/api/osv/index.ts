@@ -18,11 +18,12 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 where: {
                     acc: acc ? String(acc) : undefined,
                     stock: stock ? String(stock) : undefined,
-                    mrp: mrp ? String(mrp) : undefined,
-                    // mrp: {
-                    //     contains: mrp ? String(mrp) : undefined,
-                    //     mode: 'insensitive',
-                    // },
+                    // mrp: mrp ? String(mrp) : undefined,
+                    mrp: {
+                        equals: String(mrp),
+                        mode: 'insensitive'
+                    }
+
                 }
             })
             return res.status(200).json(data);

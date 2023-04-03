@@ -25,8 +25,8 @@ const Nav: React.FC = () => {
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
-        <Link href='/account/10.08'>Малоценка</Link>
-        <Link href='/account/mc04'>Инсутрумент</Link>
+        <Link href='/account/08'>Малоценка</Link>
+        <Link href='/account/04'>Инсутрумент</Link>
         <Link href='/account/01'>Основные средства</Link>
       </Navbar.Collapse>
     </Navbar>

@@ -1,7 +1,7 @@
 import { Label, Select, Spinner, TextInput } from 'flowbite-react'
 import { useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
-export default function Osv({ acc } : { acc: string }){
+export default function Account04({ acc } : { acc: string }){
     const [ name, setName ] = useState<string>('')
     const [ visible, setVisible ] = useState<boolean>(false)
 
@@ -30,7 +30,7 @@ export default function Osv({ acc } : { acc: string }){
                 <div className='w-full'>
                     <Label htmlFor="search-mrp">МОЛ:</Label>
                     <TextInput className='w-full' value={name} id="search-mrp" onChange={setSearch} autoComplete='off'/>
-                    {visible && <div className='absolute w-[97%] bg-white py-2 border'>
+                    {visible && <div className='absolute w-[97.7%] bg-white py-2 border rounded-md'>
                         {mrps?.map((el, i) => {
                             return(
                                 <div key={i} onClick={()=>setName(el.name)} className='ml-2 cursor-pointer hover:underline hover:bg-slate-50'>
