@@ -11,37 +11,47 @@ export const config = {
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
         if(req.method === 'GET'){
-            const data = await prisma.osv.findMany()
+            const { acc, stock, mrp } = req.query
+            const data = await prisma.osv.findMany({
+                where: {
+                    acc: acc && !Array.isArray(acc) ? acc : undefined,
+                    stock: stock && !Array.isArray(stock) ? stock : undefined,
+                    mrp: {
+                        contains: mrp ? String(mrp) : undefined,
+                        mode: 'insensitive',
+                    },
+                }
+            })
             return res.status(200).json(data);
         }
         if(req.method === 'POST'){
             // const { token } =JSON.parse(req.body)
             const { token } = req.body
+            if( token !== process.env.TOKEN){
+                throw new Error('Доступ запрещен')
+            }
+
             // const { body } = JSON.parse(req.body)
             const { body } = req.body
 
-            // if( token !== process.env.TOKEN){
-            //     throw new Error('Доступ запрещен')
-            // }
-
             await prisma.account.deleteMany({})
-            const account = await prisma.account.createMany({
-                data: body.map(el => ({ name: el.acc, desc: el.desc })),
+            const { count: added_account} = await prisma.account.createMany({
+                data: body.map(el => ({ acc: el.acc, desc: el.acc_desc })),
                 skipDuplicates: true,
             })
             //mrp - materially responsible person
             await prisma.mrp.deleteMany({})
-            const mol = await prisma.mrp.createMany({
+            const { count: added_mrp} = await prisma.mrp.createMany({
                 data: body.map(el => ({ name: el.mrp })),
                 skipDuplicates: true,
             })
             //Нужно ли здесь создавать добавлять связи? протестируй как быстрее извлекается, если обращается по связи или просто фильтрует по строке mrp | acc
             //UPD вроде при использовании метода createMany нельзя создавать связи
             await prisma.osv.deleteMany({})
-            const data = await prisma.osv.createMany({
-                data: body
+            const { count: added_materials} = await prisma.osv.createMany({
+                data: body.map(el => ({ acc: el.acc, name: el.name, stock: el.stock, mrp: el.mrp, unit: el.unit, qty: el.qty }))
             })
-            return res.status(200).json(data);
+            return res.status(200).json({ added_account, added_mrp, added_materials });
         }
     }catch(e){
         return res.status(500).send(e.message);

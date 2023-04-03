@@ -82,12 +82,13 @@ model Osv {
   acc           String?
   name          String?
   stock         String?
+  mrp           String?
   unit          String?
   qty           String?         
 }
 model Account {
   id            Int @unique @default(autoincrement()) @id
-  name          String @unique
+  acc           String @unique
   desc          String?
 }
 model Mrp {
