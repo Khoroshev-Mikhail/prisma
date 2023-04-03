@@ -1,3 +1,4 @@
+import { Account, Osv } from '@prisma/client';
 import prisma from 'lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -17,40 +18,42 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 where: {
                     acc: acc ? String(acc) : undefined,
                     stock: stock ? String(stock) : undefined,
-                    mrp: {
-                        contains: mrp ? String(mrp) : undefined,
-                        mode: 'insensitive',
-                    },
+                    mrp: mrp ? String(mrp) : undefined,
+                    // mrp: {
+                    //     contains: mrp ? String(mrp) : undefined,
+                    //     mode: 'insensitive',
+                    // },
                 }
             })
             return res.status(200).json(data);
         }
         if(req.method === 'POST'){
             // const { token } =JSON.parse(req.body)
+            // const { body } = JSON.parse(req.body)
             const { token } = req.body
+            const { body } = req.body
             if( token !== process.env.TOKEN){
                 throw new Error('Доступ запрещен')
             }
 
-            // const { body } = JSON.parse(req.body)
-            const { body } = req.body
-
+            await prisma.upd.create({
+                data: {
+                    datetime: new Date()
+                }
+            })
             await prisma.account.deleteMany({})
             const { count: added_account} = await prisma.account.createMany({
-                data: body.map(el => ({ acc: el.acc, desc: el.acc_name })),
+                data: body.map(el => ({ acc: el.acc, desc: el.acc_desc })),
                 skipDuplicates: true,
             })
-            //mrp - materially responsible person
             await prisma.mrp.deleteMany({})
             const { count: added_mrp} = await prisma.mrp.createMany({
                 data: body.map(el => ({ name: el.mrp })),
                 skipDuplicates: true,
             })
-            //Нужно ли здесь создавать добавлять связи? протестируй как быстрее извлекается, если обращается по связи или просто фильтрует по строке mrp | acc
-            //UPD вроде при использовании метода createMany нельзя создавать связи
             await prisma.osv.deleteMany({})
             const { count: added_materials} = await prisma.osv.createMany({
-                data: body.map(el => ({ acc: el.acc, name: el.name, stock: el.stock, mrp: el.mrp, unit: el.unit, qty: el.qty }))
+                data: body.map(el => ({ name: el.name, bp: el.bp, acc: el.acc, acc_desc: el.acc_desc, stock: el.stock, mrp: el.mrp, unit: el.unit, qty: el.qty }))
             })
             return res.status(200).json({ added_account, added_mrp, added_materials });
         }

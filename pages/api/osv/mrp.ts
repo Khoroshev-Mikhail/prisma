@@ -1,14 +1,6 @@
 import prisma from 'lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-export const config = {
-    api: {
-        bodyParser: {
-            sizeLimit: '100mb'
-        }
-    }
-}
-
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
         if(req.method === 'GET'){

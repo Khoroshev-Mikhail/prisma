@@ -1,4 +1,4 @@
-export default function Account01(){
+export default function Account04(){
     return (
         <div>Основные</div>
     )

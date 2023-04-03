@@ -79,8 +79,10 @@ model Ks2{
 
 model Osv {
   id            Int @unique @default(autoincrement()) @id
-  acc           String?
+  bp            String?
   name          String?
+  acc           String?
+  acc_desc      String?
   stock         String?
   mrp           String?
   unit          String?
@@ -94,4 +96,8 @@ model Account {
 model Mrp {
   id            Int @unique @default(autoincrement()) @id
   name          String @unique
+}
+model Upd {
+  id            Int @unique @default(autoincrement()) @id
+  datetime      DateTime @default(now())
 }
