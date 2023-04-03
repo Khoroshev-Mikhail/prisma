@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             const { name } = req.query
             const data = await prisma.mrp.findMany({
                 where: {
-                    name: name && !Array.isArray(name) ? name : undefined,
+                    name: name ? String(name) : undefined,
                 }
             })
             return res.status(200).json(data);

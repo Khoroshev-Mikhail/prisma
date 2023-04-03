@@ -1,5 +1,6 @@
 import prisma from 'lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
+
 export const config = {
     api: {
         bodyParser: {
@@ -14,8 +15,8 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             const { acc, stock, mrp } = req.query
             const data = await prisma.osv.findMany({
                 where: {
-                    acc: acc && !Array.isArray(acc) ? acc : undefined,
-                    stock: stock && !Array.isArray(stock) ? stock : undefined,
+                    acc: acc ? String(acc) : undefined,
+                    stock: stock ? String(stock) : undefined,
                     mrp: {
                         contains: mrp ? String(mrp) : undefined,
                         mode: 'insensitive',
