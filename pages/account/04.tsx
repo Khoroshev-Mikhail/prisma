@@ -42,7 +42,7 @@ export default function Account04({ acc } : { acc: string }){
                 </div>
             </div>
             <div className='col-span-12 mt-4'>
-                Основные средства:
+                Инструмент:
             </div>
             {isLoading && 
                 <div className='col-span-12 text-center py-4'>
