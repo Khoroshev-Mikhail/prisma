@@ -12,7 +12,7 @@ const Nav: React.FC = () => {
         <Image src={'/images/logo.png'} alt='CRCC Rus' width={50} height={50}></Image>
       </Link>
       <div className="flex md:order-2">
-      {session 
+      {/* {session 
         ?
           <Button color="light" onClick={() => signOut()}>
             Выход {session.user.email}
@@ -21,7 +21,7 @@ const Nav: React.FC = () => {
           <Button color="light" onClick={() => signIn()}>
             Войти
           </Button>
-      }
+      } */}
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
