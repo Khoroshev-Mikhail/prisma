@@ -1,7 +1,7 @@
 export default function Osv({ data, title }){
     return (
         <>
-            {data.length > 0 &&
+            {/* {data.length > 0 && */}
                 <>
                     <div className='col-span-12 mt-4'>
                         {title}:
@@ -10,6 +10,8 @@ export default function Osv({ data, title }){
                             <div className='col-span-1 row-span-2 md:row-span-1 flex flex-col justify-center md:pl-2'>
                                 <div className="text-center md:text-left">№</div>
                             </div>
+                            <div className='col-span-11 md:col-span-6'>МОЛ</div>
+                            <div className='col-span-11 md:col-span-6'>Склад</div>
                             <div className='col-span-11 md:col-span-6'>Наименование</div>
                             <div className='col-span-5 md:col-span-2'>БП</div>
                             <div className='col-span-3 md:col-span-1 text-right'>Ед.изм.</div>
@@ -21,6 +23,8 @@ export default function Osv({ data, title }){
                                 <div className='col-span-1 row-span-2 md:row-span-1 flex flex-col justify-center md:pl-2'>
                                     <div className="text-center md:text-left">{i+1}</div>
                                 </div>
+                                <div className='col-span-11 md:col-span-6'>{el.mrp}</div>
+                                <div className='col-span-11 md:col-span-6'>{el.stock}</div>
                                 <div className='col-span-11 md:col-span-6'>{el.name}</div>
                                 <div className='col-span-5 md:col-span-2'>{el.bp}</div>
                                 <div className='col-span-3 md:col-span-1 text-right'>{el.unit}</div>
@@ -29,7 +33,7 @@ export default function Osv({ data, title }){
                         )
                     })}
                 </>
-            }
+            {/* } */}
         </>
     )
 }

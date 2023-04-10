@@ -1,45 +1,17 @@
+import Search from 'components/UI/Search'
 import { Label, Select, Spinner, TextInput } from 'flowbite-react'
 import { useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 export default function Account01({ acc } : { acc: string }){
     const [ name, setName ] = useState<string>('')
-    const [ visible, setVisible ] = useState<boolean>(false)
 
     const { data, isLoading } = useSWR(name ? `/api/osv/?acc=10.01&mrp=${name}` : null)
     const { data: mrps } = useSWR(name ? `/api/osv/mrp?name=${name}` : null)
 
-    function setSearch({target: { value }}){
-        setVisible(true)
-        setName(value)
-    }
-    function clickSearch(e){
-        if(e.target.id !== "search-mrp"){
-            setVisible(false)
-        }
-    }
-    useEffect(()=>{
-        addEventListener('click', clickSearch)
-        return ()=>{
-            removeEventListener('click', clickSearch)
-        }
-    },[])
-
     return (
         <div className="grid grid-cols-12">
             <div className='col-span-12'>
-                <div className='w-full'>
-                    <Label htmlFor="search-mrp">МОЛ:</Label>
-                    <TextInput className='w-full' value={name} id="search-mrp" onChange={setSearch} autoComplete='off'/>
-                    {visible && <div className='absolute w-[97.7%] bg-white py-2 border rounded-md'>
-                        {mrps?.map((el, i) => {
-                            return(
-                                <div key={i} onClick={()=>setName(el.name)} className='ml-2 cursor-pointer hover:underline hover:bg-slate-50'>
-                                    {el.name}
-                                </div>
-                            )
-                        })}
-                    </div>}
-                </div>
+                <Search data={mrps} name={name} setName={setName}/>
             </div>
             <div className='col-span-12 mt-4'>
                 Основные средства:

@@ -17,13 +17,15 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             const data = await prisma.osv.findMany({
                 where: {
                     acc: acc ? String(acc) : undefined,
-                    stock: stock ? String(stock) : undefined,
-                    // mrp: mrp ? String(mrp) : undefined,
-                    mrp: {
+                    stock: 
+                    stock ? {
+                        equals: String(stock),
+                        mode: 'insensitive'
+                    } : undefined,
+                    mrp: mrp ? {
                         equals: String(mrp),
                         mode: 'insensitive'
-                    }
-
+                    } : undefined
                 }
             })
             return res.status(200).json(data);
