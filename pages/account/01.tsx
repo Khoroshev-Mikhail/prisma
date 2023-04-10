@@ -11,7 +11,7 @@ export default function Account01({ acc } : { acc: string }){
     return (
         <div className="grid grid-cols-12">
             <div className='col-span-12'>
-                <Search data={mrps} name={name} setName={setName}/>
+                {/* <Search data={mrps} name={name} setName={setName}/> */}
             </div>
             <div className='col-span-12 mt-4'>
                 Основные средства:
