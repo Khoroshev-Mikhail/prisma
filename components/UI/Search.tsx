@@ -25,8 +25,7 @@ export default function Search({ data, name, setName, isLoading }){
             {visible && 
                 <div className='absolute w-[97.7%] bg-white py-2 border rounded-md'>
                     {isLoading && <Spinner color={'pink'} />}
-                    {!isLoading && data && data.length > 0 
-                    ?
+                    {!isLoading && data &&
                         data.map((el, i) => {
                             return(
                                 <div key={i} onClick={()=>setName(el.name)} className='ml-2 cursor-pointer hover:underline hover:bg-slate-50'>
@@ -34,10 +33,6 @@ export default function Search({ data, name, setName, isLoading }){
                                 </div>
                             )
                         })
-                    :
-                    <div className='ml-2'>
-                        Нет результатов поиска...
-                    </div>
                 }
                 </div>
             }
