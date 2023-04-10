@@ -1,7 +1,7 @@
 import { Label, Spinner, TextInput } from "flowbite-react"
 import { useEffect, useState } from "react"
 
-export default function Search({ data, name, setName, isLoading }){
+export default function Search({ data, name, setName }){
     const [ visible, setVisible ] = useState<boolean>(false)
     function setSearch(name){
         setVisible(true)

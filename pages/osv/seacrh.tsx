@@ -7,7 +7,7 @@ export default function Mrp(){
     const [ name, setName ] = useState<string>('')
 
     const { data, isLoading } = useSWR(name ?? `/api/osv/?mrp=${name}`)
-    const { data: mrps } = useSWR(name ?? `/api/osv/mrp?name=${name}`)
+    const { data: mrps } = useSWR(name ?? `/api/osv/mrps/?name=${name}`)
 
     return (
         <div className="grid grid-cols-12">
