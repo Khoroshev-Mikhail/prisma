@@ -97,6 +97,10 @@ model Mrp {
   id            Int @unique @default(autoincrement()) @id
   name          String @unique
 }
+model Stock {
+  id            Int @unique @default(autoincrement()) @id
+  name          String @unique
+}
 model Upd {
   id            Int @unique @default(autoincrement()) @id
   datetime      DateTime @default(now())

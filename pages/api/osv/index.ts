@@ -43,20 +43,25 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 }
             })
             await prisma.account.deleteMany({})
-            const { count: added_account} = await prisma.account.createMany({
+            const { count: added_account } = await prisma.account.createMany({
                 data: body.map(el => ({ acc: el.acc, desc: el.acc_desc })),
                 skipDuplicates: true,
             })
             await prisma.mrp.deleteMany({})
-            const { count: added_mrp} = await prisma.mrp.createMany({
+            const { count: added_mrp } = await prisma.mrp.createMany({
                 data: body.map(el => ({ name: el.mrp })),
                 skipDuplicates: true,
             })
+            await prisma.stock.deleteMany({})
+            const { count: added_stock } = await prisma.stock.createMany({
+                data: body.map(el => ({ name: el.stock })),
+                skipDuplicates: true,
+            })
             await prisma.osv.deleteMany({})
-            const { count: added_materials} = await prisma.osv.createMany({
+            const { count: added_materials } = await prisma.osv.createMany({
                 data: body.map(el => ({ name: el.name, bp: el.bp, acc: el.acc, acc_desc: el.acc_desc, stock: el.stock, mrp: el.mrp, unit: el.unit, qty: el.qty }))
             })
-            return res.status(200).json({ added_account, added_mrp, added_materials });
+            return res.status(200).json({ added_account, added_mrp, added_stock, added_materials });
         }
     }catch(e){
         return res.status(500).send(e.message);
