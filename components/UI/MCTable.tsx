@@ -1,4 +1,4 @@
-function Osv({ data, title }){
+export default function MCTable({ data, title }){
     return (
         // <>
         //     {data.length > 0 &&
@@ -33,4 +33,3 @@ function Osv({ data, title }){
         // </>
     )
 }
-export default Osv
