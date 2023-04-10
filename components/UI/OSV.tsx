@@ -1,7 +1,7 @@
 function Osv({ data, title }){
     return (
-        <>
-            {data.length > 0 &&
+        // <>
+        //     {data.length > 0 &&
                 <>
                     <div className='col-span-12 mt-4'>
                         {title}:
@@ -29,8 +29,8 @@ function Osv({ data, title }){
                         )
                     })}
                 </>
-            }
-        </>
+        //     }
+        // </>
     )
 }
 export default Osv

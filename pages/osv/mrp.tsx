@@ -1,7 +1,7 @@
 import Osv from 'components/UI/Osv'
 import Search from 'components/UI/Search'
-import { Label, Select, Spinner, TextInput } from 'flowbite-react'
-import { useEffect, useRef, useState } from 'react'
+import {Spinner} from 'flowbite-react'
+import { useState } from 'react'
 import useSWR from 'swr'
 export default function Mrp(){
     const [ name, setName ] = useState<string>('')
