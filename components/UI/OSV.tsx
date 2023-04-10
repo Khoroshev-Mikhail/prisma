@@ -1,4 +1,4 @@
-export default function Osv({ data, title }){
+function Osv({ data, title }){
     return (
         <>
             {data.length > 0 &&
@@ -33,3 +33,4 @@ export default function Osv({ data, title }){
         </>
     )
 }
+export default Osv
