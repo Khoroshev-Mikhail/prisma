@@ -5,7 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 export const config = {
     api: {
         bodyParser: {
-            sizeLimit: '100mb'
+            sizeLimit: '500mb'
         }
     }
 }
@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             })
             await prisma.account.deleteMany({})
             const { count: added_account } = await prisma.account.createMany({
-                data: body.map(el => ({ acc: el.acc, desc: el.acc_desc })),
+                data: body.map(el => ({ acc: el.acc, desc: el.acc_name })),
                 skipDuplicates: true,
             })
             await prisma.mrp.deleteMany({})
