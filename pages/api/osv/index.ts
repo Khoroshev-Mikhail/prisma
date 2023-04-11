@@ -35,11 +35,11 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             // const { body } = JSON.parse(req.body)
             const { token } = req.body
             const { body } = req.body
-            const { isDelete } = req.body
+            // const { isDelete } = req.body
             if( token !== process.env.TOKEN){
                 throw new Error('Доступ запрещен')
             }
-            if(isDelete){
+            if(req.body.isDelete){
                 await prisma.account.deleteMany()
                 await prisma.mrp.deleteMany()
                 await prisma.stock.deleteMany()
