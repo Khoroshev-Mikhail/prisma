@@ -96,12 +96,10 @@ model Account {
 model Mrp {
   id            Int @unique @default(autoincrement()) @id
   name          String @unique
-  acc           String?
 }
 model Stock {
   id            Int @unique @default(autoincrement()) @id
   name          String @unique
-  acc           String?
 }
 model Upd {
   id            Int @unique @default(autoincrement()) @id
