@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             })
             await prisma.account.deleteMany({})
             const { count: added_account } = await prisma.account.createMany({
-                data: body.map(el => ({ acc: el.acc, acc_desc: el.acc_name })),
+                data: body.map(el => ({ acc: el.acc, desc: el.acc_name })),
                 skipDuplicates: true,
             })
             await prisma.mrp.deleteMany({})
@@ -61,7 +61,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             })
             await prisma.osv.deleteMany({})
             const { count: added_materials } = await prisma.osv.createMany({
-                data: body.map(el => ({ name: el.name, bp: el.bp, acc: el.acc, acc_desc: el.acc_desc, stock: el.stock, mrp: el.mrp, unit: el.unit, qty: el.qty }))
+                data: body.map(el => ({ name: el.name, bp: el.bp, acc: el.acc, acc_desc: el.acc_name, stock: el.stock, mrp: el.mrp, unit: el.unit, qty: el.qty }))
             })
             return res.status(200).json({ added_account, added_mrp, added_stock, added_materials });
         }
