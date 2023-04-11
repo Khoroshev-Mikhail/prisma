@@ -39,11 +39,11 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 throw new Error('Доступ запрещен')
             }
 
-            await prisma.upd.create({
-                data: {
-                    datetime: new Date()
-                }
-            })
+            // await prisma.upd.create({
+            //     data: {
+            //         datetime: new Date()
+            //     }
+            // })
             await prisma.account.deleteMany({})
             const { count: added_account } = await prisma.account.createMany({
                 data: body.map(el => ({ acc: el.acc, desc: el.acc_name })),
