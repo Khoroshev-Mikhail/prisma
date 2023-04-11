@@ -35,6 +35,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             // const { body } = JSON.parse(req.body)
             const { token } = req.body
             const { body } = req.body
+            const { acc } = req.body
             if( token !== process.env.TOKEN){
                 throw new Error('Доступ запрещен')
             }
@@ -44,22 +45,38 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                     datetime: new Date()
                 }
             })
-            await prisma.account.deleteMany({})
+            await prisma.account.deleteMany({
+                where: {
+                    acc: acc
+                }
+            })
             const { count: added_account } = await prisma.account.createMany({
                 data: body.map(el => ({ acc: el.acc, desc: el.acc_name })),
                 skipDuplicates: true,
             })
-            await prisma.mrp.deleteMany({})
+            await prisma.mrp.deleteMany({
+                where: {
+                    acc: acc
+                }
+            })
             const { count: added_mrp } = await prisma.mrp.createMany({
-                data: body.map(el => ({ name: el.mrp })),
+                data: body.map(el => ({ name: el.mrp, acc: el.acc })),
                 skipDuplicates: true,
             })
-            await prisma.stock.deleteMany({})
+            await prisma.stock.deleteMany({
+                where: {
+                    acc: acc
+                }
+            })
             const { count: added_stock } = await prisma.stock.createMany({
-                data: body.map(el => ({ name: el.stock })),
+                data: body.map(el => ({ name: el.stock, acc: el.acc })),
                 skipDuplicates: true,
             })
-            await prisma.osv.deleteMany({})
+            await prisma.osv.deleteMany({
+                where: {
+                    acc: acc
+                }
+            })
             const { count: added_materials } = await prisma.osv.createMany({
                 data: body.map(el => ({ name: el.name, bp: el.bp, acc: el.acc, acc_desc: el.acc_name, stock: el.stock, mrp: el.mrp, unit: el.unit, qty: el.qty }))
             })
