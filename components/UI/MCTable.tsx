@@ -19,7 +19,7 @@ export default function MCTable({ data, title }){
                         return (
                             <div className='col-span-12 grid grid-cols-12 border-b border-l border-r even:bg-white odd:bg-slate-50' key={i}>
                                 <div className='col-span-1 row-span-2 md:row-span-1 flex flex-col justify-center md:pl-2'>
-                                    <div className="text-center md:text-left">{i+1}</div>
+                                    <div className="text-center md:text-left truncate">{i+1}</div>
                                 </div>
                                 <div className='col-span-11 md:col-span-6'>{el.name}</div>
                                 <div className='col-span-5 md:col-span-2'>{el.bp}</div>
