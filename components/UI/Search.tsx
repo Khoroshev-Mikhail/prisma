@@ -1,11 +1,11 @@
 import { Label, Spinner, TextInput } from "flowbite-react"
 import { useEffect, useState } from "react"
 
-export default function Search({ data, name, setName }){
+export default function Search({ data, state, setState, title, placeholder, isLoading }){
     const [ visible, setVisible ] = useState<boolean>(false)
-    function setSearch(name){
+    function setSearch({ target: {value}}){
         setVisible(true)
-        setName(name)
+        setState(value)
     }
     function clickSearch(e){
         if(e.target.id !== "search-mrp"){
@@ -20,14 +20,15 @@ export default function Search({ data, name, setName }){
     },[])
     return (
         <div className='w-full'>
-            <Label htmlFor="search-mrp">МОЛ:</Label>
-            <TextInput className='w-full' value={name} id="search-mrp" onChange={(e)=>setSearch(e.target.value)} autoComplete='off'/>
+            <Label htmlFor="search-mrp">{title}</Label>
+            <TextInput className='w-full' value={state} id="search-mrp" onChange={setSearch} autoComplete='off' placeholder={placeholder}/>
             {visible && 
-                <div className='absolute w-[97.7%] bg-white py-2 border rounded-md'>
-                    {data?.map((el, i) => {
+                <div className='absolute w-[92%] bg-white py-2 border rounded-md'>
+                    {isLoading && <Spinner className="ml-2" />}
+                    {!isLoading && data?.map((el, i) => {
                         return(
-                            <div key={i} onClick={()=>setName(el.name)} className='ml-2 cursor-pointer hover:underline hover:bg-slate-50'>
-                                {el.name}
+                            <div key={i} onClick={()=>setState(el.bp)} className='ml-2 cursor-pointer hover:underline hover:bg-slate-50'>
+                                {el.bp} {el.name}
                             </div>
                         )
                     })

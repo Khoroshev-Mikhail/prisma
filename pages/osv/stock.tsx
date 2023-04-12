@@ -9,7 +9,7 @@ export default function Stock(){
     const [ name, setName ] = useState<string>(null)
 
     const { data, isLoading } = useSWR(name ? `/api/osv/?stock=${name}` : null)
-    const { data: list } = useSWR(`/api/osv/stocks`)
+    const { data: list } = useSWR(`/api/osv/stock`)
     const { data: date } = useSWR(`/api/osv/date`)
     useEffect(()=>{
         console.log(date)

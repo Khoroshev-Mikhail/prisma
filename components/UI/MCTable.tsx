@@ -23,8 +23,7 @@ export default function MCTable({ data, title }){
                                 </div>
                                 <div className='col-span-11 md:col-span-6'>{el.name}</div>
                                 <div className='col-span-5 md:col-span-2'>{el.bp}</div>
-                                <div className='col-span-3 md:col-span-1 text-right'>{el.unit}</div>
-                                <div className='col-span-3 md:col-span-2 text-right pr-2'>{el.qty}</div>
+                                <div className='col-span-6 md:col-span-3 text-right pr-2'>{el.qty} {el.unit}</div>
                             </div>
                         )
                     })}

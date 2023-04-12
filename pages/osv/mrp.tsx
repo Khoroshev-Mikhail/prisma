@@ -9,7 +9,7 @@ export default function Mrp(){
     const [ name, setName ] = useState<string>('')
 
     const { data, isLoading } = useSWR(name ? `/api/osv/?mrp=${name}` : null)
-    const { data: list} = useSWR(`/api/osv/mrps`)
+    const { data: list} = useSWR(`/api/osv/mrp`)
     const { data: date } = useSWR(`/api/osv/date`)
     return (
         <>
