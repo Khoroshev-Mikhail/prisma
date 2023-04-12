@@ -24,10 +24,10 @@ export default function Stock(){
                 <div className='col-span-12'>
                 {list && 
                     <select className='w-full rounded-lg border-gray-300' value={name} onChange={(e)=>setName(e.target.value)}>
-                        {!list.includes("") && <option value={null}></option>}
+                        {!list.includes("") && <option value={null} className='w-full'></option>}
                         {list.map((el, i) => {
                             return (
-                                <option value={el} key={i}>{el}</option>
+                                <option value={el} key={i} className='w-full'>{el}</option>
                             )
                         })}
                     </select>
