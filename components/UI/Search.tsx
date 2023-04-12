@@ -1,7 +1,7 @@
 import { Label, Spinner, TextInput } from "flowbite-react"
 import { useEffect, useState } from "react"
 
-export default function Search({ data, state, setState,  placeholder, isLoading }){
+export default function Search({ data, state, setState,  placeholder, isLoading, autofocus }){
     const [ visible, setVisible ] = useState<boolean>(false)
     function setSearch({ target: {value}}){
         setVisible(true)
@@ -21,7 +21,7 @@ export default function Search({ data, state, setState,  placeholder, isLoading 
     return (
         <div className='w-full'>
             {/* <Label htmlFor="search-mrp">{label}</Label> */}
-            <TextInput className='w-full bg-white' value={state} id="search-mrp" onChange={setSearch} autoComplete='off' placeholder={placeholder}/>
+            <TextInput type="number" inputMode="numeric" className='w-full bg-white' value={state} id="search-mrp" onChange={setSearch} autoFocus autoComplete='off' placeholder={placeholder}/>
             {visible && 
                 <div className='absolute w-[92%] bg-white py-2 border rounded-md'>
                     {isLoading && <Spinner className="ml-2" />}

@@ -21,8 +21,13 @@ export default function Bp(){
                     Поиск по инвентарному номеру (БП-0000ХХХ):
                 </div>
                 <div className='col-span-12 mb-4'>
-                    <Search data={data} state={bp} setState={bpReplace} placeholder="Введите только цифры, например: 1605" isLoading={isLoading}/>
+                    <Search data={data} state={bp} autofocus={true} setState={bpReplace} placeholder="Введите только цифры, например: 1605" isLoading={isLoading}/>
                 </div>
+                {/* {isLoading &&
+                    <div className='col-span-12 text-center'>
+                        <Spinner />
+                    </div>
+                } */}
                 {data &&
                     <div className='col-span-12 grid grid-cols-12 bg-gray-100 border'>
                         <div className='col-span-1 row-span-4 flex flex-col justify-center md:pl-2'>
