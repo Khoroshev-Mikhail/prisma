@@ -22,17 +22,14 @@ export default function Mrp(){
                     Выберите МОЛа:
                 </div>
                 <div className='col-span-12'>
-                    {list && 
-                        <select className='w-full rounded-lg border-gray-300' defaultValue={null} onChange={(e)=>setName(e.target.value)}>
-                            {!list.includes("") && <option value={null} className='w-full'></option>}
-                            {list.map((el, i) => {
-                                return (
-                                    <option value={el} key={i} className='w-full'>{el}</option>
-                                )
-                            })}
-                        </select>
-                    }
-                    {/* <Search data={mrps} name={name} setName={setName} /> */}
+                    <select className='w-full rounded-lg border-gray-300' defaultValue={null} onChange={(e)=>setName(e.target.value)}>
+                        {!list?.includes("") && <option value={null} className='w-full'></option>}
+                        {list?.map((el, i) => {
+                            return (
+                                <option value={el} key={i} className='w-full'>{el}</option>
+                            )
+                        })}
+                    </select>
                 </div>
                 <div className='col-span-12 pt-4 text-gray-400'>
                     Данные актуальны на: {date && new Date(date).toLocaleString('ru-Ru') }
