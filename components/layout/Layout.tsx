@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import Footer from "./Footer";
 import Nav from "./Nav";
+import Header from "./Header";
 
 type Props = {
   children: ReactNode;
@@ -8,8 +9,9 @@ type Props = {
 
 const Layout: React.FC<Props> = ({children}) => (
   <div className="flex flex-col h-screen justify-between">
-    <Nav />
-    <div className="mb-auto p-4">{children}</div>
+    {/* <Nav /> */}
+    <Header />
+    <div className="mb-auto px-4">{children}</div>
     <Footer />
   </div>
 );

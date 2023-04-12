@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 },
                 take: 1
             })
-            return res.status(200).json(data[0]);
+            return res.status(200).json(data[0].datetime);
         }
     }catch(e){
         return res.status(500).send(e.message);

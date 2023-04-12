@@ -10,7 +10,10 @@ export default function Stock(){
 
     const { data, isLoading } = useSWR(name ? `/api/osv/?stock=${name}` : null)
     const { data: list } = useSWR(`/api/osv/stocks`)
-
+    const { data: date } = useSWR(`/api/osv/date`)
+    useEffect(()=>{
+        console.log(date)
+    }, [])
     return (
         <>
             <Head>
@@ -31,8 +34,11 @@ export default function Stock(){
                 }
                     {/* <Search data={mrps} name={name} setName={setName}/> */}
                 </div>
+                <div className='col-span-12 pt-4 text-gray-400'>
+                    Данные актуальны на: {date && new Date(date).toLocaleString('ru-Ru') }
+                </div>
                 {isLoading && 
-                    <div className='col-span-12 text-center py-4'>
+                    <div className='col-span-12 text-center'>
                         <Spinner size={'lg'} />
                     </div>
                 }

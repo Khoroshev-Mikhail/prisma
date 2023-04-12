@@ -3,7 +3,7 @@ export default function MCTable({ data, title }){
         // <>
         //     {data.length > 0 &&
                 <>
-                    <div className='col-span-12 mt-4'>
+                    <div className='col-span-12'>
                         {title}:
                     </div>
                     <div className='col-span-12 grid grid-cols-12 bg-gray-100 border'>

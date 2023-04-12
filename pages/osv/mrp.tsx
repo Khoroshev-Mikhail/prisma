@@ -10,7 +10,7 @@ export default function Mrp(){
 
     const { data, isLoading } = useSWR(name ? `/api/osv/?mrp=${name}` : null)
     const { data: list} = useSWR(`/api/osv/mrps`)
-
+    const { data: date } = useSWR(`/api/osv/date`)
     return (
         <>
             <Head>
@@ -30,6 +30,9 @@ export default function Mrp(){
                         </select>
                     }
                     {/* <Search data={mrps} name={name} setName={setName} /> */}
+                </div>
+                <div className='col-span-12 pt-4 text-gray-400'>
+                    Данные актуальны на: {date && new Date(date).toLocaleString('ru-Ru') }
                 </div>
                 {isLoading && 
                     <div className='col-span-12 text-center py-4'>
