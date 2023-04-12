@@ -13,13 +13,15 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                             mode: 'insensitive',
                         }
                     },
-                    take: 5
+                    select: {
+                        name: true
+                    }
                 })
-                return res.status(200).json(data);
+                return res.status(200).json(data.map(el => el.name).sort((a, b) => a.localeCompare(b)));
             }
 
             const data = await prisma.stock.findMany()
-            return res.status(200).json(data);
+            return res.status(200).json(data.map(el => el.name).sort((a, b) => a.localeCompare(b)));
         }
     }catch(e){
         return res.status(500).send(e.message);
