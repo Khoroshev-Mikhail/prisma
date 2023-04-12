@@ -18,7 +18,7 @@ export default function Bp(){
             </Head>
             <div className="grid grid-cols-12">
                 <div className='col-span-12'>
-                    Поиск по инвентарному номеру (БП-000ХХХ):
+                    Поиск по инвентарному номеру (БП-0000ХХХ):
                 </div>
                 <div className='col-span-12 mb-4'>
                     <Search data={data} state={bp} setState={bpReplace} placeholder="Введите только цифры, например: 1605" isLoading={isLoading}/>

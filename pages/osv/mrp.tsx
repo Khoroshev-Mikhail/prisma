@@ -9,7 +9,7 @@ export default function Mrp(){
     const [ name, setName ] = useState<string>('')
 
     const { data, isLoading } = useSWR(name ? `/api/osv/?mrp=${name}` : null)
-    const { data: list} = useSWR(`/api/osv/mrp`)
+    const { data: list, isLoading: isLoadingList} = useSWR(`/api/osv/mrp`)
     const { data: date } = useSWR(`/api/osv/date`)
     return (
         <>
@@ -22,7 +22,8 @@ export default function Mrp(){
                     Выберите МОЛа:
                 </div>
                 <div className='col-span-12'>
-                    <select className='w-full rounded-lg border-gray-300' defaultValue={null} onChange={(e)=>setName(e.target.value)}>
+                    <select disabled={isLoadingList} className='w-full rounded-lg border-gray-300' defaultValue={null} onChange={(e)=>setName(e.target.value)}>
+                        {isLoadingList && <option value={null} className='w-full'>Загрузка...</option>}
                         {!list?.includes("") && <option value={null} className='w-full'></option>}
                         {list?.map((el, i) => {
                             return (

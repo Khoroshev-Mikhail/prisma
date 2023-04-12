@@ -9,7 +9,7 @@ export default function Stock(){
     const [ name, setName ] = useState<string>(null)
 
     const { data, isLoading } = useSWR(name ? `/api/osv/?stock=${name}` : null)
-    const { data: list } = useSWR(`/api/osv/stock`)
+    const { data: list, isLoading: isLoadingList } = useSWR(`/api/osv/stock`)
     const { data: date } = useSWR(`/api/osv/date`)
     useEffect(()=>{
         console.log(date)
@@ -25,7 +25,8 @@ export default function Stock(){
                     Выберите склад:
                 </div>
                 <div className='col-span-12'>
-                    <select className='w-full rounded-lg border-gray-300' value={name} onChange={(e)=>setName(e.target.value)}>
+                    <select disabled={isLoadingList}  className='w-full rounded-lg border-gray-300' value={name} onChange={(e)=>setName(e.target.value)}>
+                        {isLoadingList && <option value={null} className='w-full'>Загрузка...</option>}
                         {!list?.includes("") && <option value={null} className='w-full'></option>}
                         {list?.map((el, i) => {
                             return (
