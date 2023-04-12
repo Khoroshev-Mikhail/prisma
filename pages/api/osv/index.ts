@@ -1,12 +1,12 @@
-import { Account, Osv } from '@prisma/client';
 import prisma from 'lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export const config = {
     api: {
         bodyParser: {
-            sizeLimit: '500mb'
-        }
+            sizeLimit: '4mb'
+        },
+        responseLimit: false,
     }
 }
 
