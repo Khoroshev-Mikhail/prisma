@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                             mode: 'insensitive',
                         }
                     },
-                    take: 15
+                    take: 30
                 })
                 return res.status(200).json(data);
             }

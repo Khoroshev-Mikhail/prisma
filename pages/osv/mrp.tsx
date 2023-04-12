@@ -19,6 +19,9 @@ export default function Mrp(){
             </Head>
             <div className="grid grid-cols-12">
                 <div className='col-span-12'>
+                    Выберите МОЛа:
+                </div>
+                <div className='col-span-12'>
                     {list && 
                         <select className='w-full rounded-lg border-gray-300' defaultValue={null} onChange={(e)=>setName(e.target.value)}>
                             {!list.includes("") && <option value={null} className='w-full'></option>}

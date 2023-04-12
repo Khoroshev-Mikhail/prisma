@@ -9,8 +9,9 @@ const Nav: React.FC = () => {
           <Image src={'/images/logo.png'} alt='CRCC Rus' width={50} height={50}></Image>
         </Link>
         <nav>
-            <Link href="/osv/mrp" className="relative sm:text-base md:text-lg no-underline font-medium ml-10">МОЛ</Link>
-            <Link href="/osv/mrp" className="relative sm:text-base md:text-lg no-underline font-medium ml-10">Склад</Link>
+            <Link href="/osv/mrp" className="relative sm:text-base md:text-lg no-underline font-medium ml-10">МОЛы</Link>
+            <Link href="/osv/stock" className="relative sm:text-base md:text-lg no-underline font-medium ml-10">Склады</Link>
+            <Link href="/osv/bp" className="relative sm:text-base md:text-lg no-underline font-medium ml-10">Поиск по БП</Link>
         </nav>
     </header>
   );
