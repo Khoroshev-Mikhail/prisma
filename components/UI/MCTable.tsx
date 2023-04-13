@@ -12,8 +12,7 @@ export default function MCTable({ data, title }){
                             </div>
                             <div className='col-span-11 md:col-span-6'>Наименование</div>
                             <div className='col-span-5 md:col-span-2'>БП</div>
-                            <div className='col-span-3 md:col-span-1 text-right'>Ед.изм.</div>
-                            <div className='col-span-3 md:col-span-2 text-right pr-2'>Кол-во</div>
+                            <div className='col-span-6 md:col-span-3 text-right pr-2'>Кол-во</div>
                     </div>
                     {data?.map((el, i) => {
                         return (
