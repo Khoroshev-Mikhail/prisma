@@ -25,7 +25,7 @@ export default function Search({ data, state, setState,  placeholder, isLoading,
     return (
         <div className='w-full'>
             {/* <Label htmlFor="search-mrp">{label}</Label> */}
-            <input ref={ref} className='w-full bg-white rounded-lg border-gray-300' value={state} id="search-mrp" onChange={setSearch} autoComplete='off' placeholder={placeholder}/>
+            <input ref={ref} className='w-full bg-white rounded-lg border-gray-300 sm:p-2' value={state} id="search-mrp" onChange={setSearch} autoComplete='off' placeholder={placeholder}/>
             {visible && 
                 <div className='absolute w-[92%] min-h-[50px] bg-white py-2 border rounded-md'>
                     {isLoading && <Spinner className="ml-2" />}

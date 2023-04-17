@@ -7,9 +7,6 @@ import useSWR from 'swr'
 export default function Bp(){
     const [ str, setStr ] = useState<string>('')
     const { data, isLoading } = useSWR(str ? `/api/osv/bp/?str=${str}` : null)
-    function bpReplace(bp){
-        setStr(bp.replace(/\D/gi, ''))
-    }
     return (
         <>
             <Head>
@@ -21,7 +18,7 @@ export default function Bp(){
                     Поиск по названию или инвентарному номеру (БП-0000ХХХ):
                 </div>
                 <div className='col-span-12 mb-4'>
-                    <Search data={data} state={str} autofocus={true} setState={bpReplace} placeholder="Если поиск по БП - вводите только цифры" isLoading={isLoading}/>
+                    <Search data={data} state={str} autofocus={true} setState={setStr} placeholder="Если поиск по БП - вводите только цифры" isLoading={isLoading}/>
                 </div>
                 {/* {isLoading &&
                     <div className='col-span-12 text-center'>
