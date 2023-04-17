@@ -5,10 +5,10 @@ import Head from 'next/head'
 import { useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 export default function Bp(){
-    const [ bp, setBp ] = useState<string>('')
-    const { data, isLoading } = useSWR(bp ? `/api/osv/bp/?bp=${bp}` : null)
+    const [ str, setStr ] = useState<string>('')
+    const { data, isLoading } = useSWR(str ? `/api/osv/bp/?str=${str}` : null)
     function bpReplace(bp){
-        setBp(bp.replace(/\D/gi, ''))
+        setStr(bp.replace(/\D/gi, ''))
     }
     return (
         <>
@@ -18,10 +18,10 @@ export default function Bp(){
             </Head>
             <div className="grid grid-cols-12">
                 <div className='col-span-12'>
-                    Поиск по инвентарному номеру (БП-0000ХХХ):
+                    Поиск по названию или инвентарному номеру (БП-0000ХХХ):
                 </div>
                 <div className='col-span-12 mb-4'>
-                    <Search data={data} state={bp} autofocus={true} setState={bpReplace} placeholder="Введите только цифры, например: 1605" isLoading={isLoading}/>
+                    <Search data={data} state={str} autofocus={true} setState={bpReplace} placeholder="Если поиск по БП - вводите только цифры" isLoading={isLoading}/>
                 </div>
                 {/* {isLoading &&
                     <div className='col-span-12 text-center'>

@@ -4,14 +4,22 @@ import { NextApiRequest, NextApiResponse } from 'next';
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     try{
         if(req.method === 'GET'){
-            const { bp } = req.query
-            if(bp && bp !== ''){
+            const { str } = req.query
+            if(str && str !== ''){
                 const data = await prisma.osv.findMany({
                     where: {
-                        bp: {
-                            contains: String(bp),
-                            mode: 'insensitive',
-                        }
+                        OR: [
+                                {
+                                    bp: {
+                                    contains: String(str),
+                                    mode: 'insensitive',
+                                }},
+                                {
+                                    name: {
+                                    contains: String(str),
+                                    mode: 'insensitive',
+                                }}
+                        ]
                     },
                     take: 30
                 })
