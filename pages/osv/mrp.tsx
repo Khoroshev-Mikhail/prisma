@@ -18,7 +18,7 @@ export default function Mrp(){
                 <title>{name ? name : 'CРСС: МОЛ'}</title>
             </Head>
             <div className="grid grid-cols-12">
-                <div className='col-span-12'>
+                <div className='col-span-12 mb-1'>
                     Выберите МОЛа:
                 </div>
                 <div className='col-span-12'>

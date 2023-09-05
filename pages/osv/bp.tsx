@@ -14,7 +14,7 @@ export default function Bp(){
                 <title>CРСС: поиск БП</title>
             </Head>
             <div className="grid grid-cols-12">
-                <div className='col-span-12'>
+                <div className='col-span-12 mb-1'>
                     Поиск по названию или инвентарному номеру (БП-0000ХХХ):
                 </div>
                 <div className='col-span-12 mb-4'>

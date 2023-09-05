@@ -21,7 +21,7 @@ export default function Stock(){
                 <title>CРСС: Склад</title>
             </Head>
             <div className="grid grid-cols-12">
-                <div className='col-span-12'>
+                <div className='col-span-12 mb-1'>
                     Выберите склад:
                 </div>
                 <div className='col-span-12'>

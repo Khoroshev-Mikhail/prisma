@@ -3,9 +3,9 @@ module.exports = {
       return [
         {
           source: '/',
-          destination: '/osv/bp',
+          destination: '/osv/mrp',
           permanent: true,
         },
       ]
     },
-  }
+}
