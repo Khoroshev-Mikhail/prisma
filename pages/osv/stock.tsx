@@ -22,9 +22,13 @@ export default function Stock(){
     const { data: date } = useSWR(`/api/osv/date`)
 
     function select({target: { value }}){
-        setName(value)
-        router.query.name = value
-        router.push(router)
+        if(value){
+            setName(value)
+            router.push(`?name=${value}`);
+        } else{
+            setName(null)
+            router.push('')
+        }
     }
 
     useEffect(()=>{
@@ -40,10 +44,11 @@ export default function Stock(){
             setName(URLname as string)
         }
         if(!URLname || URLname == ''){
-            setName('')
+            setName('0')
             console.log('ar')
         }
     }, [URLname, router.query.name])
+    
     return (
         <>
             <Head>
@@ -68,17 +73,19 @@ export default function Stock(){
                 <div className='w-full pt-4 text-gray-400'>
                     Данные актуальны на: {date && new Date(date).toLocaleString('ru-Ru') }
                 </div>
-                <div className='w-full h-full flex flex-col gap-y-4'>
-                    {isLoading && 
-                        <div className='w-full text-center'>
-                            <Spinner size={'lg'} />
-                        </div>
-                    }
-                    {lowCost.length > 0 && <MCTable data={lowCost} title={'Малоценные средства'} />}
-                    {MC04.length > 0 && <MCTable data={MC04} title={'Инструмент МЦ.04'} />}
-                    {OC.length > 0 && <MCTable data={OC} title={'Основные средства'} />}
-                    {other.length > 0 && <MCTable data={other} title={'Другое'} />}
-                </div>
+                {name && 
+                    <div className='w-full h-full flex flex-col gap-y-4'>
+                        {isLoading && 
+                            <div className='w-full text-center'>
+                                <Spinner size={'lg'} />
+                            </div>
+                        }
+                        {lowCost.length > 0 && <MCTable data={lowCost} title={'Малоценные средства'} />}
+                        {MC04.length > 0 && <MCTable data={MC04} title={'Инструмент МЦ.04'} />}
+                        {OC.length > 0 && <MCTable data={OC} title={'Основные средства'} />}
+                        {other.length > 0 && <MCTable data={other} title={'Другое'} />}
+                    </div>
+                }
             </div>
         </>
     )

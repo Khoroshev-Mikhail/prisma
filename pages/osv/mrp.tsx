@@ -9,21 +9,25 @@ import useSWR from 'swr'
 export default function Mrp(){
     const router = useRouter()
     const { name: URLname  } = router.query
-    const [ name, setName ] = useState<string>( URLname as string || '')
+    const [ name, setName ] = useState<string>( URLname as string || null)
     
     const [ OC, setOC ] = useState<any[]>([])
     const [ MC04, setMC04 ] = useState<any[]>([])
     const [ lowCost, setLowCost ] = useState<any[]>([])
     const [ other, setOther ] = useState<any[]>([])
 
-    const { data, isLoading } = useSWR(name ? `/api/osv/?mrp=${name}` : null)
+    const { data, isLoading, mutate } = useSWR(name ? `/api/osv/?mrp=${name}` : null)
     const { data: list, isLoading: isLoadingList} = useSWR(`/api/osv/mrp`)
     const { data: date } = useSWR(`/api/osv/date`)
 
     function select({target: { value }}){
-        setName(value)
-        router.query.name = value
-        router.push(router)
+        if(value){
+            setName(value)
+            router.push(`?name=${value}`);
+        } else{
+            setName(null)
+            router.push('')
+        }
     }
 
     useEffect(()=>{
@@ -40,10 +44,9 @@ export default function Mrp(){
         }
         if(!URLname || URLname == ''){
             setName('')
-            console.log('ar')
         }
-    }, [URLname, router.query.name])
-    //При клике на лого очищается get строка, но данные не переобновляются
+    }, [URLname])
+
     return (
         <>
             <Head>
@@ -69,19 +72,19 @@ export default function Mrp(){
                 <div className='w-full pt-4 text-gray-400'>
                     Данные актуальны на: {date && new Date(date).toLocaleString('ru-Ru') }
                 </div>
-
-                <div className='w-full h-full flex flex-col gap-y-4'>
-                    {isLoading && 
-                        <div className='w-full text-center py-4'>
-                            <Spinner size={'lg'} />
-                        </div>
-                    }
-                    {lowCost.length > 0 && <MCTable data={lowCost} title={'Малоценные средства'} />}
-                    {MC04.length > 0 && <MCTable data={MC04} title={'Инструмент МЦ.04'} />}
-                    {OC.length > 0 && <MCTable data={OC} title={'Основные средства'} />}
-                    {other.length > 0 && <MCTable data={other} title={'Другое'} />}
-                </div>
-                
+                {name &&
+                    <div className='w-full h-full flex flex-col gap-y-4'>
+                        {isLoading && 
+                            <div className='w-full text-center py-4'>
+                                <Spinner size={'lg'} />
+                            </div>
+                        }
+                        {lowCost.length > 0 && <MCTable data={lowCost} title={'Малоценные средства'} />}
+                        {MC04.length > 0 && <MCTable data={MC04} title={'Инструмент МЦ.04'} />}
+                        {OC.length > 0 && <MCTable data={OC} title={'Основные средства'} />}
+                        {other.length > 0 && <MCTable data={other} title={'Другое'} />}
+                    </div>
+                }                
             </div>
         </>
     )
