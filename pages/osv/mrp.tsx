@@ -1,49 +1,87 @@
 import MCTable from 'components/UI/MCTable'
-import OCTable from 'components/UI/OCTable'
 import Search from 'components/UI/Search'
 import {Spinner} from 'flowbite-react'
-import { lowCostAccounts } from 'lib/consts'
+import { MC04Account, OCAccount, lowCostAccounts } from 'lib/consts'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { use, useEffect, useState } from 'react'
 import useSWR from 'swr'
 export default function Mrp(){
-    const [ name, setName ] = useState<string>('')
+    const router = useRouter()
+    const { name: URLname  } = router.query
+    const [ name, setName ] = useState<string>( URLname as string || '')
+    
+    const [ OC, setOC ] = useState<any[]>([])
+    const [ MC04, setMC04 ] = useState<any[]>([])
+    const [ lowCost, setLowCost ] = useState<any[]>([])
+    const [ other, setOther ] = useState<any[]>([])
 
     const { data, isLoading } = useSWR(name ? `/api/osv/?mrp=${name}` : null)
     const { data: list, isLoading: isLoadingList} = useSWR(`/api/osv/mrp`)
     const { data: date } = useSWR(`/api/osv/date`)
+
+    function select({target: { value }}){
+        setName(value)
+        router.query.name = value
+        router.push(router)
+    }
+
+    useEffect(()=>{
+        if(data){
+            setLowCost(data.filter(el => lowCostAccounts.includes(el.acc)))
+            setMC04(data.filter(el => el.acc === MC04Account))
+            setOC(data.filter(el => el.acc === OCAccount))
+            setOther(data.filter(el => el.acc !== OCAccount && el.acc !== MC04Account && !lowCostAccounts.includes(el.acc)))
+        }
+    }, [data])
+    useEffect(()=>{
+        if(URLname && URLname !== ''){
+            setName(URLname as string)
+        }
+        if(!URLname || URLname == ''){
+            setName('')
+            console.log('ar')
+        }
+    }, [URLname, router.query.name])
+    //При клике на лого очищается get строка, но данные не переобновляются
     return (
         <>
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
                 <title>{name ? name : 'CРСС: МОЛ'}</title>
             </Head>
-            <div className="grid grid-cols-12">
-                <div className='col-span-12 mb-1'>
+            <div className="flex flex-col">
+                <div className='w-full mb-1'>
                     Выберите МОЛа:
                 </div>
-                <div className='col-span-12'>
-                    <select disabled={isLoadingList} className='w-full rounded-lg border-gray-300' defaultValue={null} onChange={(e)=>setName(e.target.value)}>
+                <div className='w-full'>
+                    <select disabled={isLoadingList} className='w-full rounded-lg border-gray-300' defaultValue={URLname as string || null} onChange={select}>
                         {isLoadingList && <option value={null} className='w-full'>Загрузка...</option>}
                         {!list?.includes("") && <option value={null} className='w-full'></option>}
                         {list?.map((el, i) => {
                             return (
-                                <option value={el} key={i} className='w-full'>{el}</option>
+                                <option value={el} key={i} className='w-full' selected={URLname === el}>{el}</option>
                             )
                         })}
                     </select>
                 </div>
-                <div className='col-span-12 pt-4 text-gray-400'>
+
+                <div className='w-full pt-4 text-gray-400'>
                     Данные актуальны на: {date && new Date(date).toLocaleString('ru-Ru') }
                 </div>
-                {isLoading && 
-                    <div className='col-span-12 text-center py-4'>
-                        <Spinner size={'lg'} />
-                    </div>
-                }
-                {!isLoading && data && <MCTable data={data.filter(el => lowCostAccounts.includes(el.acc))} title={'Малоценные средства'} />}
-                {!isLoading && data && <MCTable data={data.filter(el => el.acc === 'МЦ.04')} title={'МЦ.04'} />}
-                {!isLoading && data && <OCTable data={data.filter(el => el.acc === '01.01')} title={'Основные средства'} />}
+
+                <div className='w-full h-full flex flex-col gap-y-4'>
+                    {isLoading && 
+                        <div className='col-span-12 text-center py-4'>
+                            <Spinner size={'lg'} />
+                        </div>
+                    }
+                    {lowCost.length > 0 && <MCTable data={lowCost} title={'Малоценные средства'} />}
+                    {MC04.length > 0 && <MCTable data={MC04} title={'Инструмент МЦ.04'} />}
+                    {OC.length > 0 && <MCTable data={OC} title={'Основные средства'} />}
+                    {other.length > 0 && <MCTable data={other} title={'Другое'} />}
+                </div>
+                
             </div>
         </>
     )
