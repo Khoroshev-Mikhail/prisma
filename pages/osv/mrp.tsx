@@ -1,4 +1,5 @@
 import MCTable from 'components/UI/MCTable'
+import OCTable from 'components/UI/OCTable'
 import Search from 'components/UI/Search'
 import {Spinner} from 'flowbite-react'
 import { lowCostAccounts } from 'lib/consts'
@@ -42,7 +43,7 @@ export default function Mrp(){
                 }
                 {!isLoading && data && <MCTable data={data.filter(el => lowCostAccounts.includes(el.acc))} title={'Малоценные средства'} />}
                 {!isLoading && data && <MCTable data={data.filter(el => el.acc === 'МЦ.04')} title={'МЦ.04'} />}
-                {!isLoading && data && <MCTable data={data.filter(el => el.acc === '01.01')} title={'Основные средства'} />}
+                {!isLoading && data && <OCTable data={data.filter(el => el.acc === '01.01')} title={'Основные средства'} />}
             </div>
         </>
     )
