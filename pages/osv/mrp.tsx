@@ -72,7 +72,7 @@ export default function Mrp(){
 
                 <div className='w-full h-full flex flex-col gap-y-4'>
                     {isLoading && 
-                        <div className='col-span-12 text-center py-4'>
+                        <div className='w-full text-center py-4'>
                             <Spinner size={'lg'} />
                         </div>
                     }
