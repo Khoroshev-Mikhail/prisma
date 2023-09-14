@@ -41,6 +41,8 @@ export default function Mrp(){
                     </div>
                 }
                 {!isLoading && data && <MCTable data={data.filter(el => lowCostAccounts.includes(el.acc))} title={'Малоценные средства'} />}
+                {!isLoading && data && <MCTable data={data.filter(el => el.acc === 'МЦ.04')} title={'МЦ.04'} />}
+                {!isLoading && data && <MCTable data={data.filter(el => el.acc === '01.01')} title={'Основные средства'} />}
             </div>
         </>
     )
