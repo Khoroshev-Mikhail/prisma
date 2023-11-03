@@ -17,8 +17,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             const data = await prisma.osv.findMany({
                 where: {
                     acc: acc ? String(acc) : undefined,
-                    stock: 
-                    stock ? {
+                    stock: stock ? {
                         equals: String(stock),
                         mode: 'insensitive'
                     } : undefined,
